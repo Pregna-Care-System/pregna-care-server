@@ -1,6 +1,8 @@
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using PregnaCare.Core.Repositories.Implementations;
+using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
 
 namespace PregnaCare
@@ -18,6 +20,8 @@ namespace PregnaCare
 
             builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(authDbConnection));
 
+            builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+
             // Config identity
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
                             .AddEntityFrameworkStores<AuthDbContext>()
@@ -34,8 +38,8 @@ namespace PregnaCare
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var authDbContext = services.GetRequiredService<AuthDbContext>();   
-                
+                var authDbContext = services.GetRequiredService<AuthDbContext>();
+
                 authDbContext.Database.Migrate();
             }
 
