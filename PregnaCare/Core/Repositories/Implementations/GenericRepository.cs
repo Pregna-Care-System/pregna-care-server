@@ -38,7 +38,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<T> GetByIdAsync(TKey id)
         {
-            return await _dbSet.FindAsync(id) ;
+            return await _dbSet.FindAsync(id);
         }
 
         public void Remove(T entity)

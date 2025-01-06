@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
+using PregnaCare.Infrastructure.UnitOfWork;
 
 namespace PregnaCare
 {
@@ -15,12 +16,14 @@ namespace PregnaCare
 
             // Get connection string
             var authDbConnection = builder.Configuration["ConnectionStrings:AuthDbConnection"];
-
+            var applicationDbConnection = builder.Configuration["ConnectionStrings:ApplicationDbConnection"];
             // Add services to the container.
 
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(applicationDbConnection));
             builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(authDbConnection));
 
             builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Config identity
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()

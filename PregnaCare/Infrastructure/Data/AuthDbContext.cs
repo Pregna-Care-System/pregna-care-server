@@ -12,11 +12,6 @@ namespace PregnaCare.Infrastructure.Data
         /// <summary>
         /// Constructor
         /// </summary>
-        public AuthDbContext() { }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
         /// <param name="options"></param>
         public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options) { }
 
