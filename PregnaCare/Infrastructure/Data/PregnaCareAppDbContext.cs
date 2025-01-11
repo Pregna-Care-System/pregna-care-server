@@ -351,8 +351,8 @@ public partial class PregnaCareAppDbContext : DbContext
         PropertyInfo updatedAtProp = null;
         foreach (var entry in entries)
         {
-            createdAtProp = entry.Entity.GetType().GetProperty("CreatedAt");
-            updatedAtProp = entry.Entity.GetType().GetProperty("UpdatedAt");
+            createdAtProp = entry.Entity.GetType().GetProperty("CreatedDate");
+            updatedAtProp = entry.Entity.GetType().GetProperty("ModifiedDate");
 
             if (entry.State == EntityState.Added)
             {
