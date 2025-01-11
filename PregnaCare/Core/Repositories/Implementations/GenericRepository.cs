@@ -12,13 +12,13 @@ namespace PregnaCare.Core.Repositories.Implementations
     /// <typeparam name="TKey"></typeparam>
     public class GenericRepository<T, TKey> : IGenericRepository<T, TKey> where T : class
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly PregnaCareAppDbContext _pregnaCareAppDbContext;
         private readonly DbSet<T> _dbSet;
 
-        public GenericRepository(ApplicationDbContext applicationDbContext)
+        public GenericRepository(PregnaCareAppDbContext pregnaCareAppDbContext)
         {
-            _applicationDbContext = applicationDbContext;
-            _dbSet = applicationDbContext.Set<T>();
+            _pregnaCareAppDbContext = pregnaCareAppDbContext;
+            _dbSet = _pregnaCareAppDbContext.Set<T>();
         }
 
         public async Task AddAsync(T entity)

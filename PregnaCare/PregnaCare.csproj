@@ -19,8 +19,6 @@
 
   <ItemGroup>
     <Folder Include="Api\Controllers\" />
-    <Folder Include="Core\Entities\" />
-    <Folder Include="Common\" />
     <Folder Include="Api\" />
     <Folder Include="Utils\" />
   </ItemGroup>

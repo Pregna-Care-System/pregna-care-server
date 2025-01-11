@@ -19,7 +19,7 @@ namespace PregnaCare
             var applicationDbConnection = builder.Configuration["ConnectionStrings:ApplicationDbConnection"];
             // Add services to the container.
 
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(applicationDbConnection));
+            builder.Services.AddDbContext<PregnaCareAppDbContext>(options => options.UseSqlServer(applicationDbConnection));
             builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(authDbConnection));
 
             builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));

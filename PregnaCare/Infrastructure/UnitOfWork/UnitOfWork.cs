@@ -9,16 +9,16 @@ namespace PregnaCare.Infrastructure.UnitOfWork
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly ApplicationDbContext _applicationDbContext;
+        private readonly PregnaCareAppDbContext _pregnaCareAppDbContext;
         private readonly Dictionary<Type, object> _repositories;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="applicationDbContext"></param>
-        public UnitOfWork(ApplicationDbContext applicationDbContext)
+        public UnitOfWork(PregnaCareAppDbContext pregnaCareAppDbContext)
         {
-            _applicationDbContext = applicationDbContext;
+            _pregnaCareAppDbContext = pregnaCareAppDbContext;
             _repositories = new();
         }
 
@@ -27,7 +27,7 @@ namespace PregnaCare.Infrastructure.UnitOfWork
         /// </summary>
         public void Dispose()
         {
-            _applicationDbContext.Dispose();
+            _pregnaCareAppDbContext.Dispose();
         }
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace PregnaCare.Infrastructure.UnitOfWork
             if (!_repositories.ContainsKey(type))
             {
                 var repositoryType = typeof(GenericRepository<,>).MakeGenericType(type, typeof(TKey));
-                var repositoryInstance = Activator.CreateInstance(repositoryType, _applicationDbContext);
+                var repositoryInstance = Activator.CreateInstance(repositoryType, _pregnaCareAppDbContext);
                 _repositories[type] = repositoryInstance;
             }
 
@@ -56,7 +56,7 @@ namespace PregnaCare.Infrastructure.UnitOfWork
         /// <returns></returns>
         public async Task SaveChangesAsync()
         {
-            await _applicationDbContext.SaveChangesAsync();
+            await _pregnaCareAppDbContext.SaveChangesAsync();
         }
     }
 }
