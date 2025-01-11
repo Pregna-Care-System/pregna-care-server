@@ -10,7 +10,7 @@ namespace PregnaCare
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -38,12 +38,15 @@ namespace PregnaCare
 
             var app = builder.Build();
 
+            // Migrate, Seed data
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 var authDbContext = services.GetRequiredService<AuthDbContext>();
 
                 authDbContext.Database.Migrate();
+
+                await SeedData.InitializeAsync(services);
             }
 
             // Configure the HTTP request pipeline.
