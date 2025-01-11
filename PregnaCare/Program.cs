@@ -5,6 +5,8 @@ using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
 using PregnaCare.Infrastructure.UnitOfWork;
+using PregnaCare.Services.Implementations;
+using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare
 {
@@ -22,8 +24,11 @@ namespace PregnaCare
             builder.Services.AddDbContext<PregnaCareAppDbContext>(options => options.UseSqlServer(applicationDbConnection));
             builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(authDbConnection));
 
+            builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             // Config identity
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using PregnaCare.Core.Models;
 
@@ -341,6 +342,50 @@ public partial class PregnaCareAppDbContext : DbContext
         });
 
         OnModelCreatingPartial(modelBuilder);
+    }
+
+    private void UpdateTimestamps()
+    {
+        var entries = ChangeTracker.Entries().Where(x => x.State == EntityState.Modified || x.State == EntityState.Added);
+        PropertyInfo createdAtProp = null;
+        PropertyInfo updatedAtProp = null;
+        foreach (var entry in entries)
+        {
+            createdAtProp = entry.Entity.GetType().GetProperty("CreatedAt");
+            updatedAtProp = entry.Entity.GetType().GetProperty("UpdatedAt");
+
+            if (entry.State == EntityState.Added)
+            {
+                if (createdAtProp != null && createdAtProp.CanWrite)
+                {
+                    createdAtProp.SetValue(entry.Entity, DateTime.Now);
+                }
+
+                if (updatedAtProp != null && updatedAtProp.CanWrite)
+                {
+                    updatedAtProp.SetValue(entry.Entity, DateTime.Now);
+                }
+            }
+            else
+            {
+                if (updatedAtProp != null && updatedAtProp.CanWrite)
+                {
+                    updatedAtProp.SetValue(entry.Entity, DateTime.Now);
+                }
+            }
+        }
+    }
+
+    public override int SaveChanges()
+    {
+        UpdateTimestamps();
+        return base.SaveChanges();
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        UpdateTimestamps();
+        return base.SaveChangesAsync(cancellationToken);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
