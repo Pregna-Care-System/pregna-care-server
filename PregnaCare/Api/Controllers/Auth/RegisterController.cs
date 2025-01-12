@@ -25,7 +25,8 @@ namespace PregnaCare.Api.Controllers.Auth
         }
 
         [HttpPost]
-        public async Task<RegisterResponse> Exec([FromBody] RegisterRequest request) {
+        public async Task<RegisterResponse> Exec([FromBody] RegisterRequest request)
+        {
             var response = await _authService.RegisterAsync(request);
             return response;
         }
