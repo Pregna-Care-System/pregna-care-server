@@ -38,8 +38,7 @@ namespace PregnaCare.Core.Repositories.Implementations
         /// <returns></returns>
         public async Task RegisterAsync(UserAccount userAccount, IdentityUser identityUser, string password, string roleName)
         {
-            await _userManager.AddPasswordAsync(identityUser, password);
-            await _userManager.CreateAsync(identityUser);
+            await _userManager.CreateAsync(identityUser, password);
             await _userManager.AddToRoleAsync(identityUser, roleName);
             await _pregnaCareAppDbContext.UserAccounts.AddAsync(userAccount);
 
