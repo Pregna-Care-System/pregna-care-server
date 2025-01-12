@@ -29,6 +29,12 @@ namespace PregnaCare.Middlewares
                     var audience = Environment.GetEnvironmentVariable("AUDIENCE");
                     var secretKey = Environment.GetEnvironmentVariable("SECRET_KEY");
 
+
+                    if (string.IsNullOrEmpty(issuer) || string.IsNullOrEmpty(audience) || string.IsNullOrEmpty(secretKey))
+                    {
+                        throw new ArgumentException("Issuer, Audience, or SecretKey is not provided.");
+                    }
+
                     var validationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,

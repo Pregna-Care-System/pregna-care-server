@@ -9,5 +9,6 @@ namespace PregnaCare.Common.Api
     /// <typeparam name="TRsponse"></typeparam>
     public abstract class AbstractApiController<TRequest, TRsponse> : ControllerBase
     {
+        public abstract Task<TRsponse> Exec(TRequest request);
     }
 }
