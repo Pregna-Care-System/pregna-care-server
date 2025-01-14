@@ -5,11 +5,11 @@ namespace PregnaCare.Core.Models;
 
 public partial class AlertAction
 {
-    public int AlertActionId { get; set; }
+    public int Id { get; set; }
 
-    public int AlertId { get; set; }
+    public int? GrowthAlertId { get; set; }
 
-    public DateOnly ActionDate { get; set; }
+    public DateTime? ActionDate { get; set; }
 
     public string PerformedBy { get; set; }
 
@@ -17,5 +17,5 @@ public partial class AlertAction
 
     public string ActionDetail { get; set; }
 
-    public virtual GrowthAlert Alert { get; set; }
+    public virtual GrowthAlert GrowthAlert { get; set; }
 }

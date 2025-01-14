@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using PregnaCare.Core.Models;
 
@@ -23,19 +22,19 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public virtual DbSet<Comment> Comments { get; set; }
 
+    public virtual DbSet<Feature> Features { get; set; }
+
+    public virtual DbSet<FetalGrowthRecord> FetalGrowthRecords { get; set; }
+
+    public virtual DbSet<FetalStandard> FetalStandards { get; set; }
+
     public virtual DbSet<GrowthAlert> GrowthAlerts { get; set; }
 
     public virtual DbSet<GrowthMetric> GrowthMetrics { get; set; }
 
-    public virtual DbSet<GrowthStandard> GrowthStandards { get; set; }
-
     public virtual DbSet<MembershipPlan> MembershipPlans { get; set; }
 
-    public virtual DbSet<MembershipPlanHistory> MembershipPlanHistories { get; set; }
-
     public virtual DbSet<Notification> Notifications { get; set; }
-
-    public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<PregnancyRecord> PregnancyRecords { get; set; }
 
@@ -43,349 +42,268 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public virtual DbSet<ReminderType> ReminderTypes { get; set; }
 
-    public virtual DbSet<UserAccount> UserAccounts { get; set; }
+    public virtual DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<AlertAction>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__AlertAct__3214EC07373E8697");
+
             entity.ToTable("AlertAction");
 
-            entity.Property(e => e.AlertActionId).HasColumnName("AlertActionID");
-            entity.Property(e => e.ActionType)
-                .IsRequired()
-                .HasMaxLength(50);
-            entity.Property(e => e.AlertId).HasColumnName("AlertID");
-            entity.Property(e => e.PerformedBy)
-                .IsRequired()
-                .HasMaxLength(50);
+            entity.Property(e => e.ActionDate).HasColumnType("datetime");
+            entity.Property(e => e.ActionType).HasMaxLength(50);
+            entity.Property(e => e.PerformedBy).HasMaxLength(50);
 
-            entity.HasOne(d => d.Alert).WithMany(p => p.AlertActions)
-                .HasForeignKey(d => d.AlertId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+            entity.HasOne(d => d.GrowthAlert).WithMany(p => p.AlertActions)
+                .HasForeignKey(d => d.GrowthAlertId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_AlertAction_GrowthAlert");
         });
 
         modelBuilder.Entity<Blog>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__Blog__3214EC07E7888D34");
+
             entity.ToTable("Blog");
 
-            entity.Property(e => e.BlogId).HasColumnName("BlogID");
-            entity.Property(e => e.AuthorId).HasColumnName("AuthorID");
-            entity.Property(e => e.PageTitle).HasMaxLength(50);
-            entity.Property(e => e.PublishedDate).HasColumnType("datetime");
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Heading).HasMaxLength(100);
+            entity.Property(e => e.PageTitle).HasMaxLength(100);
             entity.Property(e => e.ShortDescription).HasMaxLength(100);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
-            entity.HasOne(d => d.Author).WithMany(p => p.Blogs)
-                .HasForeignKey(d => d.AuthorId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Blog_UserAccount");
+            entity.HasOne(d => d.User).WithMany(p => p.Blogs)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Blog_User");
         });
 
         modelBuilder.Entity<Comment>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__Comment__3214EC073603D185");
+
             entity.ToTable("Comment");
 
-            entity.Property(e => e.CommentId).HasColumnName("CommentID");
-            entity.Property(e => e.BlogId).HasColumnName("BlogID");
-            entity.Property(e => e.CommentDate).HasColumnType("datetime");
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
-            entity.Property(e => e.UserAccountId).HasColumnName("UserAccountID");
 
             entity.HasOne(d => d.Blog).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.BlogId)
                 .HasConstraintName("FK_Comment_Blog");
 
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.Comments)
-                .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK_Comment_UserAccount");
+            entity.HasOne(d => d.ParentComment).WithMany(p => p.InverseParentComment)
+                .HasForeignKey(d => d.ParentCommentId)
+                .HasConstraintName("FK_Comment_Parent");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Comments)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_Comment_User");
+        });
+
+        modelBuilder.Entity<Feature>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Feature__3214EC07031F9225");
+
+            entity.ToTable("Feature");
+
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(100);
+            entity.Property(e => e.FeatureName).HasMaxLength(50);
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<FetalGrowthRecord>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__FetalGro__3214EC07428B364C");
+
+            entity.ToTable("FetalGrowthRecord");
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+            entity.HasOne(d => d.GrowthMetric).WithMany(p => p.FetalGrowthRecords)
+                .HasForeignKey(d => d.GrowthMetricId)
+                .HasConstraintName("FK_FetalGrowthRecord_GrowthMetric");
+
+            entity.HasOne(d => d.PregnancyRecord).WithMany(p => p.FetalGrowthRecords)
+                .HasForeignKey(d => d.PregnancyRecordId)
+                .HasConstraintName("FK_FetalGrowthRecord_PregnancyRecord");
+        });
+
+        modelBuilder.Entity<FetalStandard>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__FetalSta__3214EC07FBE9B431");
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Source).HasMaxLength(255);
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+
+            entity.HasOne(d => d.GrowthMetric).WithMany(p => p.FetalStandards)
+                .HasForeignKey(d => d.GrowthMetricId)
+                .HasConstraintName("FK_FetalStandards_GrowthMetric");
         });
 
         modelBuilder.Entity<GrowthAlert>(entity =>
         {
-            entity.HasKey(e => e.AlertId);
+            entity.HasKey(e => e.Id).HasName("PK__GrowthAl__3214EC0757CFD069");
 
             entity.ToTable("GrowthAlert");
 
-            entity.Property(e => e.AlertId).HasColumnName("AlertID");
-            entity.Property(e => e.CreatedBy)
-                .IsRequired()
-                .HasMaxLength(50);
-            entity.Property(e => e.GrowthMetricId).HasColumnName("GrowthMetricID");
-            entity.Property(e => e.IsResolved).HasDefaultValue(false);
-            entity.Property(e => e.Issue).IsRequired();
-            entity.Property(e => e.Severity)
-                .IsRequired()
-                .HasMaxLength(50);
-            entity.Property(e => e.UserAccountId).HasColumnName("UserAccountID");
+            entity.Property(e => e.AlertDate).HasColumnType("datetime");
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
             entity.HasOne(d => d.GrowthMetric).WithMany(p => p.GrowthAlerts)
                 .HasForeignKey(d => d.GrowthMetricId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_GrowthAlert_GrowthMetric");
 
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.GrowthAlerts)
-                .HasForeignKey(d => d.UserAccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_GrowthAlert_UserAccount");
+            entity.HasOne(d => d.User).WithMany(p => p.GrowthAlerts)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_GrowthAlert_User");
         });
 
         modelBuilder.Entity<GrowthMetric>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__GrowthMe__3214EC07FEC1570D");
+
             entity.ToTable("GrowthMetric");
 
-            entity.Property(e => e.GrowthMetricId).HasColumnName("GrowthMetricID");
-            entity.Property(e => e.AmnioticFluidVolume).HasColumnType("decimal(5, 2)");
-            entity.Property(e => e.FetalHeight).HasColumnType("decimal(5, 2)");
-            entity.Property(e => e.FetalMovement)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.FetalStructuralAbnormalities)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.FetalWeight).HasColumnType("decimal(5, 2)");
-            entity.Property(e => e.GestationalDiabetes)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.MaternalBloodGlucose).HasColumnType("decimal(5, 2)");
-            entity.Property(e => e.MaternalBloodPressure)
-                .HasMaxLength(7)
-                .IsUnicode(false);
-            entity.Property(e => e.MaternalWeightGain).HasColumnType("decimal(5, 2)");
-            entity.Property(e => e.Position)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.PreEclampsia)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.PregnancyRecordId).HasColumnName("PregnancyRecordID");
-            entity.Property(e => e.PregnancyStatus).HasMaxLength(50);
-
-            entity.HasOne(d => d.PregnancyRecord).WithMany(p => p.GrowthMetrics)
-                .HasForeignKey(d => d.PregnancyRecordId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_GrowthMetric_PregnancyRecord");
-        });
-
-        modelBuilder.Entity<GrowthStandard>(entity =>
-        {
-            entity.ToTable("GrowthStandard");
-
-            entity.Property(e => e.GrowthStandardId).HasColumnName("GrowthStandardID");
-            entity.Property(e => e.Category)
-                .HasMaxLength(20)
-                .IsUnicode(false);
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-            entity.Property(e => e.Indicator)
-                .HasMaxLength(255)
-                .IsUnicode(false);
-            entity.Property(e => e.MaxStandard).HasColumnType("decimal(5, 2)");
-            entity.Property(e => e.MinStandard).HasColumnType("decimal(5, 2)");
-            entity.Property(e => e.ModifiedBy).HasMaxLength(100);
-            entity.Property(e => e.Unit)
-                .HasMaxLength(20)
-                .IsUnicode(false);
+            entity.Property(e => e.Name).HasMaxLength(255);
+            entity.Property(e => e.Unit).HasMaxLength(50);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
-            entity.Property(e => e.WarningMessage)
-                .HasMaxLength(255)
-                .IsUnicode(false);
         });
 
         modelBuilder.Entity<MembershipPlan>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__Membersh__3214EC071BCB4FB1");
+
             entity.ToTable("MembershipPlan");
 
-            entity.Property(e => e.MembershipPlanId).HasColumnName("MembershipPlanID");
-            entity.Property(e => e.PlanName).HasMaxLength(50);
-        });
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(100);
+            entity.Property(e => e.PlanName).HasMaxLength(100);
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
-        modelBuilder.Entity<MembershipPlanHistory>(entity =>
-        {
-            entity.HasKey(e => e.PlanHistoryId);
-
-            entity.ToTable("MembershipPlanHistory");
-
-            entity.Property(e => e.PlanHistoryId).HasColumnName("PlanHistoryID");
-            entity.Property(e => e.CreatedBy).HasMaxLength(50);
-            entity.Property(e => e.ExpiryDate).HasColumnType("datetime");
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.LastModified).HasColumnType("datetime");
-            entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
-            entity.Property(e => e.PlanId).HasColumnName("PlanID");
-            entity.Property(e => e.PurchaseDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.UserAccountId).HasColumnName("UserAccountID");
-
-            entity.HasOne(d => d.Payment).WithMany(p => p.MembershipPlanHistories)
-                .HasForeignKey(d => d.PaymentId)
-                .HasConstraintName("FK_MembershipPlanHistory_Payment");
-
-            entity.HasOne(d => d.Plan).WithMany(p => p.MembershipPlanHistories)
-                .HasForeignKey(d => d.PlanId)
-                .HasConstraintName("FK_MembershipPlanHistory_MembershipPlan");
-
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.MembershipPlanHistories)
-                .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK_MembershipPlanHistory_UserAccount");
+            entity.HasMany(d => d.Features).WithMany(p => p.MembershipPlans)
+                .UsingEntity<Dictionary<string, object>>(
+                    "MembershipPlanFeature",
+                    r => r.HasOne<Feature>().WithMany()
+                        .HasForeignKey("FeatureId")
+                        .HasConstraintName("FK_MembershipPlanFeature_Feature"),
+                    l => l.HasOne<MembershipPlan>().WithMany()
+                        .HasForeignKey("MembershipPlanId")
+                        .HasConstraintName("FK_MembershipPlanFeature_MembershipPlan"),
+                    j =>
+                    {
+                        j.HasKey("MembershipPlanId", "FeatureId").HasName("PK__Membersh__06667B0AD66A8B61");
+                        j.ToTable("MembershipPlanFeature");
+                    });
         });
 
         modelBuilder.Entity<Notification>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC07022CBD3B");
+
             entity.ToTable("Notification");
 
-            entity.Property(e => e.NotificationId).HasColumnName("NotificationID");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
-            entity.Property(e => e.ReadAt).HasColumnType("datetime");
-            entity.Property(e => e.ReminderId).HasColumnName("ReminderID");
-            entity.Property(e => e.SentAt).HasColumnType("datetime");
             entity.Property(e => e.Status).HasMaxLength(10);
-            entity.Property(e => e.Title).HasMaxLength(50);
+            entity.Property(e => e.Title).HasMaxLength(100);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
             entity.HasOne(d => d.Reminder).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.ReminderId)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Notification_Reminder");
-        });
-
-        modelBuilder.Entity<Payment>(entity =>
-        {
-            entity.ToTable("Payment");
-
-            entity.Property(e => e.PaymentId).HasColumnName("PaymentID");
-            entity.Property(e => e.PaymentDateTime).HasColumnType("datetime");
-            entity.Property(e => e.PaymentMethod)
-                .IsRequired()
-                .HasMaxLength(50);
-            entity.Property(e => e.PaymentStatus)
-                .IsRequired()
-                .HasMaxLength(50);
-            entity.Property(e => e.UserAccountId).HasColumnName("UserAccountID");
-
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.UserAccountId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Payment_UserAccount");
         });
 
         modelBuilder.Entity<PregnancyRecord>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__Pregnanc__3214EC0788997951");
+
             entity.ToTable("PregnancyRecord");
 
-            entity.Property(e => e.PregnancyRecordId).HasColumnName("PregnancyRecordID");
-            entity.Property(e => e.BabyName).HasMaxLength(50);
-            entity.Property(e => e.ContactPhone).HasMaxLength(15);
-            entity.Property(e => e.FatherName).HasMaxLength(50);
-            entity.Property(e => e.LastUpdated)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.MotherName).HasMaxLength(50);
-            entity.Property(e => e.PregnancyType).HasMaxLength(50);
-            entity.Property(e => e.UserAccountId).HasColumnName("UserAccountID");
+            entity.Property(e => e.BabyGender)
+                .IsRequired()
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.BabyName)
+                .IsRequired()
+                .HasMaxLength(50);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.ImageUrl).HasMaxLength(255);
+            entity.Property(e => e.MotherBloodType)
+                .HasMaxLength(3)
+                .IsUnicode(false)
+                .IsFixedLength();
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
 
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.PregnancyRecords)
-                .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK_PregnancyRecord_UserAccount");
+            entity.HasOne(d => d.User).WithMany(p => p.PregnancyRecords)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_PregnancyRecord_User");
         });
 
         modelBuilder.Entity<Reminder>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC078C37188D");
+
             entity.ToTable("Reminder");
 
-            entity.Property(e => e.ReminderId).HasColumnName("ReminderID");
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.ReminderDate).HasColumnType("datetime");
-            entity.Property(e => e.ReminderTypeId).HasColumnName("ReminderTypeID");
-            entity.Property(e => e.Status)
-                .IsRequired()
-                .HasMaxLength(10);
-            entity.Property(e => e.Title)
-                .IsRequired()
-                .HasMaxLength(50);
+            entity.Property(e => e.Status).HasMaxLength(10);
+            entity.Property(e => e.Title).HasMaxLength(100);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
-            entity.Property(e => e.UserAccountId).HasColumnName("UserAccountID");
 
             entity.HasOne(d => d.ReminderType).WithMany(p => p.Reminders)
                 .HasForeignKey(d => d.ReminderTypeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK_Reminder_ReminderType");
 
-            entity.HasOne(d => d.UserAccount).WithMany(p => p.Reminders)
-                .HasForeignKey(d => d.UserAccountId)
-                .HasConstraintName("FK_Reminder_UserAccount");
+            entity.HasOne(d => d.User).WithMany(p => p.Reminders)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_Reminder_User");
         });
 
         modelBuilder.Entity<ReminderType>(entity =>
         {
+            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC073C7583A3");
+
             entity.ToTable("ReminderType");
 
-            entity.Property(e => e.ReminderTypeId).HasColumnName("ReminderTypeID");
-            entity.Property(e => e.TypeName).HasMaxLength(50);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.TypeName).HasMaxLength(100);
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
         });
 
-        modelBuilder.Entity<UserAccount>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
-            entity.ToTable("UserAccount");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC0773126B02");
 
-            entity.Property(e => e.UserAccountId).HasColumnName("UserAccountID");
-            entity.Property(e => e.CreatedBy).HasMaxLength(50);
-            entity.Property(e => e.CreatedDate).HasColumnType("datetime");
-            entity.Property(e => e.FullName)
-                .IsRequired()
-                .HasMaxLength(100);
-            entity.Property(e => e.ModifiedBy).HasMaxLength(50);
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.UserName)
-                .IsRequired()
-                .HasMaxLength(50);
+            entity.ToTable("User");
+
+            entity.Property(e => e.Address).HasMaxLength(100);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Email).HasMaxLength(40);
+            entity.Property(e => e.FullName).HasMaxLength(60);
+            entity.Property(e => e.Gender).HasMaxLength(10);
+            entity.Property(e => e.PhoneNumber).HasMaxLength(10);
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
         });
 
         OnModelCreatingPartial(modelBuilder);
-    }
-
-    private void UpdateTimestamps()
-    {
-        var entries = ChangeTracker.Entries().Where(x => x.State == EntityState.Modified || x.State == EntityState.Added);
-        PropertyInfo createdAtProp = null;
-        PropertyInfo updatedAtProp = null;
-        foreach (var entry in entries)
-        {
-            createdAtProp = entry.Entity.GetType().GetProperty("CreatedDate");
-            updatedAtProp = entry.Entity.GetType().GetProperty("ModifiedDate");
-
-            if (entry.State == EntityState.Added)
-            {
-                if (createdAtProp != null && createdAtProp.CanWrite)
-                {
-                    createdAtProp.SetValue(entry.Entity, DateTime.Now);
-                }
-
-                if (updatedAtProp != null && updatedAtProp.CanWrite)
-                {
-                    updatedAtProp.SetValue(entry.Entity, DateTime.Now);
-                }
-            }
-            else
-            {
-                if (updatedAtProp != null && updatedAtProp.CanWrite)
-                {
-                    updatedAtProp.SetValue(entry.Entity, DateTime.Now);
-                }
-            }
-        }
-    }
-
-    public override int SaveChanges()
-    {
-        UpdateTimestamps();
-        return base.SaveChanges();
-    }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        UpdateTimestamps();
-        return base.SaveChangesAsync(cancellationToken);
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

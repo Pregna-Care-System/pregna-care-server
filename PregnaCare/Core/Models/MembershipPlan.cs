@@ -5,7 +5,7 @@ namespace PregnaCare.Core.Models;
 
 public partial class MembershipPlan
 {
-    public int MembershipPlanId { get; set; }
+    public int Id { get; set; }
 
     public string PlanName { get; set; }
 
@@ -15,5 +15,9 @@ public partial class MembershipPlan
 
     public string Description { get; set; }
 
-    public virtual ICollection<MembershipPlanHistory> MembershipPlanHistories { get; set; } = new List<MembershipPlanHistory>();
+    public DateTime? CreatedAt { get; set; }
+
+    public DateTime? UpdatedAt { get; set; }
+
+    public virtual ICollection<Feature> Features { get; set; } = new List<Feature>();
 }

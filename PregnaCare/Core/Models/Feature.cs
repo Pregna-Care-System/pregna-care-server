@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace PregnaCare.Core.Models;
 
-public partial class ReminderType
+public partial class Feature
 {
     public int Id { get; set; }
 
-    public string TypeName { get; set; }
+    public string FeatureName { get; set; }
 
     public string Description { get; set; }
 
@@ -15,5 +15,5 @@ public partial class ReminderType
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<Reminder> Reminders { get; set; } = new List<Reminder>();
+    public virtual ICollection<MembershipPlan> MembershipPlans { get; set; } = new List<MembershipPlan>();
 }

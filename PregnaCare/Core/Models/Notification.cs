@@ -5,7 +5,7 @@ namespace PregnaCare.Core.Models;
 
 public partial class Notification
 {
-    public int NotificationId { get; set; }
+    public int Id { get; set; }
 
     public int? ReminderId { get; set; }
 
@@ -14,10 +14,6 @@ public partial class Notification
     public string Message { get; set; }
 
     public string Status { get; set; }
-
-    public DateTime? SentAt { get; set; }
-
-    public DateTime? ReadAt { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

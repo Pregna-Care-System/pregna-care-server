@@ -5,29 +5,35 @@ namespace PregnaCare.Core.Models;
 
 public partial class PregnancyRecord
 {
-    public int PregnancyRecordId { get; set; }
-
-    public int? UserAccountId { get; set; }
+    public int Id { get; set; }
 
     public string BabyName { get; set; }
 
-    public string MotherName { get; set; }
+    public DateOnly PregnancyStartDate { get; set; }
 
-    public string FatherName { get; set; }
+    public DateOnly ExpectedDueDate { get; set; }
 
-    public string ContactPhone { get; set; }
+    public int CurrentWeek { get; set; }
 
-    public DateOnly StartDate { get; set; }
+    public string BabyGender { get; set; }
 
-    public DateOnly DueDate { get; set; }
+    public int MotherAge { get; set; }
 
-    public int? WeeksPregnant { get; set; }
+    public string MotherBloodType { get; set; }
 
-    public string PregnancyType { get; set; }
+    public double? MotherWeightBeforePregnancy { get; set; }
 
-    public DateTime? LastUpdated { get; set; }
+    public string HealthConditions { get; set; }
 
-    public virtual ICollection<GrowthMetric> GrowthMetrics { get; set; } = new List<GrowthMetric>();
+    public string ImageUrl { get; set; }
 
-    public virtual UserAccount UserAccount { get; set; }
+    public DateTime CreatedAt { get; set; }
+
+    public DateTime UpdatedAt { get; set; }
+
+    public int? UserId { get; set; }
+
+    public virtual ICollection<FetalGrowthRecord> FetalGrowthRecords { get; set; } = new List<FetalGrowthRecord>();
+
+    public virtual User User { get; set; }
 }

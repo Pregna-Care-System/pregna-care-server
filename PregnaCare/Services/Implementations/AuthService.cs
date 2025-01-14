@@ -158,10 +158,10 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            var userAccount = new UserAccount
+            var userAccount = new User
             {
                 FullName = request.FullName,
-                UserName = request.Email,
+                Email = request.Email,
             };
 
             var identityUser = new IdentityUser
