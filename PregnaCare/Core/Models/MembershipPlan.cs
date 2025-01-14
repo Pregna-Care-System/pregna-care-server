@@ -19,5 +19,7 @@ public partial class MembershipPlan
 
     public DateTime? UpdatedAt { get; set; }
 
+    public virtual ICollection<UserMembershipPlan> UserMembershipPlans { get; set; } = new List<UserMembershipPlan>();
+
     public virtual ICollection<Feature> Features { get; set; } = new List<Feature>();
 }
