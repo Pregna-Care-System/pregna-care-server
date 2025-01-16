@@ -68,6 +68,17 @@ namespace PregnaCare.Services.Implementations
                     Message = Messages.GetMessageById(Messages.E00001)
                 });
             }
+            var isConfirm = (await _userManager.IsEmailConfirmedAsync(identityUser));
+            if (!isConfirm)
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.Password),
+                    Value = request.Password,
+                    MessageId = Messages.E00003,
+                    Message = Messages.GetMessageById(Messages.E00003)
+                });
+            }
 
             if (detailErrorList.Any())
             {
