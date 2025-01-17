@@ -73,8 +73,8 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(request.Password),
-                    Value = request.Password,
+                    FieldName = nameof(request.Email),
+                    Value = request.Email,
                     MessageId = Messages.E00003,
                     Message = Messages.GetMessageById(Messages.E00003)
                 });
@@ -106,6 +106,70 @@ namespace PregnaCare.Services.Implementations
             return response;
         }
 
+        public async Task<LoginResponse> LoginGoogleAsync(LoginRequest request)
+        {
+            var response = new LoginResponse();
+            var detailErrorList = new List<DetailError>();
+
+            var identityUser = await _userManager.FindByEmailAsync(request.Email);
+            if (identityUser == null)
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.Email),
+                    Value = request.Email,
+                    MessageId = Messages.E00002,
+                    Message = Messages.GetMessageById(Messages.E00002)
+                });
+            }
+
+            var roleName = (await _userManager.GetRolesAsync(identityUser)).FirstOrDefault();
+            if (string.IsNullOrEmpty(roleName))
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.Password),
+                    Value = request.Password,
+                    MessageId = Messages.E00001,
+                    Message = Messages.GetMessageById(Messages.E00001)
+                });
+            }
+            var isConfirm = (await _userManager.IsEmailConfirmedAsync(identityUser));
+            if (!isConfirm)
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.Email),
+                    Value = request.Email,
+                    MessageId = Messages.E00003,
+                    Message = Messages.GetMessageById(Messages.E00003)
+                });
+            }
+
+            if (detailErrorList.Any())
+            {
+                response.Success = false;
+                response.MessageId = Messages.E00002;
+                response.Message = Messages.GetMessageById(Messages.E00002);
+                response.DetailErrorList = detailErrorList;
+                return response;
+            }
+            var accessToken = _tokenService.GenerateToken(identityUser, roleName, TokenTypeEnum.AccessToken.ToString());
+
+            var refreshToken = await _userManager.GetAuthenticationTokenAsync(identityUser, LoginProviderEnum.InternalProvider.ToString(), TokenTypeEnum.RefreshToken.ToString());
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                refreshToken = _tokenService.GenerateToken(identityUser, roleName, TokenTypeEnum.RefreshToken.ToString());
+
+                await _userManager.SetAuthenticationTokenAsync(identityUser, LoginProviderEnum.InternalProvider.ToString(), TokenTypeEnum.RefreshToken.ToString(), refreshToken);
+            }
+
+            response.Success = true;
+            response.MessageId = Messages.I00001;
+            response.Message = Messages.GetMessageById(Messages.I00001);
+            response.Response = new Token { RefreshToken = refreshToken, AccessToken = accessToken };
+            return response;
+        }
         /// <summary>
         /// RegisterAsync
         /// </summary>

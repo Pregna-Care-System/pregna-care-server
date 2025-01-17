@@ -30,5 +30,12 @@ namespace PregnaCare.Api.Controllers.Auth
             var response = await _authService.LoginAsync(request);
             return response;
         }
+
+        [HttpPost("Google")]
+        public async Task<LoginResponse> LoginGoogle([FromBody] LoginRequest request)
+        {
+            var response = await _authService.LoginGoogleAsync(request);
+            return response;
+        }
     }
 }
