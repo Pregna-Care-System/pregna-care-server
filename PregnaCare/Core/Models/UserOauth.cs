@@ -11,7 +11,7 @@ public partial class UserOauth
 
     public int OauthProviderId { get; set; }
 
-    public string OauthToken { get; set; }
+    public string OauthToken { get; set; } = string.Empty;
 
     public DateTime OauthTokenExpiry { get; set; }
 

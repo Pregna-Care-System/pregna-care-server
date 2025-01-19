@@ -9,7 +9,7 @@ public partial class JwtToken
 
     public int UserId { get; set; }
 
-    public string RefreshToken { get; set; }
+    public string RefreshToken { get; set; } = string.Empty;
 
     public DateTime? CreatedAt { get; set; }
 

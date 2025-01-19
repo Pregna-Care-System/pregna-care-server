@@ -15,7 +15,7 @@ public partial class FetalGrowthRecord
 
     public double Value { get; set; }
 
-    public string Note { get; set; }
+    public string Note { get; set; } = string.Empty;
 
     public DateTime? CreatedAt { get; set; }
 

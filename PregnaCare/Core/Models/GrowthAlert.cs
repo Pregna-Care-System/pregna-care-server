@@ -15,11 +15,11 @@ public partial class GrowthAlert
 
     public DateTime AlertDate { get; set; }
 
-    public string Issue { get; set; }
+    public string Issue { get; set; } = string.Empty;
 
-    public string Severity { get; set; }
+    public string Severity { get; set; } = string.Empty;
 
-    public string Recommendation { get; set; }
+    public string Recommendation { get; set; } = string.Empty;
 
     public bool? IsResolved { get; set; }
 

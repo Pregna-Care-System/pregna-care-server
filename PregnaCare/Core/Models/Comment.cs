@@ -13,7 +13,7 @@ public partial class Comment
 
     public int? ParentCommentId { get; set; }
 
-    public string CommentText { get; set; }
+    public string CommentText { get; set; } = string.Empty;
 
     public DateTime? CreatedAt { get; set; }
 
