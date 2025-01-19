@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace PregnaCare.Core.Models;
 
-public partial class Feature
+public partial class Role
 {
     public int Id { get; set; }
 
-    public string FeatureName { get; set; }
+    public string RoleName { get; set; }
 
     public string Description { get; set; }
 
@@ -17,7 +17,5 @@ public partial class Feature
 
     public bool? IsDeleted { get; set; }
 
-    public virtual ICollection<MembershipPlanFeature> MembershipPlanFeatures { get; set; } = new List<MembershipPlanFeature>();
-
-    public virtual ICollection<UserFeature> UserFeatures { get; set; } = new List<UserFeature>();
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

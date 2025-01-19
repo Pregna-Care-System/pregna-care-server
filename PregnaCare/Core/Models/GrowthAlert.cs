@@ -7,13 +7,13 @@ public partial class GrowthAlert
 {
     public int Id { get; set; }
 
-    public int? GrowthMetricId { get; set; }
+    public int GrowthMetricId { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
-    public int? Week { get; set; }
+    public int Week { get; set; }
 
-    public DateTime? AlertDate { get; set; }
+    public DateTime AlertDate { get; set; }
 
     public string Issue { get; set; }
 
@@ -27,7 +27,7 @@ public partial class GrowthAlert
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<AlertAction> AlertActions { get; set; } = new List<AlertAction>();
+    public bool? IsDeleted { get; set; }
 
     public virtual GrowthMetric GrowthMetric { get; set; }
 

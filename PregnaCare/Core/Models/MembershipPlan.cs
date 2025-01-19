@@ -9,9 +9,9 @@ public partial class MembershipPlan
 
     public string PlanName { get; set; }
 
-    public double? Price { get; set; }
+    public double Price { get; set; }
 
-    public int? Duration { get; set; }
+    public int Duration { get; set; }
 
     public string Description { get; set; }
 
@@ -19,7 +19,7 @@ public partial class MembershipPlan
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<UserMembershipPlan> UserMembershipPlans { get; set; } = new List<UserMembershipPlan>();
+    public bool? IsDeleted { get; set; }
 
-    public virtual ICollection<Feature> Features { get; set; } = new List<Feature>();
+    public virtual ICollection<MembershipPlanFeature> MembershipPlanFeatures { get; set; } = new List<MembershipPlanFeature>();
 }

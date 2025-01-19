@@ -13,13 +13,19 @@ public partial class GrowthMetric
 
     public string Description { get; set; }
 
+    public double? MinValue { get; set; }
+
+    public double? MaxValue { get; set; }
+
+    public int? Week { get; set; }
+
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<FetalGrowthRecord> FetalGrowthRecords { get; set; } = new List<FetalGrowthRecord>();
+    public bool? IsDeleted { get; set; }
 
-    public virtual ICollection<FetalStandard> FetalStandards { get; set; } = new List<FetalStandard>();
+    public virtual ICollection<FetalGrowthRecord> FetalGrowthRecords { get; set; } = new List<FetalGrowthRecord>();
 
     public virtual ICollection<GrowthAlert> GrowthAlerts { get; set; } = new List<GrowthAlert>();
 }

@@ -7,7 +7,7 @@ public partial class Blog
 {
     public int Id { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
     public string PageTitle { get; set; }
 
@@ -28,6 +28,10 @@ public partial class Blog
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+
+    public bool? IsDeleted { get; set; }
+
+    public virtual ICollection<BlogTag> BlogTags { get; set; } = new List<BlogTag>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using PregnaCare.Common.Enums;
 using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
@@ -26,10 +25,9 @@ namespace PregnaCare
             // Get connection string
             var authDbConnection = builder.Configuration["ConnectionStrings:AuthDbConnection"];
             var applicationDbConnection = builder.Configuration["ConnectionStrings:ApplicationDbConnection"];
-            // Add services to the container.
 
+            // Add services to the container.
             builder.Services.AddDbContext<PregnaCareAppDbContext>(options => options.UseSqlServer(applicationDbConnection));
-            builder.Services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(authDbConnection));
 
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
@@ -41,21 +39,23 @@ namespace PregnaCare
 
             // Config identity
             builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                            .AddEntityFrameworkStores<AuthDbContext>()
+                            .AddEntityFrameworkStores<PregnaCareAppDbContext>()
                             .AddDefaultTokenProviders();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+
             // Config CORS
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend",
                     policy =>
                     {
-                        policy.WithOrigins("http://localhost:3000") 
+                        policy.WithOrigins("http://localhost:3000")
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });
             });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -96,13 +96,13 @@ namespace PregnaCare
 
             var app = builder.Build();
 
-            // Migrate, Seed data
+            // Seed data
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var authDbContext = services.GetRequiredService<AuthDbContext>();
+                var appDbcContext = services.GetRequiredService<PregnaCareAppDbContext>();
 
-                authDbContext.Database.Migrate();
+                appDbcContext.Database.Migrate();
 
                 await SeedData.InitializeAsync(services);
             }

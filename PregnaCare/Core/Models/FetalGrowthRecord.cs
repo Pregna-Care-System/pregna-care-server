@@ -9,9 +9,9 @@ public partial class FetalGrowthRecord
 
     public int PregnancyRecordId { get; set; }
 
-    public int Week { get; set; }
-
     public int GrowthMetricId { get; set; }
+
+    public int Week { get; set; }
 
     public double Value { get; set; }
 
@@ -20,6 +20,8 @@ public partial class FetalGrowthRecord
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+
+    public bool? IsDeleted { get; set; }
 
     public virtual GrowthMetric GrowthMetric { get; set; }
 
