@@ -105,6 +105,7 @@ namespace PregnaCare
                 appDbcContext.Database.Migrate();
 
                 await SeedData.InitializeAsync(services);
+                appDbcContext.ChangeTracker.Clear();
             }
 
             // Configure the HTTP request pipeline.

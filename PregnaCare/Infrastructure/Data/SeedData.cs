@@ -24,6 +24,7 @@ namespace PregnaCare.Infrastructure.Data
                         .Select(r => r.RoleName)
                         .ToListAsync();
 
+                    var isAdded = false;
                     foreach (var roleName in roleNames)
                     {
                         if (!existingRoles.Contains(roleName))
@@ -34,17 +35,19 @@ namespace PregnaCare.Infrastructure.Data
                                 Description = roleName,
                                 IsDeleted = false,
                             });
+
+                            isAdded = true;
                         }
                     }
 
-                    await appDbContext.SaveChangesAsync();
+                    if(isAdded) await appDbContext.SaveChangesAsync();
 
                     // Seed admin account
                     var adminEmail = "pregnacareadmin@gmail.com";
 
                     if (!await appDbContext.Users.AnyAsync(u => u.Email == adminEmail))
                     {
-                        var hashPassword = PasswordHasher.HashPassword("Admin1234@!");
+                        var hashPassword = PasswordUtils.HashPassword("Admin1234@!");
                         var adminRole = await appDbContext.Roles
                             .FirstOrDefaultAsync(r => r.RoleName == RoleEnum.Admin.ToString());
 
@@ -58,7 +61,6 @@ namespace PregnaCare.Infrastructure.Data
                             Email = adminEmail,
                             FullName = "PregnaCare Admin",
                             Password = hashPassword,
-                            Role = adminRole,
                             RoleId = adminRole.Id,
                             IsDeleted = false
                         };

@@ -61,6 +61,20 @@ public partial class PregnaCareAppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            var key = entity.FindPrimaryKey();
+
+            if (key != null)
+            {
+                foreach (var property in key.Properties)
+                {
+                    property.ValueGenerated = Microsoft.EntityFrameworkCore.Metadata.ValueGenerated.OnAdd;
+                }
+            }
+        }
+
         modelBuilder.Entity<Blog>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Blog__3214EC07BD650179");

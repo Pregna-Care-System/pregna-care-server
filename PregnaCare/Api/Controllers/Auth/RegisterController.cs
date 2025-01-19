@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.Extensions;
+﻿using System.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Common.Api;
-using PregnaCare.Core.Models;
 using PregnaCare.Services.Interfaces;
-using System.Web;
 
 namespace PregnaCare.Api.Controllers.Auth
 {
@@ -37,26 +35,26 @@ namespace PregnaCare.Api.Controllers.Auth
         {
             var response = await _authService.RegisterAsync(request);
 
-            var user = await _userManager.FindByEmailAsync(request.Email);
-            if (user == null)
-            {
-                throw new Exception("No user with this email exists");
-            }
+            //var user = await _userManager.FindByEmailAsync(request.Email);
+            //if (user == null)
+            //{
+            //    throw new Exception("No user with this email exists");
+            //}
 
-            string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            string encodedCode = HttpUtility.UrlEncode(code);
+            //string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            //string encodedCode = HttpUtility.UrlEncode(code);
 
-            var callbackUrl = Url.Action("ConfirmEmail", "Register", new { userId = user.Id, code = encodedCode }, HttpContext.Request.Scheme);
+            //var callbackUrl = Url.Action("ConfirmEmail", "Register", new { userId = user.Id, code = encodedCode }, HttpContext.Request.Scheme);
 
-            string path = Path.Combine(Directory.GetCurrentDirectory(), "Utils", "Html", "SignupConfirmation.html");
+            //string path = Path.Combine(Directory.GetCurrentDirectory(), "Utils", "Html", "SignupConfirmation.html");
 
-            string emailContent = await System.IO.File.ReadAllTextAsync(path);
+            //string emailContent = await System.IO.File.ReadAllTextAsync(path);
 
-            emailContent = emailContent.Replace("{FullName}", request.FullName).Replace("{ConfirmationUrl}", callbackUrl);
-            if (!_emailService.SendEmail(user.Email, "Confirm your account", emailContent, ""))
-            {
-                throw new Exception("Email sending failed. Please try again later.");
-            }
+            //emailContent = emailContent.Replace("{FullName}", request.FullName).Replace("{ConfirmationUrl}", callbackUrl);
+            //if (!_emailService.SendEmail(user.Email, "Confirm your account", emailContent, ""))
+            //{
+            //    throw new Exception("Email sending failed. Please try again later.");
+            //}
 
             return response;
         }
@@ -77,7 +75,7 @@ namespace PregnaCare.Api.Controllers.Auth
             var result = await _userManager.ConfirmEmailAsync(user, decodeCode);
             if (result.Succeeded)
             {
-                return Redirect("http://localhost:3000/email-success-confirm"); 
+                return Redirect("http://localhost:3000/email-success-confirm");
             }
 
             return BadRequest("Email confirmation failed");

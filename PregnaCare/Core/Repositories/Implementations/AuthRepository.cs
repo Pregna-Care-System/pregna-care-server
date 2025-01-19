@@ -7,20 +7,14 @@ namespace PregnaCare.Core.Repositories.Implementations
 {
     public class AuthRepository : IAuthRepository
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly PregnaCareAppDbContext _pregnaCareAppDbContext;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="userManager"></param>
-        /// <param name="roleManager"></param>
         /// <param name="pregnaCareAppDbContext"></param>
-        public AuthRepository(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, PregnaCareAppDbContext pregnaCareAppDbContext)
+        public AuthRepository(PregnaCareAppDbContext pregnaCareAppDbContext)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
             _pregnaCareAppDbContext = pregnaCareAppDbContext;
         }
 
@@ -33,14 +27,10 @@ namespace PregnaCare.Core.Repositories.Implementations
         /// RegisterAsync
         /// </summary>
         /// <param name="userAccount"></param>
-        /// <param name="identityUser"></param>
         /// <returns></returns>
-        public async Task RegisterAsync(User userAccount, IdentityUser identityUser, string password, string roleName)
+        public async Task RegisterAsync(User userAccount)
         {
-            await _userManager.CreateAsync(identityUser, password);
-            await _userManager.AddToRoleAsync(identityUser, roleName);
             await _pregnaCareAppDbContext.Users.AddAsync(userAccount);
-
             await _pregnaCareAppDbContext.SaveChangesAsync();
         }
     }

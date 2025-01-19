@@ -3,7 +3,7 @@ using System.Text;
 
 namespace PregnaCare.Utils
 {
-    public class PasswordHasher
+    public class PasswordUtils
     {
         /// <summary>
         /// HashPassword

@@ -5,7 +5,7 @@ namespace PregnaCare.Core.Repositories.Interfaces
 {
     public interface IAuthRepository
     {
-        Task RegisterAsync(User userAccount, IdentityUser identityUser, string password, string roleName);
+        Task RegisterAsync(User userAccount);
         Task LoginAsync();
     }
 }

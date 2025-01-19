@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.IdentityModel.Tokens;
 using PregnaCare.Common.Enums;
+using PregnaCare.Core.Models;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Services.Implementations
@@ -15,12 +16,12 @@ namespace PregnaCare.Services.Implementations
         /// <summary>
         /// GenerateTokenAsync
         /// </summary>
-        /// <param name="identityUser"></param>
+        /// <param name="user"></param>
         /// <param name="roleName"></param>
         /// <param name="tokenType"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public string GenerateToken(IdentityUser identityUser, string roleName, string tokenType)
+        public string GenerateToken(User user, string roleName, string tokenType)
         {
             var token = string.Empty;
 
@@ -49,7 +50,7 @@ namespace PregnaCare.Services.Implementations
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Email, identityUser.Email),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, roleName),
             };
 
