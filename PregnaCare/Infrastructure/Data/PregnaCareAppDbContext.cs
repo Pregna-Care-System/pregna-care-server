@@ -37,6 +37,8 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public virtual DbSet<MembershipPlanFeature> MembershipPlanFeatures { get; set; }
 
+    public virtual DbSet<MotherInfo> MotherInfos { get; set; }
+
     public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<OauthProvider> OauthProviders { get; set; }
@@ -61,38 +63,19 @@ public partial class PregnaCareAppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-
-        foreach (var entity in modelBuilder.Model.GetEntityTypes())
-        {
-            var key = entity.FindPrimaryKey();
-
-            if (key != null)
-            {
-                foreach (var property in key.Properties)
-                {
-                    property.ValueGenerated = Microsoft.EntityFrameworkCore.Metadata.ValueGenerated.OnAdd;
-                }
-            }
-        }
-
         modelBuilder.Entity<Blog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Blog__3214EC07BD650179");
+            entity.HasKey(e => e.Id).HasName("PK__Blog__3214EC072786BEB3");
 
             entity.ToTable("Blog");
 
-            entity.Property(e => e.Content).IsRequired();
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.Heading)
-                .IsRequired()
-                .HasMaxLength(100);
+            entity.Property(e => e.Heading).HasMaxLength(100);
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
             entity.Property(e => e.IsVisible).HasDefaultValue(true);
-            entity.Property(e => e.PageTitle)
-                .IsRequired()
-                .HasMaxLength(100);
+            entity.Property(e => e.PageTitle).HasMaxLength(100);
             entity.Property(e => e.ShortDescription).HasMaxLength(100);
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -107,7 +90,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<BlogTag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BlogTag__3214EC074BB9334D");
+            entity.HasKey(e => e.Id).HasName("PK__BlogTag__3214EC07514AC503");
 
             entity.ToTable("BlogTag");
 
@@ -132,7 +115,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Comment__3214EC076D6C58ED");
+            entity.HasKey(e => e.Id).HasName("PK__Comment__3214EC07CF5BD60A");
 
             entity.ToTable("Comment");
 
@@ -162,11 +145,11 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<Feature>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Feature__3214EC07F4049354");
+            entity.HasKey(e => e.Id).HasName("PK__Feature__3214EC077B25E40F");
 
             entity.ToTable("Feature");
 
-            entity.HasIndex(e => e.FeatureName, "UQ__Feature__55ABBB712266D4F6").IsUnique();
+            entity.HasIndex(e => e.FeatureName, "UQ__Feature__55ABBB71C7A28148").IsUnique();
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -182,7 +165,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<FetalGrowthRecord>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FetalGro__3214EC0747EA016E");
+            entity.HasKey(e => e.Id).HasName("PK__FetalGro__3214EC07BD96B25F");
 
             entity.ToTable("FetalGrowthRecord");
 
@@ -197,17 +180,17 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.HasOne(d => d.GrowthMetric).WithMany(p => p.FetalGrowthRecords)
                 .HasForeignKey(d => d.GrowthMetricId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FetalGrow__Growt__02084FDA");
+                .HasConstraintName("FK__FetalGrow__Growt__7A672E12");
 
             entity.HasOne(d => d.PregnancyRecord).WithMany(p => p.FetalGrowthRecords)
                 .HasForeignKey(d => d.PregnancyRecordId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FetalGrow__Pregn__01142BA1");
+                .HasConstraintName("FK__FetalGrow__Pregn__797309D9");
         });
 
         modelBuilder.Entity<GrowthAlert>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GrowthAl__3214EC07A3B14280");
+            entity.HasKey(e => e.Id).HasName("PK__GrowthAl__3214EC078EC7B30D");
 
             entity.ToTable("GrowthAlert");
 
@@ -217,36 +200,31 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasColumnType("datetime");
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
             entity.Property(e => e.IsResolved).HasDefaultValue(false);
-            entity.Property(e => e.Issue).IsRequired();
-            entity.Property(e => e.Severity)
-                .IsRequired()
-                .HasMaxLength(20);
+            entity.Property(e => e.Severity).HasMaxLength(20);
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
-            entity.HasOne(d => d.GrowthMetric).WithMany(p => p.GrowthAlerts)
-                .HasForeignKey(d => d.GrowthMetricId)
+            entity.HasOne(d => d.FetalGrowthRecord).WithMany(p => p.GrowthAlerts)
+                .HasForeignKey(d => d.FetalGrowthRecordId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GrowthAle__Growt__797309D9");
+                .HasConstraintName("FK__GrowthAle__Fetal__00200768");
 
             entity.HasOne(d => d.User).WithMany(p => p.GrowthAlerts)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GrowthAle__UserI__7A672E12");
+                .HasConstraintName("FK__GrowthAle__UserI__01142BA1");
         });
 
         modelBuilder.Entity<GrowthMetric>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GrowthMe__3214EC0742FD074F");
+            entity.HasKey(e => e.Id).HasName("PK__GrowthMe__3214EC072C28D33A");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
-            entity.Property(e => e.Name)
-                .IsRequired()
-                .HasMaxLength(255);
+            entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Unit).HasMaxLength(50);
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -255,7 +233,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<JwtToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__JwtToken__3214EC077AF31832");
+            entity.HasKey(e => e.Id).HasName("PK__JwtToken__3214EC0750E823F5");
 
             entity.ToTable("JwtToken");
 
@@ -270,12 +248,12 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.JwtTokens)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__JwtToken__UserId__46B27FE2");
+                .HasConstraintName("FK__JwtToken__UserId__3C34F16F");
         });
 
         modelBuilder.Entity<MembershipPlan>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Membersh__3214EC072FC874BB");
+            entity.HasKey(e => e.Id).HasName("PK__Membersh__3214EC0767385E4B");
 
             entity.ToTable("MembershipPlan");
 
@@ -294,7 +272,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<MembershipPlanFeature>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Membersh__3214EC07F457BDEF");
+            entity.HasKey(e => e.Id).HasName("PK__Membersh__3214EC0704F78380");
 
             entity.ToTable("MembershipPlanFeature");
 
@@ -317,9 +295,29 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasConstraintName("FK__Membershi__Membe__2180FB33");
         });
 
+        modelBuilder.Entity<MotherInfo>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__MotherIn__3214EC0703D7CFEA");
+
+            entity.ToTable("MotherInfo");
+
+            entity.Property(e => e.BloodPressure).HasMaxLength(50);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.PregnancyRecord).WithMany(p => p.MotherInfos)
+                .HasForeignKey(d => d.PregnancyRecordId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_MotherInfo_PregnancyRecord");
+        });
+
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC07A2400B8D");
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC07612A9E87");
 
             entity.ToTable("Notification");
 
@@ -327,13 +325,10 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
-            entity.Property(e => e.Message).IsRequired();
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .HasDefaultValue("Pending");
-            entity.Property(e => e.Title)
-                .IsRequired()
-                .HasMaxLength(100);
+            entity.Property(e => e.Title).HasMaxLength(100);
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -351,7 +346,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<OauthProvider>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__OAuthPro__3214EC07D425078C");
+            entity.HasKey(e => e.Id).HasName("PK__OAuthPro__3214EC07833648C2");
 
             entity.ToTable("OAuthProvider");
 
@@ -377,14 +372,13 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<PregnancyCheckupSchedule>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Pregnanc__3214EC07B95F0CAB");
+            entity.HasKey(e => e.Id).HasName("PK__Pregnanc__3214EC0771579B10");
 
             entity.ToTable("PregnancyCheckupSchedule");
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.Description).IsRequired();
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -393,16 +387,12 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<PregnancyRecord>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Pregnanc__3214EC0750934CE3");
+            entity.HasKey(e => e.Id).HasName("PK__Pregnanc__3214EC0738AB5FBB");
 
             entity.ToTable("PregnancyRecord");
 
-            entity.Property(e => e.BabyGender)
-                .IsRequired()
-                .HasMaxLength(10);
-            entity.Property(e => e.BabyName)
-                .IsRequired()
-                .HasMaxLength(50);
+            entity.Property(e => e.BabyGender).HasMaxLength(10);
+            entity.Property(e => e.BabyName).HasMaxLength(50);
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -420,7 +410,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<Reminder>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC0776AB836F");
+            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC07FAB5A7A6");
 
             entity.ToTable("Reminder");
 
@@ -432,9 +422,7 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .HasDefaultValue("Active");
-            entity.Property(e => e.Title)
-                .IsRequired()
-                .HasMaxLength(100);
+            entity.Property(e => e.Title).HasMaxLength(100);
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -452,7 +440,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<ReminderType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC07503C7398");
+            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC07649B310C");
 
             entity.ToTable("ReminderType");
 
@@ -460,9 +448,7 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
-            entity.Property(e => e.TypeName)
-                .IsRequired()
-                .HasMaxLength(100);
+            entity.Property(e => e.TypeName).HasMaxLength(100);
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -470,7 +456,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC07DBD2D2AD");
+            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC07C463BA0C");
 
             entity.ToTable("Role");
 
@@ -479,9 +465,7 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasColumnType("datetime");
             entity.Property(e => e.Description).HasMaxLength(40);
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
-            entity.Property(e => e.RoleName)
-                .IsRequired()
-                .HasMaxLength(20);
+            entity.Property(e => e.RoleName).HasMaxLength(20);
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -489,11 +473,11 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC072EFF7730");
+            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC0749D73245");
 
             entity.ToTable("Tag");
 
-            entity.HasIndex(e => e.Name, "UQ__Tag__737584F64996C3C8").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__Tag__737584F650D5E136").IsUnique();
 
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -509,26 +493,21 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC07C2E60F11");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC07A8B4ED79");
 
             entity.ToTable("User");
 
-            entity.HasIndex(e => e.Email, "UQ__User__A9D10534A197EB2C").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__User__A9D105347D6DDC2B").IsUnique();
 
             entity.Property(e => e.Address).HasMaxLength(100);
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.Email)
-                .IsRequired()
-                .HasMaxLength(40);
-            entity.Property(e => e.FullName)
-                .IsRequired()
-                .HasMaxLength(60);
+            entity.Property(e => e.Email).HasMaxLength(40);
+            entity.Property(e => e.FullName).HasMaxLength(60);
             entity.Property(e => e.Gender).HasMaxLength(10);
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
             entity.Property(e => e.Password)
-                .IsRequired()
                 .HasMaxLength(255)
                 .IsUnicode(false);
             entity.Property(e => e.PhoneNumber).HasMaxLength(10);
@@ -543,7 +522,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<UserFeature>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserFeat__3214EC07368430DA");
+            entity.HasKey(e => e.Id).HasName("PK__UserFeat__3214EC07A9624710");
 
             entity.ToTable("UserFeature");
 
@@ -572,7 +551,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<UserOauth>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserOAut__3214EC07B3C8427F");
+            entity.HasKey(e => e.Id).HasName("PK__UserOAut__3214EC07AC4957C1");
 
             entity.ToTable("UserOAuth");
 
@@ -594,12 +573,12 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.HasOne(d => d.OauthProvider).WithMany(p => p.UserOauths)
                 .HasForeignKey(d => d.OauthProviderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserOAuth__OAuth__4F47C5E3");
+                .HasConstraintName("FK__UserOAuth__OAuth__44CA3770");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserOauths)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserOAuth__UserI__4E53A1AA");
+                .HasConstraintName("FK__UserOAuth__UserI__43D61337");
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -9,17 +9,17 @@ public partial class PregnancyRecord
 
     public int UserId { get; set; }
 
-    public string BabyName { get; set; } = string.Empty;
+    public string BabyName { get; set; }
 
-    public DateOnly PregnancyStartDate { get; set; }
+    public DateOnly? PregnancyStartDate { get; set; }
 
-    public DateOnly ExpectedDueDate { get; set; }
+    public DateOnly? ExpectedDueDate { get; set; }
 
-    public int CurrentWeek { get; set; }
+    public int? CurrentWeek { get; set; }
 
-    public string BabyGender { get; set; } = string.Empty;
+    public string BabyGender { get; set; }
 
-    public string ImageUrl { get; set; } = string.Empty;
+    public string ImageUrl { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
@@ -28,6 +28,8 @@ public partial class PregnancyRecord
     public bool? IsDeleted { get; set; }
 
     public virtual ICollection<FetalGrowthRecord> FetalGrowthRecords { get; set; } = new List<FetalGrowthRecord>();
+
+    public virtual ICollection<MotherInfo> MotherInfos { get; set; } = new List<MotherInfo>();
 
     public virtual User User { get; set; }
 }

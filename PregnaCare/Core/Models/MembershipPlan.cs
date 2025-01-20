@@ -7,13 +7,13 @@ public partial class MembershipPlan
 {
     public int Id { get; set; }
 
-    public string PlanName { get; set; } = string.Empty;
+    public string PlanName { get; set; }
 
     public double Price { get; set; }
 
     public int Duration { get; set; }
 
-    public string Description { get; set; } = string.Empty;
+    public string Description { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
