@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PregnaCare.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using PregnaCare.Infrastructure.Data;
 namespace PregnaCare.Migrations.AuthDb
 {
     [DbContext(typeof(PregnaCareAuthDbContext))]
-    partial class PregnaCareAuthDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250127090224_AddColumnToAspNetUserTokens")]
+    partial class AddColumnToAspNetUserTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

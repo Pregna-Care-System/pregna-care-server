@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Common.Api;
 using PregnaCare.Services.Interfaces;
+using PregnaCare.Utils;
 
 namespace PregnaCare.Api.Controllers.Auth
 {
@@ -34,21 +35,15 @@ namespace PregnaCare.Api.Controllers.Auth
         public override async Task<RegisterResponse> Exec([FromBody] RegisterRequest request)
         {
             var response = await _authService.RegisterAsync(request);
-
             if (!response.Success) return response;
 
             var user = await _userManager.FindByEmailAsync(request.Email);
-            
+            if (user == null) throw new Exception("No user with this email exists");
 
-            if (user == null)
-            {
-                throw new Exception("No user with this email exists");
-            }
+            string code = CommonUtils.GenerateOtp();
+            // string encodedCode = HttpUtility.UrlEncode(code);
 
-            string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            string encodedCode = HttpUtility.UrlEncode(code);
-
-            var callbackUrl = Url.Action("ConfirmEmail", "Register", new { userId = user.Id, code = encodedCode }, HttpContext.Request.Scheme);
+            var callbackUrl = Url.Action("ConfirmEmail", "Register", new { userId = user.Id, code = code }, HttpContext.Request.Scheme);
 
             string path = Path.Combine(Directory.GetCurrentDirectory(), "Utils", "Html", "SignupConfirmation.html");
 
@@ -60,6 +55,7 @@ namespace PregnaCare.Api.Controllers.Auth
                 throw new Exception("Email sending failed. Please try again later.");
             }
 
+            await _authService.AddOtpTokenAsync(user.Id, code, DateTime.Now.AddMinutes(5));
             return response;
         }
 
@@ -68,21 +64,25 @@ namespace PregnaCare.Api.Controllers.Auth
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
             {
-                return BadRequest("Invalid confirmation request");
+                return BadRequest("Invalid confirmation request.");
             }
+
             string decodeCode = HttpUtility.UrlDecode(code);
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return BadRequest("User not found");
+                return BadRequest("User not found.");
             }
-            var result = await _userManager.ConfirmEmailAsync(user, decodeCode);
-            if (result.Succeeded)
+
+            var result = await _authService.VerifyOtpAsync(user.Id, code);
+            if (result)
             {
+                user.EmailConfirmed = true;
+                await _authService.RemoveOtpTokenAsync(user.Id);
                 return Redirect("http://localhost:3000/email-success-confirm");
             }
 
-            return BadRequest("Email confirmation failed");
+            return BadRequest("OTP has expired.");
         }
 
     }

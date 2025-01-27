@@ -9,5 +9,15 @@ namespace PregnaCare.Infrastructure.Data
         public PregnaCareAuthDbContext(DbContextOptions<PregnaCareAuthDbContext> options) : base(options)
         {
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<IdentityUserToken<Guid>>(entity =>
+            {
+                entity.Property<DateTime>("ExpirationTime");
+            });
+        }
     }
 }

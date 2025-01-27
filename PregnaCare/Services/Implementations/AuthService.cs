@@ -15,6 +15,7 @@ namespace PregnaCare.Services.Implementations
     public class AuthService : IAuthService
     {
         private readonly PregnaCareAppDbContext _dbContext;
+        private readonly PregnaCareAuthDbContext _authContext;
         private readonly IAuthRepository _authRepository;
         private readonly ITokenService _tokenService;
         private readonly UserManager<IdentityUser<Guid>> _userManager;
@@ -24,16 +25,33 @@ namespace PregnaCare.Services.Implementations
         /// Constructor
         /// </summary>
         /// <param name="dbContext"></param>
+        /// <param name="authContext"></param>
         /// <param name="authRepository"></param>
         /// <param name="tokenService"></param>
         /// <param name="userManager"></param>
-        public AuthService(PregnaCareAppDbContext dbContext, IAuthRepository authRepository, ITokenService tokenService, UserManager<IdentityUser<Guid>> userManager, RoleManager<IdentityRole<Guid>> roleManager)
+        public AuthService(PregnaCareAppDbContext dbContext, PregnaCareAuthDbContext authContext, IAuthRepository authRepository, ITokenService tokenService, UserManager<IdentityUser<Guid>> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
             _dbContext = dbContext;
+            _authContext = authContext;
             _authRepository = authRepository;
             _tokenService = tokenService;
             _userManager = userManager;
             _roleManager = roleManager;
+        }
+
+        public async Task AddOtpTokenAsync(Guid userId, string otp, DateTime expirationTime)
+        {
+            var token = new IdentityUserToken<Guid>
+            {
+                UserId = userId,
+                LoginProvider = LoginProviderEnum.InternalProvider.ToString(),
+                Name = TokenTypeEnum.OTP.ToString(),
+                Value = otp,
+            };
+
+            _authContext.Entry(token).Property("ExpirationTime").CurrentValue = expirationTime;
+            _authContext.Set<IdentityUserToken<Guid>>().Add(token);
+            await _authContext.SaveChangesAsync();
         }
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
@@ -379,6 +397,35 @@ namespace PregnaCare.Services.Implementations
             response.MessageId = Messages.I00001;
             response.Message = Messages.GetMessageById(Messages.I00001);
             return response;
+        }
+
+        public async Task RemoveOtpTokenAsync(Guid userId)
+        {
+            var token = await _authContext.Set<IdentityUserToken<Guid>>()
+                                          .FirstOrDefaultAsync(t => t.UserId == userId &&
+                                                                    t.LoginProvider == LoginProviderEnum.InternalProvider.ToString() &&
+                                                                    t.Name == TokenTypeEnum.OTP.ToString());
+
+            if (token != null)
+            {
+                _authContext.Set<IdentityUserToken<Guid>>().Remove(token);
+                await _authContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> VerifyOtpAsync(Guid userId, string otp)
+        {
+            var token = await _authContext.Set<IdentityUserToken<Guid>>()
+                                          .FirstOrDefaultAsync(t => t.UserId == userId
+                                                                    && t.LoginProvider == LoginProviderEnum.InternalProvider.ToString()
+                                                                    && t.Name == TokenTypeEnum.OTP.ToString());
+
+            if (token == null || token.Value != otp) return false;
+
+            var expirationTime = (DateTime?)_authContext.Entry(token).Property("ExpirationTime").OriginalValue;
+            if (expirationTime.HasValue && expirationTime.Value < DateTime.Now) return false;
+
+            return true;
         }
     }
 }
