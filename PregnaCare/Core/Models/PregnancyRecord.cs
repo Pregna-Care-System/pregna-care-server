@@ -5,17 +5,15 @@ namespace PregnaCare.Core.Models;
 
 public partial class PregnancyRecord
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int UserId { get; set; }
+    public Guid? UserId { get; set; }
 
     public string BabyName { get; set; }
 
     public DateOnly? PregnancyStartDate { get; set; }
 
     public DateOnly? ExpectedDueDate { get; set; }
-
-    public int? CurrentWeek { get; set; }
 
     public string BabyGender { get; set; }
 

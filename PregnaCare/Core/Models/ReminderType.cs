@@ -5,7 +5,7 @@ namespace PregnaCare.Core.Models;
 
 public partial class ReminderType
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public string TypeName { get; set; }
 

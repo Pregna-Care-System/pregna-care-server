@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 namespace PregnaCare.Core.Models;
 
-public partial class UserFeature
+public partial class UserMembershipPlan
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
-    public int FeatureId { get; set; }
+    public Guid MembershipPlanId { get; set; }
 
     public DateTime? ActivatedAt { get; set; }
 
@@ -23,7 +23,7 @@ public partial class UserFeature
 
     public bool? IsDeleted { get; set; }
 
-    public virtual Feature Feature { get; set; }
+    public virtual MembershipPlan MembershipPlan { get; set; }
 
     public virtual User User { get; set; }
 }

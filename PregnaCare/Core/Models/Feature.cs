@@ -5,7 +5,7 @@ namespace PregnaCare.Core.Models;
 
 public partial class Feature
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public string FeatureName { get; set; }
 
@@ -18,6 +18,4 @@ public partial class Feature
     public bool? IsDeleted { get; set; }
 
     public virtual ICollection<MembershipPlanFeature> MembershipPlanFeatures { get; set; } = new List<MembershipPlanFeature>();
-
-    public virtual ICollection<UserFeature> UserFeatures { get; set; } = new List<UserFeature>();
 }

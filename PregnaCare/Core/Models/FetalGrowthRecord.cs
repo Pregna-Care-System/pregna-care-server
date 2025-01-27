@@ -5,11 +5,11 @@ namespace PregnaCare.Core.Models;
 
 public partial class FetalGrowthRecord
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int PregnancyRecordId { get; set; }
+    public Guid PregnancyRecordId { get; set; }
 
-    public int GrowthMetricId { get; set; }
+    public Guid GrowthMetricId { get; set; }
 
     public int? Week { get; set; }
 

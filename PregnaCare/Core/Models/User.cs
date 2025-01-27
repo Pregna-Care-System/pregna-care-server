@@ -5,7 +5,7 @@ namespace PregnaCare.Core.Models;
 
 public partial class User
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public string FullName { get; set; }
 
@@ -27,8 +27,6 @@ public partial class User
 
     public DateTime? UpdatedAt { get; set; }
 
-    public int? RoleId { get; set; }
-
     public bool? IsDeleted { get; set; }
 
     public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
@@ -37,17 +35,13 @@ public partial class User
 
     public virtual ICollection<GrowthAlert> GrowthAlerts { get; set; } = new List<GrowthAlert>();
 
-    public virtual ICollection<JwtToken> JwtTokens { get; set; } = new List<JwtToken>();
-
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     public virtual ICollection<PregnancyRecord> PregnancyRecords { get; set; } = new List<PregnancyRecord>();
 
-    public virtual ICollection<Reminder> Reminders { get; set; } = new List<Reminder>();
+    public virtual ICollection<UserMembershipPlan> UserMembershipPlans { get; set; } = new List<UserMembershipPlan>();
 
-    public virtual Role Role { get; set; }
+    public virtual ICollection<UserReminder> UserReminders { get; set; } = new List<UserReminder>();
 
-    public virtual ICollection<UserFeature> UserFeatures { get; set; } = new List<UserFeature>();
-
-    public virtual ICollection<UserOauth> UserOauths { get; set; } = new List<UserOauth>();
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }

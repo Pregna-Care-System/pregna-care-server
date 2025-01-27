@@ -101,8 +101,8 @@ namespace PregnaCare.Services.Implementations
                 });
             }
 
-            var user = await _dbContext.Users.AsNoTracking().Include(x => x.Role).FirstOrDefaultAsync(x => x.Email == request.Email);
-            var isSamePassword = PasswordUtils.VerifyPassword(request.Password, user?.Password ?? "");
+            var user = await _dbContext.Users.AsNoTracking().ToListAsync();//.Include(x => x.Role).FirstOrDefaultAsync(x => x.Email == request.Email);
+            var isSamePassword = PasswordUtils.VerifyPassword(request.Password, user?[0].Password ?? "");
 
             if (user is null || !isSamePassword || detailErrorList.Any())
             {
@@ -114,29 +114,29 @@ namespace PregnaCare.Services.Implementations
             }
 
 
-            var accessToken = _tokenService.GenerateToken(user, user?.Role.RoleName, TokenTypeEnum.AccessToken.ToString());
-            var refreshToken = (await _dbContext.JwtTokens.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id && x.ExpiresAt.Minute >= DateTime.Now.Minute))?.RefreshToken ?? "";
+            var accessToken = _tokenService.GenerateToken(user[0], "", TokenTypeEnum.AccessToken.ToString());
+            //var refreshToken = (await _dbContext.JwtTokens.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id && x.ExpiresAt.Minute >= DateTime.Now.Minute))?.RefreshToken ?? "";
 
-            if (string.IsNullOrEmpty(refreshToken))
-            {
-                refreshToken = _tokenService.GenerateToken(user, user?.Role.RoleName, TokenTypeEnum.RefreshToken.ToString()).Substring(0, 255);
+            //if (string.IsNullOrEmpty(refreshToken))
+            //{
+            //    refreshToken = _tokenService.GenerateToken(user, user?.Role.RoleName, TokenTypeEnum.RefreshToken.ToString()).Substring(0, 255);
 
-                var refreshTokenExpiration = Environment.GetEnvironmentVariable("REFRESH_TOKEN_EXPIRATION") ?? "0";
+            //    var refreshTokenExpiration = Environment.GetEnvironmentVariable("REFRESH_TOKEN_EXPIRATION") ?? "0";
 
-                await _dbContext.JwtTokens.AddAsync(new JwtToken
-                {
-                    UserId = user.Id,
-                    RefreshToken = refreshToken,
-                    ExpiresAt = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration)),
-                });
+            //    await _dbContext.JwtTokens.AddAsync(new JwtToken
+            //    {
+            //        UserId = user.Id,
+            //        RefreshToken = refreshToken,
+            //        ExpiresAt = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration)),
+            //    });
 
-                await _dbContext.SaveChangesAsync();
-            }
+            //    await _dbContext.SaveChangesAsync();
+            //}
 
             response.Success = true;
             response.MessageId = Messages.I00001;
             response.Message = Messages.GetMessageById(Messages.I00001);
-            response.Response = new Token { RefreshToken = refreshToken, AccessToken = accessToken };
+            //response.Response = new Token { RefreshToken = refreshToken, AccessToken = accessToken };
             return response;
         }
 
@@ -351,7 +351,7 @@ namespace PregnaCare.Services.Implementations
                 FullName = request.FullName,
                 Email = request.Email,
                 Password = password,
-                RoleId = role.Id,
+                
                 IsDeleted = false,
             };
 

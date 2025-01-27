@@ -5,7 +5,7 @@ namespace PregnaCare.Core.Models;
 
 public partial class Role
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     public string RoleName { get; set; }
 
@@ -17,5 +17,5 @@ public partial class Role
 
     public bool? IsDeleted { get; set; }
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }
