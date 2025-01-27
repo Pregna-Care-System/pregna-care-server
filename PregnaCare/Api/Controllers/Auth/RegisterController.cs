@@ -35,26 +35,30 @@ namespace PregnaCare.Api.Controllers.Auth
         {
             var response = await _authService.RegisterAsync(request);
 
-            //var user = await _userManager.FindByEmailAsync(request.Email);
-            //if (user == null)
-            //{
-            //    throw new Exception("No user with this email exists");
-            //}
+            if (!response.Success) return response;
 
-            //string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            //string encodedCode = HttpUtility.UrlEncode(code);
+            var user = await _userManager.FindByEmailAsync(request.Email);
+            
 
-            //var callbackUrl = Url.Action("ConfirmEmail", "Register", new { userId = user.Id, code = encodedCode }, HttpContext.Request.Scheme);
+            if (user == null)
+            {
+                throw new Exception("No user with this email exists");
+            }
 
-            //string path = Path.Combine(Directory.GetCurrentDirectory(), "Utils", "Html", "SignupConfirmation.html");
+            string code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            string encodedCode = HttpUtility.UrlEncode(code);
 
-            //string emailContent = await System.IO.File.ReadAllTextAsync(path);
+            var callbackUrl = Url.Action("ConfirmEmail", "Register", new { userId = user.Id, code = encodedCode }, HttpContext.Request.Scheme);
 
-            //emailContent = emailContent.Replace("{FullName}", request.FullName).Replace("{ConfirmationUrl}", callbackUrl);
-            //if (!_emailService.SendEmail(user.Email, "Confirm your account", emailContent, ""))
-            //{
-            //    throw new Exception("Email sending failed. Please try again later.");
-            //}
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "Utils", "Html", "SignupConfirmation.html");
+
+            string emailContent = await System.IO.File.ReadAllTextAsync(path);
+
+            emailContent = emailContent.Replace("{FullName}", request.FullName).Replace("{ConfirmationUrl}", callbackUrl);
+            if (!_emailService.SendEmail(user.Email, "Confirm your account", emailContent, ""))
+            {
+                throw new Exception("Email sending failed. Please try again later.");
+            }
 
             return response;
         }

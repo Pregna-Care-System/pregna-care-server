@@ -53,7 +53,7 @@ namespace PregnaCare.Infrastructure.Data
                     if (isAdded) await appDbContext.SaveChangesAsync();
 
                     // Seed admin account
-                    var adminEmail = "pregnacareadmin@gmail.com";
+                    var adminEmail = "pregnacareadmin8386@gmail.com";
 
                     if (!await appDbContext.Users.AnyAsync(u => u.Email == adminEmail))
                     {                      
@@ -80,14 +80,17 @@ namespace PregnaCare.Infrastructure.Data
                             RoleId = adminRole.Id,
                         };
 
-                        await userManager.CreateAsync(new IdentityUser<Guid>
+                        var identityUser = new IdentityUser<Guid>
                         {
-                            Id = Guid.NewGuid(),
+                            Id = admin.Id,
                             UserName = adminEmail,
-                            NormalizedUserName = adminEmail,    
+                            NormalizedUserName = adminEmail,
                             Email = adminEmail,
                             NormalizedEmail = adminEmail,
-                        }, "Admin1234@!");
+                        };
+
+                        await userManager.CreateAsync(identityUser, "Admin1234@!");
+                        await userManager.AddToRoleAsync(identityUser, adminRole.RoleName);
 
                         await appDbContext.UserRoles.AddAsync(userRole);
                         await appDbContext.Users.AddAsync(admin);
