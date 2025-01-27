@@ -41,12 +41,8 @@ namespace PregnaCare.Api.Controllers.Auth
             if (user == null) throw new Exception("No user with this email exists");
 
             string code = CommonUtils.GenerateOtp();
-            // string encodedCode = HttpUtility.UrlEncode(code);
-
             var callbackUrl = Url.Action("ConfirmEmail", "Register", new { userId = user.Id, code = code }, HttpContext.Request.Scheme);
-
             string path = Path.Combine(Directory.GetCurrentDirectory(), "Utils", "Html", "SignupConfirmation.html");
-
             string emailContent = await System.IO.File.ReadAllTextAsync(path);
 
             emailContent = emailContent.Replace("{FullName}", request.FullName).Replace("{ConfirmationUrl}", callbackUrl);

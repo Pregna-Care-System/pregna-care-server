@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using PregnaCare.Core.Models;
+﻿using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
 
@@ -27,9 +26,11 @@ namespace PregnaCare.Core.Repositories.Implementations
         /// RegisterAsync
         /// </summary>
         /// <param name="userAccount"></param>
+        /// <param name="userRole"></param>
         /// <returns></returns>
-        public async Task RegisterAsync(User userAccount)
+        public async Task RegisterAsync(User userAccount, UserRole userRole)
         {
+            await _pregnaCareAppDbContext.UserRoles.AddAsync(userRole);
             await _pregnaCareAppDbContext.Users.AddAsync(userAccount);
             await _pregnaCareAppDbContext.SaveChangesAsync();
         }

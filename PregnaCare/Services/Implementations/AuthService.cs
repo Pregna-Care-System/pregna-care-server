@@ -383,12 +383,19 @@ namespace PregnaCare.Services.Implementations
 
             var identityUser = await _userManager.FindByEmailAsync(request.Email);
             await _userManager.AddToRoleAsync(identityUser, request.RoleName);
+            
             var userAccount = new User
             {
                 FullName = request.FullName,
                 Email = request.Email,
                 Password = identityUser.PasswordHash ?? string.Empty,
                 IsDeleted = false,
+            };
+
+            var userRole = new UserRole
+            {
+                RoleId = role.Id,
+                UserId = userAccount.Id,    
             };
 
             await _authRepository.RegisterAsync(userAccount);
