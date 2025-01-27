@@ -17,13 +17,13 @@ namespace PregnaCare.Api.Controllers.Auth
     {
         private readonly IAuthService _authService;
         private readonly IEmailService _emailService;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<IdentityUser<Guid>> _userManager;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="authService"></param>
-        public RegisterController(IAuthService authService, IEmailService emailService, UserManager<IdentityUser> userManager)
+        public RegisterController(IAuthService authService, IEmailService emailService, UserManager<IdentityUser<Guid>> userManager)
         {
             _authService = authService;
             _emailService = emailService;
@@ -80,9 +80,6 @@ namespace PregnaCare.Api.Controllers.Auth
 
             return BadRequest("Email confirmation failed");
         }
-
-
-
 
     }
 }

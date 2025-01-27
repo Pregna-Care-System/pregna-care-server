@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PregnaCare.Api.Controllers.Auth;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Constants;
@@ -16,6 +17,8 @@ namespace PregnaCare.Services.Implementations
         private readonly PregnaCareAppDbContext _dbContext;
         private readonly IAuthRepository _authRepository;
         private readonly ITokenService _tokenService;
+        private readonly UserManager<IdentityUser<Guid>> _userManager;
+        private readonly RoleManager<IdentityRole<Guid>> _roleManager;
 
         /// <summary>
         /// Constructor
@@ -23,11 +26,14 @@ namespace PregnaCare.Services.Implementations
         /// <param name="dbContext"></param>
         /// <param name="authRepository"></param>
         /// <param name="tokenService"></param>
-        public AuthService(PregnaCareAppDbContext dbContext, IAuthRepository authRepository, ITokenService tokenService)
+        /// <param name="userManager"></param>
+        public AuthService(PregnaCareAppDbContext dbContext, IAuthRepository authRepository, ITokenService tokenService, UserManager<IdentityUser<Guid>> userManager, RoleManager<IdentityRole<Guid>> roleManager)
         {
             _dbContext = dbContext;
             _authRepository = authRepository;
             _tokenService = tokenService;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
@@ -101,8 +107,9 @@ namespace PregnaCare.Services.Implementations
                 });
             }
 
-            var user = await _dbContext.Users.AsNoTracking().ToListAsync();//.Include(x => x.Role).FirstOrDefaultAsync(x => x.Email == request.Email);
-            var isSamePassword = PasswordUtils.VerifyPassword(request.Password, user?[0].Password ?? "");
+            var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == request.Email);
+            var identityUser = await _userManager.FindByEmailAsync(request.Email);
+            var isSamePassword = _userManager.PasswordHasher.VerifyHashedPassword(identityUser, identityUser.PasswordHash, request.Password) == PasswordVerificationResult.Success;
 
             if (user is null || !isSamePassword || detailErrorList.Any())
             {
@@ -113,30 +120,30 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-
-            var accessToken = _tokenService.GenerateToken(user[0], "", TokenTypeEnum.AccessToken.ToString());
+            var userRole = await _dbContext.UserRoles.AsNoTracking().Include(x => x.Role).FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var accessToken = _tokenService.GenerateToken(user, userRole.Role.RoleName, TokenTypeEnum.AccessToken.ToString());
             //var refreshToken = (await _dbContext.JwtTokens.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id && x.ExpiresAt.Minute >= DateTime.Now.Minute))?.RefreshToken ?? "";
 
             //if (string.IsNullOrEmpty(refreshToken))
             //{
-            //    refreshToken = _tokenService.GenerateToken(user, user?.Role.RoleName, TokenTypeEnum.RefreshToken.ToString()).Substring(0, 255);
+            var refreshToken = _tokenService.GenerateToken(user, userRole.Role.RoleName, TokenTypeEnum.RefreshToken.ToString()).Substring(0, 255);
 
-            //    var refreshTokenExpiration = Environment.GetEnvironmentVariable("REFRESH_TOKEN_EXPIRATION") ?? "0";
+            var refreshTokenExpiration = Environment.GetEnvironmentVariable("REFRESH_TOKEN_EXPIRATION") ?? "0";
 
-            //    await _dbContext.JwtTokens.AddAsync(new JwtToken
-            //    {
-            //        UserId = user.Id,
-            //        RefreshToken = refreshToken,
-            //        ExpiresAt = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration)),
-            //    });
+            //await _dbContext.JwtTokens.AddAsync(new JwtToken
+            //{
+            //    UserId = user.Id,
+            //    RefreshToken = refreshToken,
+            //    ExpiresAt = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration)),
+            //});
 
-            //    await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync();
             //}
 
             response.Success = true;
             response.MessageId = Messages.I00001;
             response.Message = Messages.GetMessageById(Messages.I00001);
-            //response.Response = new Token { RefreshToken = refreshToken, AccessToken = accessToken };
+            response.Response = new Token { RefreshToken = refreshToken, AccessToken = accessToken };
             return response;
         }
 
@@ -145,58 +152,60 @@ namespace PregnaCare.Services.Implementations
             var response = new LoginResponse();
             var detailErrorList = new List<DetailError>();
 
-            //var identityUser = await _userManager.FindByEmailAsync(request.Email);
-            //if (identityUser == null)
-            //{
-            //    detailErrorList.Add(new DetailError
-            //    {
-            //        FieldName = nameof(request.Email),
-            //        Value = request.Email,
-            //        MessageId = Messages.E00002,
-            //        Message = Messages.GetMessageById(Messages.E00002)
-            //    });
-            //}
+            var identityUser = await _userManager.FindByEmailAsync(request.Email);
+            if (identityUser == null)
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.Email),
+                    Value = request.Email,
+                    MessageId = Messages.E00002,
+                    Message = Messages.GetMessageById(Messages.E00002)
+                });
+            }
 
-            //var roleName = (await _userManager.GetRolesAsync(identityUser)).FirstOrDefault();
-            //if (string.IsNullOrEmpty(roleName))
-            //{
-            //    detailErrorList.Add(new DetailError
-            //    {
-            //        FieldName = nameof(request.Password),
-            //        Value = request.Password,
-            //        MessageId = Messages.E00001,
-            //        Message = Messages.GetMessageById(Messages.E00001)
-            //    });
-            //}
-            //var isConfirm = (await _userManager.IsEmailConfirmedAsync(identityUser));
-            //if (!isConfirm)
-            //{
-            //    detailErrorList.Add(new DetailError
-            //    {
-            //        FieldName = nameof(request.Email),
-            //        Value = request.Email,
-            //        MessageId = Messages.E00003,
-            //        Message = Messages.GetMessageById(Messages.E00003)
-            //    });
-            //}
+            var roleName = (await _userManager.GetRolesAsync(identityUser)).FirstOrDefault();
+            if (string.IsNullOrEmpty(roleName))
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.Password),
+                    Value = request.Password,
+                    MessageId = Messages.E00001,
+                    Message = Messages.GetMessageById(Messages.E00001)
+                });
+            }
+            var isConfirm = (await _userManager.IsEmailConfirmedAsync(identityUser));
+            if (!isConfirm)
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.Email),
+                    Value = request.Email,
+                    MessageId = Messages.E00003,
+                    Message = Messages.GetMessageById(Messages.E00003)
+                });
+            }
 
-            //if (detailErrorList.Any())
-            //{
-            //    response.Success = false;
-            //    response.MessageId = Messages.E00002;
-            //    response.Message = Messages.GetMessageById(Messages.E00002);
-            //    response.DetailErrorList = detailErrorList;
-            //    return response;
-            //}
-            //var accessToken = _tokenService.GenerateToken(identityUser, roleName, TokenTypeEnum.AccessToken.ToString());
+            if (detailErrorList.Any())
+            {
+                response.Success = false;
+                response.MessageId = Messages.E00002;
+                response.Message = Messages.GetMessageById(Messages.E00002);
+                response.DetailErrorList = detailErrorList;
+                return response;
+            }
 
-            //var refreshToken = await _userManager.GetAuthenticationTokenAsync(identityUser, LoginProviderEnum.InternalProvider.ToString(), TokenTypeEnum.RefreshToken.ToString());
-            //if (string.IsNullOrEmpty(refreshToken))
-            //{
-            //    refreshToken = _tokenService.GenerateToken(identityUser, roleName, TokenTypeEnum.RefreshToken.ToString());
+            var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == request.Email);
+            var accessToken = _tokenService.GenerateToken(user, roleName, TokenTypeEnum.AccessToken.ToString());
 
-            //    await _userManager.SetAuthenticationTokenAsync(identityUser, LoginProviderEnum.InternalProvider.ToString(), TokenTypeEnum.RefreshToken.ToString(), refreshToken);
-            //}
+            var refreshToken = await _userManager.GetAuthenticationTokenAsync(identityUser, LoginProviderEnum.ExternalProvider.ToString(), TokenTypeEnum.RefreshToken.ToString());
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                refreshToken = _tokenService.GenerateToken(user, roleName, TokenTypeEnum.RefreshToken.ToString());
+
+                await _userManager.SetAuthenticationTokenAsync(identityUser, LoginProviderEnum.ExternalProvider.ToString(), TokenTypeEnum.RefreshToken.ToString(), refreshToken);
+            }
 
             response.Success = true;
             response.MessageId = Messages.I00001;
@@ -345,13 +354,22 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            var password = PasswordUtils.HashPassword(request.Password);
+            await _userManager.CreateAsync(new IdentityUser<Guid>
+            {
+                Id = Guid.NewGuid(),
+                UserName = request.Email,
+                NormalizedUserName = request.Email,
+                Email = request.Email,
+                NormalizedEmail = request.Email,
+            }, request.Password);
+
+            var identityUser = await _userManager.FindByEmailAsync(request.Email);
+            await _userManager.AddToRoleAsync(identityUser, request.RoleName);
             var userAccount = new User
             {
                 FullName = request.FullName,
                 Email = request.Email,
-                Password = password,
-                
+                Password = identityUser.PasswordHash ?? string.Empty,
                 IsDeleted = false,
             };
 
