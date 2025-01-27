@@ -9,15 +9,15 @@ public partial class PregnancyRecord
 
     public Guid? UserId { get; set; }
 
-    public string BabyName { get; set; }
+    public string BabyName { get; set; } = string.Empty;
 
     public DateOnly? PregnancyStartDate { get; set; }
 
     public DateOnly? ExpectedDueDate { get; set; }
 
-    public string BabyGender { get; set; }
+    public string BabyGender { get; set; } = string.Empty;
 
-    public string ImageUrl { get; set; }
+    public string ImageUrl { get; set; } = string.Empty;
 
     public DateTime? CreatedAt { get; set; }
 

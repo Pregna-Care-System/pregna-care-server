@@ -15,9 +15,9 @@ public partial class MotherInfo
 
     public double? Weight { get; set; }
 
-    public string BloodPressure { get; set; }
+    public string BloodPressure { get; set; } = string.Empty;
 
-    public string HealthStatus { get; set; }
+    public string HealthStatus { get; set; } = string.Empty;
 
     public string Notes { get; set; }
 

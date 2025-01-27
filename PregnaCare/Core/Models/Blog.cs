@@ -9,17 +9,17 @@ public partial class Blog
 
     public Guid UserId { get; set; }
 
-    public string PageTitle { get; set; }
+    public string PageTitle { get; set; } = string.Empty;
 
-    public string Heading { get; set; }
+    public string Heading { get; set; } = string.Empty;
 
-    public string Content { get; set; }
+    public string Content { get; set; } = string.Empty;
 
-    public string ShortDescription { get; set; }
+    public string ShortDescription { get; set; } = string.Empty;
 
-    public string FeaturedImageUrl { get; set; }
+    public string FeaturedImageUrl { get; set; } = string.Empty;
 
-    public string UrlHandle { get; set; }
+    public string UrlHandle { get; set; } = string.Empty;
 
     public bool? IsVisible { get; set; }
 
