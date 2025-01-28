@@ -51,7 +51,7 @@ namespace PregnaCare.Api.Controllers.Auth
             var user = await _userManager.FindByEmailAsync(request.Email);
 
             var token = CommonUtils.GenerateOtp();
-            var callbackUrl = Url.Action("ResetPassword", "Password", new { token = token }, HttpContext.Request.Scheme);
+            var callbackUrl = Url.Action("ResetPasswordPage", "Password", new { token = token }, HttpContext.Request.Scheme);
 
             string path = Path.Combine(Directory.GetCurrentDirectory(), "Utils", "Html", "PasswordResetRequest.html");
             string emailContent = await System.IO.File.ReadAllTextAsync(path);
@@ -68,7 +68,7 @@ namespace PregnaCare.Api.Controllers.Auth
                 return BadRequest(response);
             }
 
-            await _authService.AddTokenAsync(user.Id, TokenTypeEnum.ResetToken.ToString(), token, DateTime.Now.AddHours(1));
+            await _authService.AddTokenAsync(user.Id, TokenTypeEnum.ResetPasswordToken.ToString(), token, DateTime.Now.AddHours(1));
             return Ok(response);
         }
 
@@ -78,7 +78,7 @@ namespace PregnaCare.Api.Controllers.Auth
             var response = await _passwordService.ResetPasswordAsync(request);
             if (!response.Success) return BadRequest(response);
 
-            var userToken = await _authContext.Set<IdentityUserToken<Guid>>().FirstOrDefaultAsync(x => x.Value == request.Token && x.Name == TokenTypeEnum.ResetToken.ToString());
+            var userToken = await _authContext.Set<IdentityUserToken<Guid>>().FirstOrDefaultAsync(x => x.Value == request.Token && x.Name == TokenTypeEnum.ResetPasswordToken.ToString());
             if (userToken == null || (DateTime?)_authContext.Entry(userToken).Property("ExpirationTime").OriginalValue < DateTime.UtcNow)
             {
                 response.Success = false;
@@ -98,9 +98,15 @@ namespace PregnaCare.Api.Controllers.Auth
 
             await _userManager.RemovePasswordAsync(identityUser);
             await _userManager.AddPasswordAsync(identityUser, request.NewPassword);
-            await _authService.RemoveTokenAsync(identityUser.Id, TokenTypeEnum.ResetToken.ToString());
+            await _authService.RemoveTokenAsync(identityUser.Id, TokenTypeEnum.ResetPasswordToken.ToString());
             return Ok(response);
         }
 
+        [HttpGet("ResetPasswordPage")]
+        public IActionResult ResetPasswordPage([FromQuery] string token)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "Utils", "Html", "ResetPassword.html");
+            return PhysicalFile(filePath, "text/html");
+        }
     }
 }

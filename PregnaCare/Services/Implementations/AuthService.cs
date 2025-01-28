@@ -58,7 +58,7 @@ namespace PregnaCare.Services.Implementations
             {
                 UserId = userId,
                 LoginProvider = LoginProviderEnum.InternalProvider.ToString(),
-                Name = TokenTypeEnum.OTP.ToString(),
+                Name = tokenType,
                 Value = otp,
             };
 
