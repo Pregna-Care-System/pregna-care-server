@@ -398,7 +398,7 @@ namespace PregnaCare.Services.Implementations
                 UserId = userAccount.Id,    
             };
 
-            await _authRepository.RegisterAsync(userAccount);
+            await _authRepository.RegisterAsync(userAccount, userRole);
 
             response.Success = true;
             response.MessageId = Messages.I00001;
