@@ -28,6 +28,7 @@ namespace PregnaCare
 
             // Add services to the container.
             builder.Services.AddDbContext<PregnaCareAppDbContext>(options => options.UseSqlServer(applicationDbConnection));
+            builder.Services.AddDbContext<PregnaCareAuthDbContext>(options => options.UseSqlServer(authDbConnection));
 
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
@@ -36,10 +37,11 @@ namespace PregnaCare
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<ITokenService, TokenService>();
             builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IPasswordService, PasswordService>();
 
             // Config identity
-            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-                            .AddEntityFrameworkStores<PregnaCareAppDbContext>()
+            builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
+                            .AddEntityFrameworkStores<PregnaCareAuthDbContext>()
                             .AddDefaultTokenProviders();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
@@ -100,12 +102,14 @@ namespace PregnaCare
             using (var scope = app.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var appDbcContext = services.GetRequiredService<PregnaCareAppDbContext>();
+                var appDbContext = services.GetRequiredService<PregnaCareAppDbContext>();
+                var authDbContext = services.GetRequiredService<PregnaCareAuthDbContext>(); 
 
-                appDbcContext.Database.Migrate();
+                authDbContext.Database.Migrate();   
+                appDbContext.Database.Migrate();
 
                 await SeedData.InitializeAsync(services);
-                appDbcContext.ChangeTracker.Clear();
+                appDbContext.ChangeTracker.Clear();
             }
 
             // Configure the HTTP request pipeline.

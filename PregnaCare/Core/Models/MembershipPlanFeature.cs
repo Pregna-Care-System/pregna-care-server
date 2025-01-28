@@ -5,11 +5,11 @@ namespace PregnaCare.Core.Models;
 
 public partial class MembershipPlanFeature
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int MembershipPlanId { get; set; }
+    public Guid MembershipPlanId { get; set; }
 
-    public int FeatureId { get; set; }
+    public Guid FeatureId { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

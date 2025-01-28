@@ -31,6 +31,7 @@
                 "E00009" => "The input format is invalid. Please follow the expected format.",
                 "E00010" => "Input error occurred. Please check the detailed errors for more information.",
                 "E00011" => "The email address you entered is already registered. Please use a different email address.",
+                "E00012" => "No user with this email exists.",
                 "E99999" => "A system error occurred. Please contact technical support.",
 
                 // Warning

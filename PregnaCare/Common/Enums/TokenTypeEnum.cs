@@ -4,5 +4,7 @@
     {
         AccessToken,
         RefreshToken,
+        OTP,
+        ResetPasswordToken,
     }
 }

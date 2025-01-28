@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using PregnaCare.Common.Enums;
 using PregnaCare.Core.Models;
 using PregnaCare.Utils;
@@ -10,6 +11,8 @@ namespace PregnaCare.Infrastructure.Data
         public static async Task InitializeAsync(IServiceProvider serviceProvider)
         {
             var appDbContext = serviceProvider.GetRequiredService<PregnaCareAppDbContext>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser<Guid>>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
 
             using (var transaction = await appDbContext.Database.BeginTransactionAsync())
             {
@@ -36,18 +39,24 @@ namespace PregnaCare.Infrastructure.Data
                                 IsDeleted = false,
                             });
 
+                            await roleManager.CreateAsync(new IdentityRole<Guid>
+                            {
+                                Id = Guid.NewGuid(),
+                                Name = roleName,
+                                NormalizedName = roleName,
+                            });
+
                             isAdded = true;
                         }
                     }
 
-                    if(isAdded) await appDbContext.SaveChangesAsync();
+                    if (isAdded) await appDbContext.SaveChangesAsync();
 
                     // Seed admin account
-                    var adminEmail = "pregnacareadmin@gmail.com";
+                    var adminEmail = "pregnacareadmin8386@gmail.com";
 
                     if (!await appDbContext.Users.AnyAsync(u => u.Email == adminEmail))
-                    {
-                        var hashPassword = PasswordUtils.HashPassword("Admin1234@!");
+                    {                      
                         var adminRole = await appDbContext.Roles
                             .FirstOrDefaultAsync(r => r.RoleName == RoleEnum.Admin.ToString());
 
@@ -58,13 +67,32 @@ namespace PregnaCare.Infrastructure.Data
 
                         var admin = new User
                         {
+                            Id = Guid.NewGuid(),
                             Email = adminEmail,
                             FullName = "PregnaCare Admin",
-                            Password = hashPassword,
-                            RoleId = adminRole.Id,
                             IsDeleted = false
                         };
 
+                        var userRole = new UserRole
+                        {
+                            Id = Guid.NewGuid(),
+                            UserId = admin.Id,
+                            RoleId = adminRole.Id,
+                        };
+
+                        var identityUser = new IdentityUser<Guid>
+                        {
+                            Id = admin.Id,
+                            UserName = adminEmail,
+                            NormalizedUserName = adminEmail,
+                            Email = adminEmail,
+                            NormalizedEmail = adminEmail,
+                        };
+
+                        await userManager.CreateAsync(identityUser, "Admin1234@!");
+                        await userManager.AddToRoleAsync(identityUser, adminRole.RoleName);
+
+                        await appDbContext.UserRoles.AddAsync(userRole);
                         await appDbContext.Users.AddAsync(admin);
                         await appDbContext.SaveChangesAsync();
                     }

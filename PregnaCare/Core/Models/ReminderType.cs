@@ -5,11 +5,11 @@ namespace PregnaCare.Core.Models;
 
 public partial class ReminderType
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public string TypeName { get; set; }
+    public string TypeName { get; set; } = string.Empty;
 
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     public DateTime? CreatedAt { get; set; }
 

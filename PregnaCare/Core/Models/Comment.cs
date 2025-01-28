@@ -5,15 +5,15 @@ namespace PregnaCare.Core.Models;
 
 public partial class Comment
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int BlogId { get; set; }
+    public Guid BlogId { get; set; }
 
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
 
-    public int? ParentCommentId { get; set; }
+    public Guid? ParentCommentId { get; set; }
 
-    public string CommentText { get; set; }
+    public string CommentText { get; set; } = string.Empty;
 
     public DateTime? CreatedAt { get; set; }
 

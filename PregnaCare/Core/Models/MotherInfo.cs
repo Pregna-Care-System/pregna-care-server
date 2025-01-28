@@ -5,9 +5,9 @@ namespace PregnaCare.Core.Models;
 
 public partial class MotherInfo
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int PregnancyRecordId { get; set; }
+    public Guid? PregnancyRecordId { get; set; }
 
     public int Week { get; set; }
 
@@ -15,9 +15,9 @@ public partial class MotherInfo
 
     public double? Weight { get; set; }
 
-    public string BloodPressure { get; set; }
+    public string BloodPressure { get; set; } = string.Empty;
 
-    public string HealthStatus { get; set; }
+    public string HealthStatus { get; set; } = string.Empty;
 
     public string Notes { get; set; }
 

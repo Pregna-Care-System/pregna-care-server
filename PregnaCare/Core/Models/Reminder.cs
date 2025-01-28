@@ -5,19 +5,17 @@ namespace PregnaCare.Core.Models;
 
 public partial class Reminder
 {
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
-    public int UserId { get; set; }
+    public Guid ReminderTypeId { get; set; }
 
-    public int ReminderTypeId { get; set; }
+    public string Title { get; set; } = string.Empty;
 
-    public string Title { get; set; }
-
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     public DateTime? ReminderDate { get; set; }
 
-    public string Status { get; set; }
+    public string Status { get; set; } = string.Empty;
 
     public DateTime? CreatedAt { get; set; }
 
@@ -25,9 +23,7 @@ public partial class Reminder
 
     public bool? IsDeleted { get; set; }
 
-    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
-
     public virtual ReminderType ReminderType { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual ICollection<UserReminder> UserReminders { get; set; } = new List<UserReminder>();
 }
