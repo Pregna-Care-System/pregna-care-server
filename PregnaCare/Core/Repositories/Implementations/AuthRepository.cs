@@ -26,11 +26,9 @@ namespace PregnaCare.Core.Repositories.Implementations
         /// RegisterAsync
         /// </summary>
         /// <param name="userAccount"></param>
-        /// <param name="userRole"></param>
         /// <returns></returns>
-        public async Task RegisterAsync(User userAccount, UserRole userRole)
+        public async Task RegisterAsync(User userAccount)
         {
-           // await _pregnaCareAppDbContext.UserRoles.AddAsync(userRole);
             await _pregnaCareAppDbContext.Users.AddAsync(userAccount);
             await _pregnaCareAppDbContext.SaveChangesAsync();
         }

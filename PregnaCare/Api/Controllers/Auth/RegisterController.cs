@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Api.Models.Requests;
 using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Api;
+using PregnaCare.Common.Enums;
 using PregnaCare.Services.Interfaces;
 using PregnaCare.Utils;
 
@@ -53,7 +54,7 @@ namespace PregnaCare.Api.Controllers.Auth
                 throw new Exception("Email sending failed. Please try again later.");
             }
 
-            await _authService.AddOtpTokenAsync(user.Id, code, DateTime.Now.AddYears(1));
+            await _authService.AddTokenAsync(user.Id, TokenTypeEnum.OTP.ToString(), code, DateTime.Now.AddYears(1));
             return response;
         }
 
@@ -72,11 +73,11 @@ namespace PregnaCare.Api.Controllers.Auth
                 return BadRequest("User not found.");
             }
 
-            var result = await _authService.VerifyOtpAsync(user.Id, code);
+            var result = await _authService.VerifyAsync(user.Id, TokenTypeEnum.OTP.ToString(), code);
             if (result)
             {
                 user.EmailConfirmed = true;
-                await _authService.RemoveOtpTokenAsync(user.Id);
+                await _authService.RemoveTokenAsync(user.Id, TokenTypeEnum.OTP.ToString());
                 return Redirect("http://localhost:3000/email-success-confirm");
             }
 

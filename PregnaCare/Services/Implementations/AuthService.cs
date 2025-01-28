@@ -40,13 +40,13 @@ namespace PregnaCare.Services.Implementations
             _roleManager = roleManager;
         }
 
-        public async Task AddOtpTokenAsync(Guid userId, string otp, DateTime expirationTime)
+        public async Task AddTokenAsync(Guid userId, string tokenType, string otp, DateTime expirationTime)
         {
             var existingToken = await _authContext.Set<IdentityUserToken<Guid>>()
                                                   .FirstOrDefaultAsync(t =>
                                                                             t.UserId == userId &&
                                                                             t.LoginProvider == LoginProviderEnum.InternalProvider.ToString() &&
-                                                                            t.Name == TokenTypeEnum.OTP.ToString());
+                                                                            t.Name == tokenType);
 
             if (existingToken != null)
             {
@@ -428,7 +428,7 @@ namespace PregnaCare.Services.Implementations
             };
 
             userAccount.UserRoles.Add(userRole);
-            await _authRepository.RegisterAsync(userAccount, userRole);
+            await _authRepository.RegisterAsync(userAccount);
 
             response.Success = true;
             response.MessageId = Messages.I00001;
@@ -436,12 +436,12 @@ namespace PregnaCare.Services.Implementations
             return response;
         }
 
-        public async Task RemoveOtpTokenAsync(Guid userId)
+        public async Task RemoveTokenAsync(Guid userId, string tokenType)
         {
             var token = await _authContext.Set<IdentityUserToken<Guid>>()
                                           .FirstOrDefaultAsync(t => t.UserId == userId &&
                                                                     t.LoginProvider == LoginProviderEnum.InternalProvider.ToString() &&
-                                                                    t.Name == TokenTypeEnum.OTP.ToString());
+                                                                    t.Name == tokenType);
 
             if (token != null)
             {
@@ -450,12 +450,12 @@ namespace PregnaCare.Services.Implementations
             }
         }
 
-        public async Task<bool> VerifyOtpAsync(Guid userId, string otp)
+        public async Task<bool> VerifyAsync(Guid userId, string tokenType, string otp)
         {
             var token = await _authContext.Set<IdentityUserToken<Guid>>()
                                           .FirstOrDefaultAsync(t => t.UserId == userId
                                                                     && t.LoginProvider == LoginProviderEnum.InternalProvider.ToString()
-                                                                    && t.Name == TokenTypeEnum.OTP.ToString());
+                                                                    && t.Name == tokenType);
 
             if (token == null || token.Value != otp) return false;
 

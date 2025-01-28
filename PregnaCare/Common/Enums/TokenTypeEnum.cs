@@ -5,5 +5,6 @@
         AccessToken,
         RefreshToken,
         OTP,
+        ResetToken,
     }
 }
