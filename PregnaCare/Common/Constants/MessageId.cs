@@ -26,6 +26,7 @@
         public static readonly string E00009 = "E00009"; // The input format is invalid. Please follow the expected format.
         public static readonly string E00010 = "E00010"; // Input error occurred. Please check the detailed errors for more information.
         public static readonly string E00011 = "E00011"; // The email address you entered is already registered. Please use a different email address.
+        public static readonly string E00012 = "E00012"; // No user with this email exists.
         public static readonly string E99999 = "E99999"; // A system error occurred. Please contact technical support.
 
         /// <summary>
