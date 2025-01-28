@@ -58,7 +58,7 @@ namespace PregnaCare.Api.Controllers.Auth
             return response;
         }
 
-        [HttpGet("confirm-email")]
+        [HttpGet("ConfirmEmail")]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))

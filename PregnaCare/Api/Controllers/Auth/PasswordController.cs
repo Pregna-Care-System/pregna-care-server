@@ -42,7 +42,7 @@ namespace PregnaCare.Api.Controllers.Auth
             _passwordService = passwordService;
         }
 
-        [HttpPost("forgot-password")]
+        [HttpPost("ForgotPassword")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
         {
             var response = await _passwordService.ForgotPasswordAsync(request);
@@ -72,7 +72,7 @@ namespace PregnaCare.Api.Controllers.Auth
             return Ok(response);
         }
 
-        [HttpPost("reset-password")]
+        [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
             var response = await _passwordService.ResetPasswordAsync(request);
