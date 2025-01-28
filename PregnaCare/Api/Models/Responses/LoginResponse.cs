@@ -1,7 +1,7 @@
 ﻿using PregnaCare.Common.Api;
 using PregnaCare.Core.Models;
 
-namespace PregnaCare.Api.Controllers.Auth
+namespace PregnaCare.Api.Models.Responses
 {
     public class LoginResponse : AbstractApiResponse<Token>
     {

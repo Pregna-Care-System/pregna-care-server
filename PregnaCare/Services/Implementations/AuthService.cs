@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PregnaCare.Api.Controllers.Auth;
+using PregnaCare.Api.Models.Requests;
+using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Constants;
 using PregnaCare.Common.Enums;
@@ -74,7 +75,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Email),
+                    FieldName = nameof(request.Email),
                     Value = request.Email,
                     Message = Messages.GetMessageById(Messages.E00005),
                     MessageId = Messages.E00005
@@ -85,7 +86,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Email),
+                    FieldName = nameof(request.Email),
                     Value = request.Email,
                     Message = Messages.GetMessageById(Messages.E00009),
                     MessageId = Messages.E00009
@@ -96,7 +97,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Password),
+                    FieldName = nameof(request.Password),
                     Value = request.Password,
                     Message = Messages.GetMessageById(Messages.E00005),
                     MessageId = Messages.E00005
@@ -107,7 +108,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Password),
+                    FieldName = nameof(request.Password),
                     Value = request.Email,
                     Message = Messages.GetMessageById(Messages.E00007),
                     MessageId = Messages.E00007
@@ -118,7 +119,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Password),
+                    FieldName = nameof(request.Password),
                     Value = request.Password,
                     Message = Messages.GetMessageById(Messages.E00009),
                     MessageId = Messages.E00009
@@ -246,7 +247,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.FullName),
+                    FieldName = nameof(request.FullName),
                     Value = request.FullName,
                     Message = Messages.GetMessageById(Messages.E00005),
                     MessageId = Messages.E00005
@@ -257,7 +258,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.FullName),
+                    FieldName = nameof(request.FullName),
                     Value = request.FullName,
                     Message = Messages.GetMessageById(Messages.E00007),
                     MessageId = Messages.E00007
@@ -268,7 +269,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Email),
+                    FieldName = nameof(request.Email),
                     Value = request.Email,
                     Message = Messages.GetMessageById(Messages.E00005),
                     MessageId = Messages.E00005
@@ -279,7 +280,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Email),
+                    FieldName = nameof(request.Email),
                     Value = request.Email,
                     Message = Messages.GetMessageById(Messages.E00009),
                     MessageId = Messages.E00009
@@ -290,7 +291,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Email),
+                    FieldName = nameof(request.Email),
                     Value = request.Email,
                     Message = Messages.GetMessageById(Messages.E00007),
                     MessageId = Messages.E00007
@@ -301,7 +302,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Password),
+                    FieldName = nameof(request.Password),
                     Value = request.Password,
                     Message = Messages.GetMessageById(Messages.E00005),
                     MessageId = Messages.E00005
@@ -312,7 +313,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Password),
+                    FieldName = nameof(request.Password),
                     Value = request.Email,
                     Message = Messages.GetMessageById(Messages.E00007),
                     MessageId = Messages.E00007
@@ -323,7 +324,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.Password),
+                    FieldName = nameof(request.Password),
                     Value = request.Password,
                     Message = Messages.GetMessageById(Messages.E00009),
                     MessageId = Messages.E00009
@@ -334,7 +335,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.RoleName),
+                    FieldName = nameof(request.RoleName),
                     Value = request.RoleName,
                     Message = Messages.GetMessageById(Messages.E00005),
                     MessageId = Messages.E00005
@@ -346,7 +347,7 @@ namespace PregnaCare.Services.Implementations
             {
                 detailErrorList.Add(new DetailError
                 {
-                    FieldName = nameof(RegisterRequest.RoleName),
+                    FieldName = nameof(request.RoleName),
                     Value = request.RoleName,
                     Message = Messages.GetMessageById(Messages.E00009),
                     MessageId = Messages.E00009

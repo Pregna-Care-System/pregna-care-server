@@ -1,4 +1,5 @@
-﻿using PregnaCare.Api.Controllers.Auth;
+﻿using PregnaCare.Api.Models.Requests;
+using PregnaCare.Api.Models.Responses;
 
 namespace PregnaCare.Services.Interfaces
 {

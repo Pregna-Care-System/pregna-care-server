@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PregnaCare.Api.Models.Requests;
+using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Api;
 using PregnaCare.Services.Interfaces;
 

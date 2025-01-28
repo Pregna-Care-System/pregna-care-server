@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using PregnaCare.Api.Models.Requests;
+using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Api;
 using PregnaCare.Services.Interfaces;
 using PregnaCare.Utils;
@@ -51,7 +53,7 @@ namespace PregnaCare.Api.Controllers.Auth
                 throw new Exception("Email sending failed. Please try again later.");
             }
 
-            await _authService.AddOtpTokenAsync(user.Id, code, DateTime.Now.AddMinutes(5));
+            await _authService.AddOtpTokenAsync(user.Id, code, DateTime.Now.AddYears(1));
             return response;
         }
 

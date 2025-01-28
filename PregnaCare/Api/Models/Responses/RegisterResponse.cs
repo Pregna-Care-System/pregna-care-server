@@ -1,6 +1,6 @@
 ﻿using PregnaCare.Common.Api;
 
-namespace PregnaCare.Api.Controllers.Auth
+namespace PregnaCare.Api.Models.Responses
 {
     public class RegisterResponse : AbstractApiResponse<string>
     {
