@@ -42,6 +42,18 @@ namespace PregnaCare.Services.Implementations
 
         public async Task AddOtpTokenAsync(Guid userId, string otp, DateTime expirationTime)
         {
+            var existingToken = await _authContext.Set<IdentityUserToken<Guid>>()
+                                                  .FirstOrDefaultAsync(t =>
+                                                                            t.UserId == userId &&
+                                                                            t.LoginProvider == LoginProviderEnum.InternalProvider.ToString() &&
+                                                                            t.Name == TokenTypeEnum.OTP.ToString());
+
+            if (existingToken != null)
+            {
+                _authContext.Set<IdentityUserToken<Guid>>().Remove(existingToken);
+                await _authContext.SaveChangesAsync();
+            }
+
             var token = new IdentityUserToken<Guid>
             {
                 UserId = userId,
@@ -50,8 +62,8 @@ namespace PregnaCare.Services.Implementations
                 Value = otp,
             };
 
-            _authContext.Entry(token).Property("ExpirationTime").CurrentValue = expirationTime;
             _authContext.Set<IdentityUserToken<Guid>>().Add(token);
+            _authContext.Entry(token).Property("ExpirationTime").CurrentValue = expirationTime;
             await _authContext.SaveChangesAsync();
         }
 
@@ -141,28 +153,44 @@ namespace PregnaCare.Services.Implementations
 
             var userRole = await _dbContext.UserRoles.AsNoTracking().Include(x => x.Role).FirstOrDefaultAsync(x => x.UserId == user.Id);
             var accessToken = _tokenService.GenerateToken(user, userRole.Role.RoleName, TokenTypeEnum.AccessToken.ToString());
-            //var refreshToken = (await _dbContext.JwtTokens.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == user.Id && x.ExpiresAt.Minute >= DateTime.Now.Minute))?.RefreshToken ?? "";
+            var tokenObject = await _authContext.Set<IdentityUserToken<Guid>>()
+                                                  .FirstOrDefaultAsync(t =>
+                                                                            t.UserId == identityUser.Id &&
+                                                                            t.LoginProvider == LoginProviderEnum.InternalProvider.ToString() &&
+                                                                            t.Name == TokenTypeEnum.RefreshToken.ToString());
 
-            //if (string.IsNullOrEmpty(refreshToken))
-            //{
-            var refreshToken = _tokenService.GenerateToken(user, userRole.Role.RoleName, TokenTypeEnum.RefreshToken.ToString()).Substring(0, 255);
-
+            string responseRefreshToken = _tokenService.GenerateToken(user, userRole.Role.RoleName, TokenTypeEnum.RefreshToken.ToString()).Substring(100);
             var refreshTokenExpiration = Environment.GetEnvironmentVariable("REFRESH_TOKEN_EXPIRATION") ?? "0";
+            if (tokenObject != null)
+            {
+                var expirationTime = (DateTime?)_authContext?.Entry(tokenObject).Property("ExpirationTime").OriginalValue;
+                if (expirationTime.HasValue && expirationTime.Value < DateTime.Now)
+                {
+                    tokenObject.Value = responseRefreshToken;
+                    _authContext.Entry(tokenObject).Property("ExpirationTime").CurrentValue = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration));
+                }
+            }
+            else
+            {
+                tokenObject = new IdentityUserToken<Guid>
+                {
+                    UserId = identityUser.Id,
+                    LoginProvider = LoginProviderEnum.InternalProvider.ToString(),
+                    Name = TokenTypeEnum.RefreshToken.ToString(),
+                    Value = responseRefreshToken,
+                };
+                _authContext.Set<IdentityUserToken<Guid>>().Add(tokenObject);
+                _authContext.Entry(tokenObject).Property("ExpirationTime").CurrentValue = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration));
 
-            //await _dbContext.JwtTokens.AddAsync(new JwtToken
-            //{
-            //    UserId = user.Id,
-            //    RefreshToken = refreshToken,
-            //    ExpiresAt = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration)),
-            //});
+            }
 
             await _dbContext.SaveChangesAsync();
-            //}
+            await _authContext.SaveChangesAsync();
 
             response.Success = true;
             response.MessageId = Messages.I00001;
             response.Message = Messages.GetMessageById(Messages.I00001);
-            response.Response = new Token { RefreshToken = refreshToken, AccessToken = accessToken };
+            response.Response = new Token { RefreshToken = tokenObject.Value, AccessToken = accessToken };
             return response;
         }
 
@@ -314,7 +342,7 @@ namespace PregnaCare.Services.Implementations
                 detailErrorList.Add(new DetailError
                 {
                     FieldName = nameof(request.Password),
-                    Value = request.Email,
+                    Value = request.Password,
                     Message = Messages.GetMessageById(Messages.E00007),
                     MessageId = Messages.E00007
                 });
@@ -384,7 +412,7 @@ namespace PregnaCare.Services.Implementations
 
             var identityUser = await _userManager.FindByEmailAsync(request.Email);
             await _userManager.AddToRoleAsync(identityUser, request.RoleName);
-            
+
             var userAccount = new User
             {
                 FullName = request.FullName,
@@ -396,9 +424,10 @@ namespace PregnaCare.Services.Implementations
             var userRole = new UserRole
             {
                 RoleId = role.Id,
-                UserId = userAccount.Id,    
+                UserId = userAccount.Id,
             };
 
+            userAccount.UserRoles.Add(userRole);
             await _authRepository.RegisterAsync(userAccount, userRole);
 
             response.Success = true;
