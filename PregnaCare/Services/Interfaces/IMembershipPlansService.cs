@@ -10,7 +10,7 @@ namespace PregnaCare.Services.Interfaces
         Task<MembershipPlanResponse> GetPlanByIdAsync(Guid id);
         Task<MembershipPlanResponse> AddPlanAsync(MembershipPlanRequest request, List<Guid> featureIds);
         Task UpdatePlanAsync(Guid id, MembershipPlan plan);
-        Task DeletePlanAsync(Guid id);
+        Task<MembershipPlanResponse> DeletePlanAsync(Guid id);
 
     }
 }

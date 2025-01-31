@@ -6,6 +6,7 @@ using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
+using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Services.Implementations
@@ -13,10 +14,12 @@ namespace PregnaCare.Services.Implementations
     public class MembershipPlansService : IMembershipPlansService
     {
         private readonly IMembershipPlansRepository _repo;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public MembershipPlansService (IMembershipPlansRepository membershipPlansRepository)
+        public MembershipPlansService (IMembershipPlansRepository membershipPlansRepository, IUnitOfWork unitOfWork)
         {
             _repo = membershipPlansRepository;
+            _unitOfWork = unitOfWork;
         }
         public async Task<MembershipPlanResponse> AddPlanAsync(MembershipPlanRequest request, List<Guid> featureIds)
         {
@@ -61,14 +64,29 @@ namespace PregnaCare.Services.Implementations
             return response;
         }
 
-        public async Task DeletePlanAsync(Guid id)
+        public async Task<MembershipPlanResponse> DeletePlanAsync(Guid id)
         {
             var plan = await _repo.GetByIdAsync(id);
-            if(plan != null)
+            if(plan == null)
             {
-                plan.IsDeleted = true;
-                _repo.Update(plan);
+                new MembershipPlanResponse
+                {
+                    Success = false,
+                    Message = "Plan not found",
+                    MessageId = "E00004"
+                };
             }
+
+            plan.IsDeleted = true;
+            _repo.Update(plan);
+            await _unitOfWork.SaveChangesAsync();
+
+            return new MembershipPlanResponse
+            {
+                Success = true,
+                Message = "Delete plan successfully"
+            };
+            
         }
 
         public async Task<MembershipPlanListResponse> GetAllPlansAsync()
