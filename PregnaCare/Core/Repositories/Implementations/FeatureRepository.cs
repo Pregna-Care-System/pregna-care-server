@@ -1,4 +1,5 @@
-﻿using PregnaCare.Core.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
 
@@ -11,6 +12,10 @@ namespace PregnaCare.Core.Repositories.Implementations
         {
             _appDbContext = pregnaCareAppDbContext;
         }
-        
+
+        public async Task<IEnumerable<Feature>> GetActiveFeatureAsync()
+        {
+            return await _appDbContext.Features.Where(f => (bool)!f.IsDeleted).ToListAsync();
+        }
     }
 }
