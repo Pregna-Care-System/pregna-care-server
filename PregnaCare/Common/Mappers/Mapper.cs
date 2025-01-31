@@ -15,5 +15,13 @@ namespace PregnaCare.Common.Mappers
                 Description = request.Description
             };
         }
+        public static Feature MapToFeature(FeatureRequest request)
+        {
+            return new Feature
+            {
+                FeatureName = request.FeatureName,
+                Description = request.Description,
+            };
+        }
     }
 }
