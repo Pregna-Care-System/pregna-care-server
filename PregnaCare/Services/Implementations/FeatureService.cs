@@ -49,9 +49,28 @@ namespace PregnaCare.Services.Implementations
             return response;
         }
 
-        public Task Delete(Guid id)
+        public async Task<FeatureResponse> Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var feature = await _repo.GetByIdAsync(id);
+            if (feature == null)
+            {
+                new FeatureResponse
+                {
+                    Success = false,
+                    Message = "Feature not found",
+                    MessageId = "E00004",
+                };
+            }
+
+            feature.IsDeleted = true;
+            _repo.Update(feature);
+            await _unit.SaveChangesAsync();
+
+            return new FeatureResponse
+            {
+                Success = true,
+                Message = "Delete feature successfully",
+            };
         }
 
         public async Task<FeatureListResponse> GetAllFeaturesAsync()
