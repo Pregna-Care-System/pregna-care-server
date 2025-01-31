@@ -65,9 +65,14 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
-        public Task<Feature> GetFeatureById(Guid id)
+        public async Task<FeatureResponse> GetFeatureById(Guid id)
         {
-            throw new NotImplementedException();
+            var feature = await _repo.GetByIdAsync(id);
+            return new FeatureResponse
+            {
+                Success = true,
+                Response = feature
+            };
         }
 
         public Task Update(Guid id, Feature feature)
