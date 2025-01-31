@@ -51,5 +51,12 @@ namespace PregnaCare.Api.Controllers.MembershipPlan
             var response = await _planService.DeletePlanAsync(id);
             return response;
         }
+
+        [HttpPut("Update")]
+        public async Task<MembershipPlanResponse> UpdateMembershipPlan(Guid id, MembershipPlanRequest request)
+        {
+            var response = await _planService.UpdatePlanAsync(id, request);
+            return response;
+        }
     }
 }

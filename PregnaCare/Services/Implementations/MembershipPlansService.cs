@@ -111,18 +111,32 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
-        public async Task UpdatePlanAsync(Guid id, MembershipPlan plan)
+        public async Task<MembershipPlanResponse> UpdatePlanAsync(Guid id, MembershipPlanRequest request)
         {
             var existingPlan = await _repo.GetByIdAsync(id);
-            if (existingPlan != null)
+            if (existingPlan == null)
             {
-                existingPlan.PlanName = plan.PlanName;
-                existingPlan.Price = plan.Price;
-                existingPlan.Description = plan.Description;
-                existingPlan.Duration = plan.Duration;
-                
-                _repo.Update(existingPlan);
+                new MembershipPlanResponse
+                {
+                    Success = false,
+                    Message = "Plan not found",
+                    MessageId = "E00004"
+                };
             }
+
+            existingPlan.PlanName = request.PlanName;
+            existingPlan.Price = request.Price;
+            existingPlan.Description = request.Description;
+            existingPlan.Duration = request.Duration;
+            existingPlan.UpdatedAt = DateTime.Now;
+
+            _repo.Update(existingPlan);
+            await _unitOfWork.SaveChangesAsync();
+            return new MembershipPlanResponse
+            {
+                Success = true,
+                Message = "Updated successfully"
+            };
         }
     }
 }

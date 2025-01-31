@@ -106,7 +106,6 @@ namespace PregnaCare.Services.Implementations
                     MessageId = "E00004",
                 };
             }
-            var mapFeature = Mapper.MapToFeature(request);
             feature.FeatureName = request.FeatureName;
             feature.Description = request.Description;
             feature.UpdatedAt = DateTime.Now;
