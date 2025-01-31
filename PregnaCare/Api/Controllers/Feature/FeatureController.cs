@@ -22,5 +22,11 @@ namespace PregnaCare.Api.Controllers.Feature
             var response = await _featureService.AddFeatureAsync(request);
             return response;
         }
+        [HttpGet("GetAll")]
+        public async Task<FeatureListResponse> GetAllListFeature()
+        {
+            var response = await _featureService.GetAllFeaturesAsync();
+            return response;
+        }
     }
 }
