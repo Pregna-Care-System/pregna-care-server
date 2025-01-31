@@ -42,8 +42,15 @@ namespace PregnaCare.Api.Controllers.Feature
         {
             var response = await _featureService.Update(id, request);
             return response;
-
         }
+
+        [HttpDelete("Delete")]
+        public async Task<FeatureResponse> DeleteFeature(Guid id) 
+        {
+            var response = await _featureService.Delete(id);
+            return response;
+        }
+
 
     }
 }
