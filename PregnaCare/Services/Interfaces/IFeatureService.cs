@@ -7,7 +7,7 @@ namespace PregnaCare.Services.Interfaces
     public interface IFeatureService
     {
         Task<FeatureResponse> AddFeatureAsync(FeatureRequest request);
-        Task <IEnumerable<Feature>> GetAllFeaturesAsync ();
+        Task <FeatureListResponse> GetAllFeaturesAsync ();
         Task <Feature> GetFeatureById(Guid id);
         Task Update (Guid id, Feature feature);
         Task Delete (Guid id);

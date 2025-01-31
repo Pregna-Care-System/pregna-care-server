@@ -54,9 +54,15 @@ namespace PregnaCare.Services.Implementations
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Feature>> GetAllFeaturesAsync()
+        public async Task<FeatureListResponse> GetAllFeaturesAsync()
         {
-            throw new NotImplementedException();
+            var feature = await _repo.GetAllAsync();
+            return new FeatureListResponse
+            {
+                Success = true,
+                Message = "Feature list retrieved successfully",
+                Response = feature
+            };
         }
 
         public Task<Feature> GetFeatureById(Guid id)
