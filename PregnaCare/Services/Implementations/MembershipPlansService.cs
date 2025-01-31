@@ -71,9 +71,16 @@ namespace PregnaCare.Services.Implementations
             }
         }
 
-        public async Task<IEnumerable<MembershipPlan>> GetAllPlansAsync()
+        public async Task<MembershipPlanListResponse> GetAllPlansAsync()
         {
-            return await _repo.GetActivePlanAsync();
+
+            var plan = await _repo.GetActivePlanAsync();
+            return new MembershipPlanListResponse
+            {
+                Success = true,
+                Message = "All plan received successfully",
+                Response = plan,
+            };
         }
 
         public async Task<MembershipPlan> GetPlanByIdAsync(Guid id)
