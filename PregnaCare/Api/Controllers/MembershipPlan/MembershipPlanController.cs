@@ -3,10 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Api.Models.Requests;
 using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Api;
-using PregnaCare.Common.Mappers;
 using PregnaCare.Services.Interfaces;
 
-namespace PregnaCare.Api.Controllers.Auth
+namespace PregnaCare.Api.Controllers.MembershipPlan
 {
     [Route("api/v1/[controller]")]
     [ApiController]
@@ -28,7 +27,7 @@ namespace PregnaCare.Api.Controllers.Auth
         {
             List<Guid> featureId = request.featuredId;
 
-            var response = await _planService.AddPlanAsync(request, featureId );
+            var response = await _planService.AddPlanAsync(request, featureId);
             return response;
         }
     }

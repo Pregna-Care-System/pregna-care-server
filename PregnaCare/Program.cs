@@ -32,6 +32,7 @@ namespace PregnaCare
 
             builder.Services.AddScoped<IAuthRepository, AuthRepository>();
             builder.Services.AddScoped<IMembershipPlansRepository, MembershipPlansRepository>();
+            builder.Services.AddScoped<IFeatureRepository, FeatureRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -40,7 +41,7 @@ namespace PregnaCare
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.AddScoped<IPasswordService, PasswordService>();
             builder.Services.AddScoped<IMembershipPlansService, MembershipPlansService>();
-            
+            builder.Services.AddScoped<IFeatureService, FeatureService>();
 
             // Config identity
             builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
