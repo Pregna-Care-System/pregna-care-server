@@ -75,7 +75,7 @@ namespace PregnaCare.Services.Implementations
 
         public async Task<FeatureListResponse> GetAllFeaturesAsync()
         {
-            var feature = await _repo.GetAllAsync();
+            var feature = await _repo.GetActiveFeatureAsync();
             return new FeatureListResponse
             {
                 Success = true,

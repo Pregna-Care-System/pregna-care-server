@@ -17,6 +17,7 @@ namespace PregnaCare.Core.Repositories.Implementations
         {
             return await _context.MembershipPlans.Where(mp => (bool)!mp.IsDeleted).ToListAsync();
         }
+
         public async Task AddPlanAsync(MembershipPlan plan, List<Guid> featureIds)
         {
             _context.MembershipPlans.Add(plan);
