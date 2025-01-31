@@ -75,9 +75,31 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
-        public Task Update(Guid id, Feature feature)
+        public async Task<FeatureResponse> Update(Guid id, FeatureRequest request)
         {
-            throw new NotImplementedException();
+            var feature = await _repo.GetByIdAsync(id);
+            if(feature == null)
+            {
+                return new FeatureResponse
+                {
+                    Success = false,
+                    Message = "Feature not found",
+                    MessageId = "E00004",
+                };
+            }
+            var mapFeature = Mapper.MapToFeature(request);
+            feature.FeatureName = request.FeatureName;
+            feature.Description = request.Description;
+            feature.UpdatedAt = DateTime.Now;
+
+            _repo.Update(feature);
+            await _unit.SaveChangesAsync();
+            return new FeatureResponse
+            {
+                Success = true,
+                Message = "Feature updated successfully",
+                Response = feature
+            };
         }
         
     }

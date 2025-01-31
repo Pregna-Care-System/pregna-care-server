@@ -36,5 +36,14 @@ namespace PregnaCare.Api.Controllers.Feature
             var response = await _featureService.GetFeatureById(id);
             return response;
         }
+
+        [HttpPut("Update")]
+        public async Task<FeatureResponse> UpdateFeature(Guid id, FeatureRequest request) 
+        {
+            var response = await _featureService.Update(id, request);
+            return response;
+
+        }
+
     }
 }
