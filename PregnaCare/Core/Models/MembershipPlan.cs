@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace PregnaCare.Core.Models;
 
@@ -22,6 +23,7 @@ public partial class MembershipPlan
     public bool? IsDeleted { get; set; }
 
     public virtual ICollection<MembershipPlanFeature> MembershipPlanFeatures { get; set; } = new List<MembershipPlanFeature>();
+    [JsonIgnore]
 
     public virtual ICollection<UserMembershipPlan> UserMembershipPlans { get; set; } = new List<UserMembershipPlan>();
 }

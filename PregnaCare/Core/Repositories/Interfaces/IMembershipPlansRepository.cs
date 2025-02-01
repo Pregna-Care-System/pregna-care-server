@@ -1,10 +1,12 @@
-﻿using PregnaCare.Core.Models;
+﻿using PregnaCare.Core.DTOs;
+using PregnaCare.Core.Models;
 
 namespace PregnaCare.Core.Repositories.Interfaces
 {
     public interface IMembershipPlansRepository: IGenericRepository<MembershipPlan, Guid>
     {
-        Task<IEnumerable<MembershipPlan>> GetActivePlanAsync();
+        Task<IEnumerable<MembershipPlanFeatureDTO>> GetPlansWithFeaturesAsync();
+
         Task AddPlanAsync(MembershipPlan plan, List<Guid> featureIds);
     }
 }

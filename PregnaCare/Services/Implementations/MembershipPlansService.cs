@@ -21,6 +21,7 @@ namespace PregnaCare.Services.Implementations
             _repo = membershipPlansRepository;
             _unitOfWork = unitOfWork;
         }
+
         public async Task<MembershipPlanResponse> AddPlanAsync(MembershipPlanRequest request, List<Guid> featureIds)
         {
             var response = new MembershipPlanResponse();
@@ -89,17 +90,6 @@ namespace PregnaCare.Services.Implementations
             
         }
 
-        public async Task<MembershipPlanListResponse> GetAllPlansAsync()
-        {
-
-            var plan = await _repo.GetActivePlanAsync();
-            return new MembershipPlanListResponse
-            {
-                Success = true,
-                Message = "All plan received successfully",
-                Response = plan,
-            };
-        }
 
         public async Task<MembershipPlanResponse> GetPlanByIdAsync(Guid id)
         {
@@ -108,6 +98,16 @@ namespace PregnaCare.Services.Implementations
             {
                 Success = true,
                 Response = plan
+            };
+        }
+
+        public async Task<MembershipPlanListResponse> GetPlanWithFeatureAsync()
+        {
+            var planFeature = await _repo.GetPlansWithFeaturesAsync();
+            return new MembershipPlanListResponse
+            {
+                Success = true,
+                Response = planFeature
             };
         }
 

@@ -31,10 +31,10 @@ namespace PregnaCare.Api.Controllers.MembershipPlan
             return response;
         }
 
-        [HttpGet("GetAll")]
-        public async Task<MembershipPlanListResponse> GetAllMembershipPlan()
+        [HttpGet("GetAllPlanWithFeature")]
+        public async Task<MembershipPlanListResponse> GetAllPlanWithFeature()
         {
-            var response = await _planService.GetAllPlansAsync();
+            var response = await _planService.GetPlanWithFeatureAsync();
             return response;
         }
 

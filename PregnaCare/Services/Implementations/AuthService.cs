@@ -140,6 +140,22 @@ namespace PregnaCare.Services.Implementations
 
             var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == request.Email);
             var identityUser = await _userManager.FindByEmailAsync(request.Email);
+            if (identityUser is null)
+            {
+                response.Success = false;
+                response.MessageId = Messages.E00003; 
+                response.Message = Messages.GetMessageById(Messages.E00003);
+                response.DetailErrorList = detailErrorList;
+                return response;
+            }
+            if (string.IsNullOrEmpty(identityUser.PasswordHash))
+            {
+                response.Success = false;
+                response.MessageId = Messages.E00004;
+                response.Message = Messages.GetMessageById(Messages.E00004);
+                response.DetailErrorList = detailErrorList;
+                return response;
+            }
             var isSamePassword = _userManager.PasswordHasher.VerifyHashedPassword(identityUser, identityUser.PasswordHash, request.Password) == PasswordVerificationResult.Success;
 
             if (user is null || !isSamePassword || detailErrorList.Any())
