@@ -78,8 +78,7 @@ namespace PregnaCare.Services.Implementations
                 };
             }
 
-            plan.IsDeleted = true;
-            _repo.Update(plan);
+            await _repo.DeletePlanAsync(id);
             await _unitOfWork.SaveChangesAsync();
 
             return new MembershipPlanResponse

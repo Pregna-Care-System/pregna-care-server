@@ -35,6 +35,25 @@ namespace PregnaCare.Core.Repositories.Implementations
             await _context.SaveChangesAsync();
         }
 
+        public async Task DeletePlanAsync(Guid planId)
+        {
+            var plan = await _context.MembershipPlans
+                .Include(mp => mp.MembershipPlanFeatures)
+                .FirstOrDefaultAsync(mp => mp.Id == planId && mp.IsDeleted == false);
+            if(plan != null)
+            {
+                plan.IsDeleted = true;
+                plan.UpdatedAt = DateTime.UtcNow;
+                
+                foreach(var planFeature in plan.MembershipPlanFeatures)
+                {
+                    planFeature.IsDeleted = true;
+                    planFeature.UpdatedAt = DateTime.UtcNow;
+                }
+            }
+                
+        }
+
         public async Task<MembershipPlanFeatureDTO> GetPlanByName(string name)
         {
             var plan = await _context.MembershipPlans
@@ -69,6 +88,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
             var plansWithFeatures = plans.Select(mp => new MembershipPlanFeatureDTO
             {
+                MembershipPlanId = mp.Id,
                 PlanName = mp.PlanName,
                 Price = mp.Price,
                 Duration = mp.Duration,
