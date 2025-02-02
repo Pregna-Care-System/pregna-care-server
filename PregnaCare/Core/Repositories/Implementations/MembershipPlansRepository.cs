@@ -3,6 +3,7 @@ using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
+using System.Numerics;
 
 namespace PregnaCare.Core.Repositories.Implementations
 {
@@ -33,6 +34,31 @@ namespace PregnaCare.Core.Repositories.Implementations
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<MembershipPlanFeatureDTO> GetPlanByName(string name)
+        {
+            var plan = await _context.MembershipPlans
+                .Where(mp => mp.PlanName == name && mp.IsDeleted == false)
+                .Include(mp => mp.MembershipPlanFeatures)
+                    .ThenInclude(mpf => mpf.Feature)
+                .FirstOrDefaultAsync();
+
+            return new MembershipPlanFeatureDTO
+            {
+                PlanName = plan.PlanName,
+                Price = plan.Price,
+                Duration = plan.Duration,
+                Description = plan.Description,
+                CreatedAt = plan.CreatedAt,
+                Features = plan.MembershipPlanFeatures
+                            .Where(mpf => mpf.IsDeleted == false)
+                            .Select(mpf => new FeatureDTO
+                            {
+                                FeatureName = mpf.Feature.FeatureName
+                            }).ToList()
+            };
+        }
+
         public async Task<IEnumerable<MembershipPlanFeatureDTO>> GetPlansWithFeaturesAsync()
         {
             var plans = await _context.MembershipPlans

@@ -91,9 +91,19 @@ namespace PregnaCare.Services.Implementations
         }
 
 
-        public async Task<MembershipPlanResponse> GetPlanByIdAsync(Guid id)
+        //public async Task<MembershipPlanResponse> GetPlanByIdAsync(Guid id)
+        //{
+        //    var plan = await _repo.GetByIdAsync(id);
+        //    return new MembershipPlanResponse
+        //    {
+        //        Success = true,
+        //        Response = plan
+        //    };
+        //}
+
+        public async Task<MembershipPlanResponse> GetPlanByNameAsync(string name)
         {
-            var plan = await _repo.GetByIdAsync(id);
+            var plan = await _repo.GetPlanByName(name);
             return new MembershipPlanResponse
             {
                 Success = true,
