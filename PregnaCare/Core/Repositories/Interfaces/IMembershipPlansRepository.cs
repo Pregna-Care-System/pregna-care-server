@@ -8,7 +8,10 @@ namespace PregnaCare.Core.Repositories.Interfaces
         Task<IEnumerable<MembershipPlanFeatureDTO>> GetPlansWithFeaturesAsync();
 
         Task AddPlanAsync(MembershipPlan plan, List<Guid> featureIds);
-        Task <MembershipPlanFeatureDTO> GetPlanByName(string name); 
+        Task <MembershipPlanFeatureDTO> GetPlanByName(string name);
+        Task<MembershipPlanFeatureDTO> GetPlanById(Guid id);
+
         Task DeletePlanAsync(Guid planId);
+        Task Update(MembershipPlan plan, List<Guid> featureIds);
     }
 }

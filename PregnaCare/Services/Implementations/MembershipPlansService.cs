@@ -90,15 +90,15 @@ namespace PregnaCare.Services.Implementations
         }
 
 
-        //public async Task<MembershipPlanResponse> GetPlanByIdAsync(Guid id)
-        //{
-        //    var plan = await _repo.GetByIdAsync(id);
-        //    return new MembershipPlanResponse
-        //    {
-        //        Success = true,
-        //        Response = plan
-        //    };
-        //}
+        public async Task<MembershipPlanResponse> GetPlanByIdAsync(Guid id)
+        {
+            var plan = await _repo.GetPlanById(id);
+            return new MembershipPlanResponse
+            {
+                Success = true,
+                Response = plan
+            };
+        }
 
         public async Task<MembershipPlanResponse> GetPlanByNameAsync(string name)
         {
@@ -120,7 +120,7 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
-        public async Task<MembershipPlanResponse> UpdatePlanAsync(Guid id, MembershipPlanRequest request)
+        public async Task<MembershipPlanResponse> UpdatePlanAsync(Guid id, MembershipPlanRequest request, List<Guid> featureIds)
         {
             var existingPlan = await _repo.GetByIdAsync(id);
             if (existingPlan == null)
@@ -139,7 +139,7 @@ namespace PregnaCare.Services.Implementations
             existingPlan.Duration = request.Duration;
             existingPlan.UpdatedAt = DateTime.Now;
 
-            _repo.Update(existingPlan);
+            await _repo.Update(existingPlan, featureIds);
             await _unitOfWork.SaveChangesAsync();
             return new MembershipPlanResponse
             {

@@ -38,12 +38,12 @@ namespace PregnaCare.Api.Controllers.MembershipPlan
             return response;
         }
 
-        //[HttpGet("GetById")]
-        //public async Task<MembershipPlanResponse> GetMembershipPlanById(Guid id)
-        //{
-        //    var response = await _planService.GetPlanByIdAsync(id);
-        //    return response;
-        //}
+        [HttpGet("GetById")]
+        public async Task<MembershipPlanResponse> GetMembershipPlanById(Guid id)
+        {
+            var response = await _planService.GetPlanByIdAsync(id);
+            return response;
+        }
         [HttpGet("GetPlanByName")]
         public async Task<MembershipPlanResponse> GetPlanByName(string name)
         {
@@ -62,7 +62,7 @@ namespace PregnaCare.Api.Controllers.MembershipPlan
         [HttpPut("Update")]
         public async Task<MembershipPlanResponse> UpdateMembershipPlan(Guid id, MembershipPlanRequest request)
         {
-            var response = await _planService.UpdatePlanAsync(id, request);
+            var response = await _planService.UpdatePlanAsync(id, request, request.featuredId);
             return response;
         }
     }

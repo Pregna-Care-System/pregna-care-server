@@ -54,6 +54,32 @@ namespace PregnaCare.Core.Repositories.Implementations
                 
         }
 
+        public async Task<MembershipPlanFeatureDTO> GetPlanById(Guid id)
+        {
+            var plan = await _context.MembershipPlans
+                .Where(mp => mp.Id == id && mp.IsDeleted == false)
+                .Include(mp => mp.MembershipPlanFeatures)
+                    .ThenInclude(mpf => mpf.Feature)
+                .FirstOrDefaultAsync();
+
+            return new MembershipPlanFeatureDTO
+            {
+                MembershipPlanId = plan.Id,
+                PlanName = plan.PlanName,
+                Price = plan.Price,
+                Duration = plan.Duration,
+                Description = plan.Description,
+                CreatedAt = plan.CreatedAt,
+                Features = plan.MembershipPlanFeatures
+                            .Where(mpf => mpf.IsDeleted == false)
+                            .Select(mpf => new FeatureDTO
+                            {
+                                Id = mpf.Id,
+                                FeatureName = mpf.Feature.FeatureName
+                            }).ToList()
+            };
+        }
+
         public async Task<MembershipPlanFeatureDTO> GetPlanByName(string name)
         {
             var plan = await _context.MembershipPlans
@@ -64,6 +90,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
             return new MembershipPlanFeatureDTO
             {
+                MembershipPlanId = plan.Id,
                 PlanName = plan.PlanName,
                 Price = plan.Price,
                 Duration = plan.Duration,
@@ -73,6 +100,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                             .Where(mpf => mpf.IsDeleted == false)
                             .Select(mpf => new FeatureDTO
                             {
+                                Id = mpf.Id,
                                 FeatureName = mpf.Feature.FeatureName
                             }).ToList()
             };
@@ -105,7 +133,52 @@ namespace PregnaCare.Core.Repositories.Implementations
             return plansWithFeatures;
         }
 
+        async Task IMembershipPlansRepository.Update(MembershipPlan plan, List<Guid> featureIds)
+        {
+            var existingPlan = await _context.MembershipPlans
+                .Include(mp => mp.MembershipPlanFeatures)
+                .FirstOrDefaultAsync(mp => mp.Id == plan.Id && mp.IsDeleted == false);
 
+            if (existingPlan == null)
+            {
+                throw new Exception("Plan not found");
+            }
+
+            existingPlan.PlanName = plan.PlanName;
+            existingPlan.Price = plan.Price;
+            existingPlan.Duration = plan.Duration;
+            existingPlan.Description = plan.Description;
+            existingPlan.UpdatedAt = DateTime.UtcNow;
+
+            // Tìm các FeatureIds đã tồn tại trong MembershipPlan
+            var existingFeatureIds = existingPlan.MembershipPlanFeatures
+                .Where(mpf => mpf.IsDeleted == false)
+                .Select(mpf => mpf.FeatureId)
+                .ToList();
+
+            existingPlan.MembershipPlanFeatures
+                .Where(mpf => !featureIds.Contains(mpf.FeatureId) && mpf.IsDeleted == false)
+                .ToList()
+                .ForEach(mpf =>
+                {
+                    mpf.IsDeleted = true;
+                    mpf.UpdatedAt = DateTime.UtcNow;
+                });
+
+            var newFeatureIds = featureIds.Except(existingFeatureIds);
+            var newFeatures = newFeatureIds.Select(featureId => new MembershipPlanFeature
+            {
+                Id = Guid.NewGuid(),
+                MembershipPlanId = plan.Id,
+                FeatureId = featureId,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            });
+
+            await _context.MembershipPlanFeatures.AddRangeAsync(newFeatures);
+
+            await _context.SaveChangesAsync();
+        }
 
     }
 }
