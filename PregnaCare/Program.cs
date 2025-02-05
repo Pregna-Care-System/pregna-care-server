@@ -42,6 +42,7 @@ namespace PregnaCare
             builder.Services.AddScoped<IPasswordService, PasswordService>();
             builder.Services.AddScoped<IMembershipPlansService, MembershipPlansService>();
             builder.Services.AddScoped<IFeatureService, FeatureService>();
+            builder.Services.AddScoped<IPregnancyRecordService, PregnancyRecordService>();
 
             // Config identity
             builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()

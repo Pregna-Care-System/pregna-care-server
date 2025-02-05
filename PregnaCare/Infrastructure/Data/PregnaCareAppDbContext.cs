@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PregnaCare.Core.Models;
 
 namespace PregnaCare.Infrastructure.Data;
@@ -60,7 +58,7 @@ public partial class PregnaCareAppDbContext : DbContext
     {
         modelBuilder.Entity<Blog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Blog__3214EC074825F4C5");
+            entity.HasKey(e => e.Id).HasName("PK__Blog__3214EC072531253D");
 
             entity.ToTable("Blog");
 
@@ -91,12 +89,12 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Blogs)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Blog__UserId__236943A5");
+                .HasConstraintName("FK__Blog__UserId__245D67DE");
         });
 
         modelBuilder.Entity<BlogTag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__BlogTag__3214EC0783BB2301");
+            entity.HasKey(e => e.Id).HasName("PK__BlogTag__3214EC07DB6D1A4E");
 
             entity.ToTable("BlogTag");
 
@@ -112,17 +110,17 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.HasOne(d => d.Blog).WithMany(p => p.BlogTags)
                 .HasForeignKey(d => d.BlogId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BlogTag__BlogId__671F4F74");
+                .HasConstraintName("FK__BlogTag__BlogId__690797E6");
 
             entity.HasOne(d => d.Tag).WithMany(p => p.BlogTags)
                 .HasForeignKey(d => d.TagId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__BlogTag__TagId__681373AD");
+                .HasConstraintName("FK__BlogTag__TagId__69FBBC1F");
         });
 
         modelBuilder.Entity<Comment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Comment__3214EC07CD78335F");
+            entity.HasKey(e => e.Id).HasName("PK__Comment__3214EC07AA0617CF");
 
             entity.ToTable("Comment");
 
@@ -141,25 +139,25 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.HasOne(d => d.Blog).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.BlogId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Comment__BlogId__31B762FC");
+                .HasConstraintName("FK__Comment__BlogId__32AB8735");
 
             entity.HasOne(d => d.ParentComment).WithMany(p => p.InverseParentComment)
                 .HasForeignKey(d => d.ParentCommentId)
-                .HasConstraintName("FK__Comment__ParentC__339FAB6E");
+                .HasConstraintName("FK__Comment__ParentC__3493CFA7");
 
             entity.HasOne(d => d.User).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Comment__UserId__32AB8735");
+                .HasConstraintName("FK__Comment__UserId__339FAB6E");
         });
 
         modelBuilder.Entity<Feature>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Feature__3214EC07E0EE3D8D");
+            entity.HasKey(e => e.Id).HasName("PK__Feature__3214EC078D774F65");
 
             entity.ToTable("Feature");
 
-            entity.HasIndex(e => e.FeatureName, "UQ__Feature__55ABBB71E74D73AD").IsUnique();
+            entity.HasIndex(e => e.FeatureName, "UQ__Feature__55ABBB7126C564CB").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CreatedAt)
@@ -178,7 +176,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<FetalGrowthRecord>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__FetalGro__3214EC0783C92656");
+            entity.HasKey(e => e.Id).HasName("PK__FetalGro__3214EC0770636744");
 
             entity.ToTable("FetalGrowthRecord");
 
@@ -186,26 +184,29 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Description).HasDefaultValue("");
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255)
+                .HasDefaultValue("");
             entity.Property(e => e.Note).HasDefaultValue("");
+            entity.Property(e => e.Unit)
+                .HasMaxLength(50)
+                .HasDefaultValue("");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
-            entity.HasOne(d => d.GrowthMetric).WithMany(p => p.FetalGrowthRecords)
-                .HasForeignKey(d => d.GrowthMetricId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FetalGrow__Growt__1BC821DD");
-
             entity.HasOne(d => d.PregnancyRecord).WithMany(p => p.FetalGrowthRecords)
                 .HasForeignKey(d => d.PregnancyRecordId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__FetalGrow__Pregn__1AD3FDA4");
+                .HasConstraintName("FK__FetalGrow__Pregn__19DFD96B");
         });
 
         modelBuilder.Entity<GrowthAlert>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GrowthAl__3214EC07D0EFA85D");
+            entity.HasKey(e => e.Id).HasName("PK__GrowthAl__3214EC07E416DF1F");
 
             entity.ToTable("GrowthAlert");
 
@@ -231,17 +232,17 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.HasOne(d => d.FetalGrowthRecord).WithMany(p => p.GrowthAlerts)
                 .HasForeignKey(d => d.FetalGrowthRecordId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GrowthAle__Fetal__7A3223E8");
+                .HasConstraintName("FK__GrowthAle__Fetal__7B264821");
 
             entity.HasOne(d => d.User).WithMany(p => p.GrowthAlerts)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__GrowthAle__UserI__7B264821");
+                .HasConstraintName("FK__GrowthAle__UserI__7C1A6C5A");
         });
 
         modelBuilder.Entity<GrowthMetric>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__GrowthMe__3214EC075434C643");
+            entity.HasKey(e => e.Id).HasName("PK__GrowthMe__3214EC079F959C7D");
 
             entity.ToTable("GrowthMetric");
 
@@ -265,7 +266,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<MembershipPlan>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Membersh__3214EC079142536E");
+            entity.HasKey(e => e.Id).HasName("PK__Membersh__3214EC0759A84688");
 
             entity.ToTable("MembershipPlan");
 
@@ -274,6 +275,9 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.Description)
+                .HasMaxLength(100)
+                .HasDefaultValue("");
+            entity.Property(e => e.ImageUrl)
                 .HasMaxLength(100)
                 .HasDefaultValue("");
             entity.Property(e => e.IsDeleted).HasDefaultValue(false);
@@ -288,7 +292,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<MembershipPlanFeature>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Membersh__3214EC0776D9865C");
+            entity.HasKey(e => e.Id).HasName("PK__Membersh__3214EC075093C74B");
 
             entity.ToTable("MembershipPlanFeature");
 
@@ -304,43 +308,46 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.HasOne(d => d.Feature).WithMany(p => p.MembershipPlanFeatures)
                 .HasForeignKey(d => d.FeatureId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Membershi__Featu__4E53A1AA");
+                .HasConstraintName("FK__Membershi__Featu__503BEA1C");
 
             entity.HasOne(d => d.MembershipPlan).WithMany(p => p.MembershipPlanFeatures)
                 .HasForeignKey(d => d.MembershipPlanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Membershi__Membe__4D5F7D71");
+                .HasConstraintName("FK__Membershi__Membe__4F47C5E3");
         });
 
         modelBuilder.Entity<MotherInfo>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__MotherIn__3214EC0761590967");
+            entity.HasKey(e => e.Id).HasName("PK__MotherIn__3214EC07333353E5");
 
             entity.ToTable("MotherInfo");
 
+            entity.HasIndex(e => e.PregnancyRecordId, "UQ__MotherIn__06D3067E0B86D5C8").IsUnique();
+
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
-            entity.Property(e => e.BloodPressure)
-                .HasMaxLength(50)
+            entity.Property(e => e.BloodType)
+                .HasMaxLength(2)
                 .HasDefaultValue("");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.HealthStatus).HasDefaultValue("");
-            entity.Property(e => e.HeartRate).HasDefaultValue(0);
+            entity.Property(e => e.MotherName)
+                .HasMaxLength(50)
+                .HasDefaultValue("");
             entity.Property(e => e.Notes).HasDefaultValue("");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.Weight).HasDefaultValue(0.0);
 
-            entity.HasOne(d => d.PregnancyRecord).WithMany(p => p.MotherInfos)
-                .HasForeignKey(d => d.PregnancyRecordId)
-                .HasConstraintName("FK__MotherInf__Pregn__6EC0713C");
+            entity.HasOne(d => d.PregnancyRecord).WithOne(p => p.MotherInfo)
+                .HasForeignKey<MotherInfo>(d => d.PregnancyRecordId)
+                .HasConstraintName("FK__MotherInf__Pregn__719CDDE7");
         });
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC07AD139397");
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC07CC6FDA03");
 
             entity.ToTable("Notification");
 
@@ -359,16 +366,11 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-
-            entity.HasOne(d => d.User).WithMany(p => p.Notifications)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Notificat__UserI__08B54D69");
         });
 
         modelBuilder.Entity<PregnancyRecord>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Pregnanc__3214EC0770DB4A26");
+            entity.HasKey(e => e.Id).HasName("PK__Pregnanc__3214EC0744B8C9AF");
 
             entity.ToTable("PregnancyRecord");
 
@@ -397,7 +399,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<Reminder>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC07495DA0D2");
+            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC07D1B5B42B");
 
             entity.ToTable("Reminder");
 
@@ -426,7 +428,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<ReminderType>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC07B3801D09");
+            entity.HasKey(e => e.Id).HasName("PK__Reminder__3214EC07BCC21D48");
 
             entity.ToTable("ReminderType");
 
@@ -447,7 +449,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC070FC99844");
+            entity.HasKey(e => e.Id).HasName("PK__Role__3214EC070B95F870");
 
             entity.ToTable("Role");
 
@@ -469,11 +471,11 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC07C743A25B");
+            entity.HasKey(e => e.Id).HasName("PK__Tag__3214EC076482AF67");
 
             entity.ToTable("Tag");
 
-            entity.HasIndex(e => e.Name, "UQ__Tag__737584F6355D03CE").IsUnique();
+            entity.HasIndex(e => e.Name, "UQ__Tag__737584F6E702CB57").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CreatedAt)
@@ -492,11 +494,11 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__User__3214EC073EA12CA9");
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC0783A4FABB");
 
             entity.ToTable("User");
 
-            entity.HasIndex(e => e.Email, "UQ__User__A9D1053443FDCCF6").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__User__A9D105349BB5D819").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Address)
@@ -526,7 +528,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<UserMembershipPlan>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserMemb__3214EC07B34C72B7");
+            entity.HasKey(e => e.Id).HasName("PK__UserMemb__3214EC07B4262E50");
 
             entity.ToTable("UserMembershipPlan");
 
@@ -547,17 +549,17 @@ public partial class PregnaCareAppDbContext : DbContext
             entity.HasOne(d => d.MembershipPlan).WithMany(p => p.UserMembershipPlans)
                 .HasForeignKey(d => d.MembershipPlanId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserMembe__Membe__55F4C372");
+                .HasConstraintName("FK__UserMembe__Membe__57DD0BE4");
 
             entity.HasOne(d => d.User).WithMany(p => p.UserMembershipPlans)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__UserMembe__UserI__55009F39");
+                .HasConstraintName("FK__UserMembe__UserI__56E8E7AB");
         });
 
         modelBuilder.Entity<UserReminder>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserRemi__3214EC07BD58D183");
+            entity.HasKey(e => e.Id).HasName("PK__UserRemi__3214EC07CD4B0FB8");
 
             entity.ToTable("UserReminder");
 
@@ -583,7 +585,7 @@ public partial class PregnaCareAppDbContext : DbContext
 
         modelBuilder.Entity<UserRole>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__UserRole__3214EC07899DCB99");
+            entity.HasKey(e => e.Id).HasName("PK__UserRole__3214EC071336C9DE");
 
             entity.ToTable("UserRole");
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PregnaCare.Core.Models;
-
+﻿namespace PregnaCare.Core.Models;
 public partial class GrowthMetric
 {
     public Guid Id { get; set; }
@@ -24,6 +20,4 @@ public partial class GrowthMetric
     public DateTime? UpdatedAt { get; set; }
 
     public bool? IsDeleted { get; set; }
-
-    public virtual ICollection<FetalGrowthRecord> FetalGrowthRecords { get; set; } = new List<FetalGrowthRecord>();
 }

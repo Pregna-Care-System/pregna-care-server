@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
-
-namespace PregnaCare.Core.Models;
-
+﻿namespace PregnaCare.Core.Models;
 public partial class MembershipPlan
 {
     public Guid Id { get; set; }
@@ -16,6 +11,8 @@ public partial class MembershipPlan
 
     public string Description { get; set; } = string.Empty;
 
+    public string ImageUrl { get; set; } = string.Empty;
+
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
@@ -23,7 +20,6 @@ public partial class MembershipPlan
     public bool? IsDeleted { get; set; }
 
     public virtual ICollection<MembershipPlanFeature> MembershipPlanFeatures { get; set; } = new List<MembershipPlanFeature>();
-    [JsonIgnore]
 
     public virtual ICollection<UserMembershipPlan> UserMembershipPlans { get; set; } = new List<UserMembershipPlan>();
 }
