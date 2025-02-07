@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace PregnaCare.Core.Repositories.Interfaces
 {
@@ -15,5 +16,6 @@ namespace PregnaCare.Core.Repositories.Interfaces
         void Remove(T entity);
         Task<T> GetByIdAsync(TKey id);
         Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> FindWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
     }
 }

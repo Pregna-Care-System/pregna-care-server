@@ -92,6 +92,14 @@ namespace PregnaCare.Services.Implementations
                 ExpectedDueDate = request.ExpectedDueDate,
                 BabyGender = request.BabyGender ?? string.Empty,
                 ImageUrl = request.ImageUrl ?? string.Empty,
+                MotherInfo = new MotherInfo
+                {
+                    MotherName = request.MotherName,
+                    DateOfBirth = request.MotherDateOfBirth,
+                    BloodType = request.BloodType,
+                    HealthStatus = request.HealhStatus,
+                    Notes = request.Notes,
+                }
             };
 
             await _repository.AddAsync(pregnancyRecord);
@@ -117,15 +125,19 @@ namespace PregnaCare.Services.Implementations
 
         public async Task<List<PregnancyRecord>> GetAllPregnancyRecords(Guid userId)
         {
-            return (await _repository.FindAsync(x => x.UserId == userId && x.IsDeleted == false)).ToList();
+            return (await _repository.FindWithIncludesAsync(
+                x => x.UserId == userId && x.IsDeleted == false,
+                x => x.MotherInfo
+            )).ToList();
         }
 
         public async Task<PregnancyRecord> GetPregnancyRecordById(Guid userId, Guid pregnancyRecordId)
         {
-            return (await _repository.FindAsync(x => x.UserId == userId &&
-                                                     x.Id == pregnancyRecordId &&
-                                                     x.IsDeleted == false))
-                                     .FirstOrDefault();
+            return (await _repository.FindWithIncludesAsync(
+                x => x.UserId == userId && x.Id == pregnancyRecordId && x.IsDeleted == false,
+                x => x.MotherInfo
+            )).FirstOrDefault();
+
         }
 
         public async Task<UpdatePregnancyRecordResponse> UpdatePregnancyRecord(UpdatePregnancyRecordRequest request)
@@ -178,7 +190,10 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            var entity = (await _repository.FindAsync(x => x.UserId == request.UserId && x.Id == request.PregnancyRecordId && x.IsDeleted == false)).FirstOrDefault();
+            var entity = (await _repository.FindWithIncludesAsync(
+                x => x.UserId == request.UserId && x.Id == request.PregnancyRecordId && x.IsDeleted == false,
+                x => x.MotherInfo
+            )).FirstOrDefault();
 
             if (entity == null)
             {
@@ -187,6 +202,11 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
+            entity.MotherInfo.MotherName = request.MotherName;
+            entity.MotherInfo.DateOfBirth = request.MotherDateOfBirth;
+            entity.MotherInfo.BloodType = request.BloodType;
+            entity.MotherInfo.HealthStatus = request.HealhStatus;
+            entity.MotherInfo.Notes = request.Notes;
             entity.BabyName = request.BabyName ?? string.Empty;
             entity.BabyGender = request.BabyGender ?? string.Empty;
             entity.PregnancyStartDate = request.PregnancyStartDate;
