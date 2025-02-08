@@ -43,6 +43,8 @@ namespace PregnaCare
             builder.Services.AddScoped<IMembershipPlansService, MembershipPlansService>();
             builder.Services.AddScoped<IFeatureService, FeatureService>();
             builder.Services.AddScoped<IPregnancyRecordService, PregnancyRecordService>();
+            builder.Services.AddScoped<IUserMembershipPlanSerivce, UserMembershipPlanService>();
+            builder.Services.AddScoped<IPaymentService, PaymentService>();
 
             // Config identity
             builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
@@ -108,9 +110,9 @@ namespace PregnaCare
             {
                 var services = scope.ServiceProvider;
                 var appDbContext = services.GetRequiredService<PregnaCareAppDbContext>();
-                var authDbContext = services.GetRequiredService<PregnaCareAuthDbContext>(); 
+                var authDbContext = services.GetRequiredService<PregnaCareAuthDbContext>();
 
-                authDbContext.Database.Migrate();   
+                authDbContext.Database.Migrate();
                 appDbContext.Database.Migrate();
 
                 await SeedData.InitializeAsync(services);
