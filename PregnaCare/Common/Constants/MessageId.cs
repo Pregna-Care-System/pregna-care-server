@@ -1,4 +1,4 @@
-﻿namespace PregnaCare.Common.Constants
+namespace PregnaCare.Common.Constants
 {
     /// <summary>
     /// Messages

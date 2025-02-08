@@ -1,4 +1,4 @@
-﻿namespace PregnaCare.Core.Models;
+namespace PregnaCare.Core.Models;
 public partial class MembershipPlan
 {
     public Guid Id { get; set; }

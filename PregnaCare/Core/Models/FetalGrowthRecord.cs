@@ -1,8 +1,8 @@
-﻿namespace PregnaCare.Core.Models;
+namespace PregnaCare.Core.Models;
 public partial class FetalGrowthRecord
 {
     public Guid Id { get; set; }
-
+  
     public Guid PregnancyRecordId { get; set; }
 
     public string Name { get; set; } = string.Empty;

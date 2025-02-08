@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using PregnaCare.Core.Models;
 
 namespace PregnaCare.Infrastructure.Data;
