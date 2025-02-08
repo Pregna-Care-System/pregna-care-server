@@ -5,7 +5,7 @@ public partial class MembershipPlan
 
     public string PlanName { get; set; } = string.Empty;
 
-    public double Price { get; set; }
+    public decimal Price { get; set; }
 
     public int Duration { get; set; }
 

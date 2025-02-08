@@ -11,6 +11,8 @@ public partial class UserMembershipPlan
 
     public DateTime? ExpiryDate { get; set; }
 
+    public decimal Price { get; set; }
+
     public bool? IsActive { get; set; }
 
     public DateTime? CreatedAt { get; set; }
