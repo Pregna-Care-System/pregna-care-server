@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PregnaCare.Core.Models;
-
+﻿namespace PregnaCare.Core.Models;
 public partial class PregnancyRecord
 {
     public Guid Id { get; set; }
@@ -27,7 +23,7 @@ public partial class PregnancyRecord
 
     public virtual ICollection<FetalGrowthRecord> FetalGrowthRecords { get; set; } = new List<FetalGrowthRecord>();
 
-    public virtual ICollection<MotherInfo> MotherInfos { get; set; } = new List<MotherInfo>();
+    public virtual MotherInfo MotherInfo { get; set; }
 
     public virtual User User { get; set; }
 }

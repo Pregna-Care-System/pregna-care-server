@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
 namespace PregnaCare.Core.Models;
-
 public partial class UserMembershipPlan
 {
     public Guid Id { get; set; }
@@ -14,6 +10,8 @@ public partial class UserMembershipPlan
     public DateTime? ActivatedAt { get; set; }
 
     public DateTime? ExpiryDate { get; set; }
+
+    public decimal Price { get; set; }
 
     public bool? IsActive { get; set; }
 

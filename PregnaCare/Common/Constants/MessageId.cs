@@ -1,4 +1,4 @@
-﻿namespace PregnaCare.Common.Constants
+namespace PregnaCare.Common.Constants
 {
     /// <summary>
     /// Messages
@@ -15,6 +15,7 @@
         /// <summary>
         /// Error
         /// </summary>
+        public static readonly string E00000 = "E00000"; // The operation was not successful.
         public static readonly string E00001 = "E00001"; // An error occurred while processing your request. Please try again later.
         public static readonly string E00002 = "E00002"; // Invalid input. Please check your information and try again.
         public static readonly string E00003 = "E00003"; // Unauthorized access. You do not have permission to perform this action.
@@ -27,6 +28,7 @@
         public static readonly string E00010 = "E00010"; // Input error occurred. Please check the detailed errors for more information.
         public static readonly string E00011 = "E00011"; // The email address you entered is already registered. Please use a different email address.
         public static readonly string E00012 = "E00012"; // No user with this email exists.
+        public static readonly string E00013 = "E00013"; // Search returned no results.
         public static readonly string E99999 = "E99999"; // A system error occurred. Please contact technical support.
 
         /// <summary>

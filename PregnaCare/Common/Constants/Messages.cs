@@ -1,4 +1,4 @@
-﻿namespace PregnaCare.Common.Constants
+namespace PregnaCare.Common.Constants
 {
     /// <summary>
     /// Messages
@@ -20,6 +20,7 @@
                 "I00003" => "Your request has been processed successfully.",
 
                 // Error
+                "E00000" => "The operation was not successful.",
                 "E00001" => "An error occurred while processing your request. Please try again later.",
                 "E00002" => "Invalid input. Please check your information and try again.",
                 "E00003" => "Unauthorized access. You do not have permission to perform this action.",
@@ -32,6 +33,7 @@
                 "E00010" => "Input error occurred. Please check the detailed errors for more information.",
                 "E00011" => "The email address you entered is already registered. Please use a different email address.",
                 "E00012" => "No user with this email exists.",
+                "E00013" => "Search returned no results.",
                 "E99999" => "A system error occurred. Please contact technical support.",
 
                 // Warning

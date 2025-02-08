@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
 namespace PregnaCare.Core.Models;
-
 public partial class User
 {
     public Guid Id { get; set; }
@@ -34,8 +30,6 @@ public partial class User
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual ICollection<GrowthAlert> GrowthAlerts { get; set; } = new List<GrowthAlert>();
-
-    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 
     public virtual ICollection<PregnancyRecord> PregnancyRecords { get; set; } = new List<PregnancyRecord>();
 

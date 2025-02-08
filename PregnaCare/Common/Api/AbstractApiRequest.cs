@@ -5,6 +5,6 @@
     /// </summary>
     public abstract class AbstractApiRequest
     {
-        public string ApiCallerId { get; set; }
+        public string? ApiCallerId { get; set; }
     }
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PregnaCare.Core.Models;
-
+﻿namespace PregnaCare.Core.Models;
 public partial class MembershipPlanFeature
 {
     public Guid Id { get; set; }

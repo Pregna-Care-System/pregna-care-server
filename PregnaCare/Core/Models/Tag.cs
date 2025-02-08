@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
 namespace PregnaCare.Core.Models;
-
 public partial class Tag
 {
     public Guid Id { get; set; }

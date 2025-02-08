@@ -50,8 +50,11 @@ namespace PregnaCare.Services.Implementations
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, roleName),
+                new Claim("id", user.Id.ToString()),
+                new Claim("email", user.Email),
+                new Claim("role", roleName),
+                new Claim("name", user.FullName),
+                new Claim("picture", user.ImageUrl)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
