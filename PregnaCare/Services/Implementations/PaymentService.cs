@@ -87,9 +87,9 @@ namespace PregnaCare.Services.Implementations
 
                     _context.UserMembershipPlans.Add(userMembershipPlan);
                     _context.SaveChanges();
+                    return response;
                 }
             }
-
 
             return response;
         }
