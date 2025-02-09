@@ -46,7 +46,7 @@ namespace PregnaCare.Services.Implementations
             }
 
             var membershipPlan = await _membershipRepository.GetByIdAsync(request.MembershipPlanId);
-            if(membershipPlan == null)
+            if (membershipPlan == null)
             {
                 detailErrorList.Add(new DetailError
                 {
@@ -67,7 +67,7 @@ namespace PregnaCare.Services.Implementations
 
             var userMembershipPlan = (await _userMembershipRepository.FindAsync(x => x.UserId == request.UserId &&
                                                                                 x.MembershipPlanId == request.MembershipPlanId &&
-                                                                                x.ExpiryDate < DateTime.Now)).FirstOrDefault();
+                                                                                x.IsActive == false)).FirstOrDefault();
 
             if (userMembershipPlan == null)
             {
@@ -80,12 +80,24 @@ namespace PregnaCare.Services.Implementations
                     Price = membershipPlan.Price,
                     IsActive = true
                 };
+
                 await _userMembershipRepository.AddAsync(userMembershipPlan);
             }
             else
             {
-                var durationDays = (request.EndDate - request.StartDate).Days;
-                userMembershipPlan.ExpiryDate = userMembershipPlan?.ExpiryDate.Value.AddDays(durationDays);
+                userMembershipPlan.IsActive = true;
+                userMembershipPlan.Price += membershipPlan.Price;
+                if (userMembershipPlan.ActivatedAt == null || userMembershipPlan.ExpiryDate == null)
+                {
+                    userMembershipPlan.ActivatedAt = request.StartDate;
+                    userMembershipPlan.ExpiryDate = request.EndDate;
+                }
+                else
+                {
+                    var durationDays = (request.EndDate - request.StartDate).Days;
+                    userMembershipPlan.ExpiryDate = userMembershipPlan.ExpiryDate.Value.AddDays(durationDays);
+                }
+
                 _userMembershipRepository.Update(userMembershipPlan);
             }
 

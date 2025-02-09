@@ -25,12 +25,10 @@ namespace PregnaCare.Utils
             var orderId = Convert.ToInt64(GetResponseData("vnp_TxnRef"));
             var vnPayTranId = Convert.ToInt64(GetResponseData("vnp_TransactionNo"));
             var vnpResponseCode = GetResponseData("vnp_ResponseCode");
-            var vnpSecureHash =
-                collections.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value;
+            var vnpSecureHash = collections.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value;
             var orderInfo = GetResponseData("vnp_OrderInfo");
 
-            var checkSignature =
-                ValidateSignature(vnpSecureHash, hashSecret);
+            var checkSignature = ValidateSignature(vnpSecureHash, hashSecret);
 
             if (!checkSignature)
                 return new PaymentResponse()
@@ -50,6 +48,7 @@ namespace PregnaCare.Utils
                 VnPayResponseCode = vnpResponseCode
             };
         }
+
         public string GetIpAddress(HttpContext context)
         {
             var ipAddress = string.Empty;
