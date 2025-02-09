@@ -10,10 +10,17 @@ namespace PregnaCare.Api.Controllers.Payment
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentService _service;
+        private readonly IConfiguration _configuration;
 
-        public PaymentController(IPaymentService service)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="service"></param>
+        /// <param name="configuration"></param>
+        public PaymentController(IPaymentService service, IConfiguration configuration)
         {
             _service = service;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -33,17 +40,17 @@ namespace PregnaCare.Api.Controllers.Payment
             });
         }
 
-        [HttpGet] 
+        [HttpGet]
         public IActionResult CallBack()
         {
             var response = _service.PaymentExecute(Request.Query);
-            if(response.Success) return Ok(response);
-
-            return BadRequest(new
+            var frontendBaseUrl = _configuration["FrontEndBaseUrl"];
+            if (response.Success)
             {
-                Success = false,
-                Message = Messages.GetMessageById(Messages.E00000),
-            });
+                return Redirect(frontendBaseUrl + $"checkout/result?vnp_ResponseCode=00");
+            }
+
+            return Redirect(frontendBaseUrl + $"checkout/result?vnp_ResponseCode={Request.Query["vnp_ResponseCode"]}");
         }
     }
 }
