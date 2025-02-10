@@ -63,9 +63,9 @@ namespace PregnaCare.Api.Controllers.GrowthMetric
         }
 
         [HttpPut]
-        public async Task<IActionResult> Update(CreateGrowthMetricRequest request)
+        public async Task<IActionResult> Update(UpdateGrowthMetricRequest request)
         {
-            var response = (await _service.CreateGrowthMetric(request));
+            var response = (await _service.UpdateGrowthMetric(request));
 
             if (!response.Success) return BadRequest(response);
             return Ok(response);
@@ -76,8 +76,19 @@ namespace PregnaCare.Api.Controllers.GrowthMetric
         {
             var response = (await _service.DeleteGrowthMetric(id));
 
-            if(!response) return BadRequest(response);
-            return Ok(response);
+            if (!response) return BadRequest(new
+            {
+                Success = false,
+                MessageId = Messages.E00000,
+                Message = Messages.GetMessageById(Messages.E00000),
+            });
+
+            return Ok(new
+            {
+                Success = true,
+                MessageId = Messages.I00001,
+                Message = Messages.GetMessageById(Messages.I00001),
+            });
         }
     }
 }
