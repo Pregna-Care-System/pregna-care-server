@@ -9,7 +9,7 @@ namespace PregnaCare.Services.Interfaces
         Task<List<GrowthMetric>> GetAllGrowthMetrics();
         Task<GrowthMetric> GetGrowthMetricById(Guid id);
         Task<CreateGrowthMetricResponse> CreateGrowthMetric(CreateGrowthMetricRequest request);
-        Task<UpdatePregnancyRecordResponse> UpdateGrowthMetric(UpdatePregnancyRecordRequest request);
+        Task<UpdateGrowthMetricResponse> UpdateGrowthMetric(UpdateGrowthMetricRequest request);
         Task<bool> DeleteGrowthMetric(Guid id);
     }
 }
