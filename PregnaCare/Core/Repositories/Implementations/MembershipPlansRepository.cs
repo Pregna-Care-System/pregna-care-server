@@ -75,7 +75,8 @@ namespace PregnaCare.Core.Repositories.Implementations
                             .Select(mpf => new FeatureDTO
                             {
                                 Id = mpf.Id,
-                                FeatureName = mpf.Feature.FeatureName
+                                FeatureName = mpf.Feature.FeatureName,
+                                FeatureDescription = mpf.Feature.Description
                             }).ToList()
             };
         }
