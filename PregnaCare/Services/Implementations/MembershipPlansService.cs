@@ -59,6 +59,10 @@ namespace PregnaCare.Services.Implementations
             plan.UpdatedAt = DateTime.UtcNow;
 
             await _repo.AddPlanAsync(plan, featureIds);
+
+            var addPlan = await _repo.GetPlanById(plan.Id);
+
+            response.Response = addPlan;
             response.Success = true;
             response.Message = "Plan added successfully";
 
@@ -141,8 +145,12 @@ namespace PregnaCare.Services.Implementations
 
             await _repo.Update(existingPlan, featureIds);
             await _unitOfWork.SaveChangesAsync();
+
+            var addPlan = await _repo.GetPlanById(id);
+
             return new MembershipPlanResponse
             {
+                Response = addPlan,
                 Success = true,
                 Message = "Updated successfully"
             };
