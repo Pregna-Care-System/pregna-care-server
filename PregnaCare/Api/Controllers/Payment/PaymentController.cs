@@ -30,12 +30,15 @@ namespace PregnaCare.Api.Controllers.Payment
             if (string.IsNullOrEmpty(url)) return BadRequest(new
             {
                 Success = false,
+                MessageId = Messages.E00000,
                 Message = Messages.GetMessageById(Messages.E00000),
             });
 
             return Ok(new
             {
                 Success = true,
+                MessageId = Messages.I00001,
+                Message = Messages.GetMessageById(Messages.I00001),
                 Url = url,
             });
         }
