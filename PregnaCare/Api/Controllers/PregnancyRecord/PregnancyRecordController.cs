@@ -37,7 +37,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
                 BabyGender = x.BabyGender,
                 PregnancyStartDate = x.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 ExpectedDueDate = x.ExpectedDueDate ?? DateOnly.FromDateTime(DateTime.Now),
-                ImageUrl = x.ImageUrl
+                ImageUrl = x.ImageUrl,
+                CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt
+
             });
 
             if (response.Any()) return Ok(response);
