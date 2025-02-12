@@ -70,6 +70,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                 Duration = plan.Duration,
                 Description = plan.Description,
                 CreatedAt = plan.CreatedAt,
+                ImageUrl = plan.ImageUrl,
                 Features = plan.MembershipPlanFeatures
                             .Where(mpf => mpf.IsDeleted == false)
                             .Select(mpf => new FeatureDTO
@@ -97,6 +98,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                 Duration = plan.Duration,
                 Description = plan.Description,
                 CreatedAt = plan.CreatedAt,
+                ImageUrl = plan.ImageUrl,
                 Features = plan.MembershipPlanFeatures
                             .Where(mpf => mpf.IsDeleted == false)
                             .Select(mpf => new FeatureDTO
@@ -123,6 +125,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                 Duration = mp.Duration,
                 Description = mp.Description,
                 CreatedAt = mp.CreatedAt,
+                ImageUrl = mp.ImageUrl,
                 Features = mp.MembershipPlanFeatures
                             .Where(mpf => mpf.IsDeleted == false)
                             .Select(mpf => new FeatureDTO
@@ -150,7 +153,7 @@ namespace PregnaCare.Core.Repositories.Implementations
             existingPlan.Duration = plan.Duration;
             existingPlan.Description = plan.Description;
             existingPlan.UpdatedAt = DateTime.UtcNow;
-
+            existingPlan.ImageUrl = plan.ImageUrl;
             // Tìm các FeatureIds đã tồn tại trong MembershipPlan
             var existingFeatureIds = existingPlan.MembershipPlanFeatures
                 .Where(mpf => mpf.IsDeleted == false)

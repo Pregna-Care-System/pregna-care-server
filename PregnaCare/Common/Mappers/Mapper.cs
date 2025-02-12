@@ -13,7 +13,8 @@ namespace PregnaCare.Common.Mappers
                 PlanName = request.PlanName,
                 Price = request.Price,
                 Duration = request.Duration,
-                Description = request.Description
+                Description = request.Description,
+                ImageUrl = request.ImageUrl
             };
         }
         public static Feature MapToFeature(FeatureRequest request)
