@@ -6,6 +6,23 @@ namespace PregnaCare.Common.Mappers
 {
     public static class Mapper
     {
+        public static AccountDTO MapToAccountDTO(User user)
+        {
+            return new AccountDTO
+            {
+               Id = user.Id,
+               Address = user.Address,
+               CreatedAt = user.CreatedAt,
+               UpdatedAt = user.UpdatedAt,
+               DateOfBirth = user.DateOfBirth,
+               Email = user.Email,
+               FullName = user.FullName,
+               Gender = user.Gender,
+               ImageUrl = user.ImageUrl,
+               IsDeleted = user.IsDeleted,
+               PhoneNumber = user.PhoneNumber,
+            };
+        }
         public static MembershipPlan MapToMembershipPlan(MembershipPlanRequest request)
         {
             return new MembershipPlan
