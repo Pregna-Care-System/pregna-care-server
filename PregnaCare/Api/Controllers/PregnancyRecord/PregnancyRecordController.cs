@@ -29,10 +29,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             {
                 Id = x.Id,
                 MotherName = x.MotherInfo.MotherName,
-                MotherDateOfBirth = x.MotherInfo?.DateOfBirth ?? DateOnly.FromDateTime(DateTime.Now),
-                BloodType = x.MotherInfo?.BloodType ?? string.Empty,
-                HealhStatus = x.MotherInfo?.HealthStatus ?? string.Empty,
-                Notes = x.MotherInfo?.Notes ?? string.Empty,
+                MotherDateOfBirth = x?.MotherInfo?.DateOfBirth ?? DateOnly.FromDateTime(DateTime.Now),
+                BloodType = x?.MotherInfo?.BloodType ?? string.Empty,
+                HealhStatus = x?.MotherInfo?.HealthStatus ?? string.Empty,
+                Notes = x?.MotherInfo?.Notes ?? string.Empty,
                 BabyName = x.BabyName,
                 BabyGender = x.BabyGender,
                 PregnancyStartDate = x.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
@@ -40,7 +40,6 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
                 ImageUrl = x.ImageUrl,
                 CreatedAt = x.CreatedAt,
                 UpdatedAt = x.UpdatedAt
-
             });
 
             if (response.Any()) return Ok(new
