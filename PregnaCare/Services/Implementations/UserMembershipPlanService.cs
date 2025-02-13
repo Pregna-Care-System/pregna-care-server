@@ -15,17 +15,18 @@ namespace PregnaCare.Services.Implementations
         private readonly IGenericRepository<UserMembershipPlan, Guid> _userMembershipRepository;
         private readonly IGenericRepository<User, Guid> _userRepository;
         private readonly IGenericRepository<MembershipPlan, Guid> _membershipRepository;
-
+        private readonly IUserMembershipPlanRepository _userMembershipPlanRepository;
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="unitOfWork"></param>
-        public UserMembershipPlanService(IUnitOfWork unitOfWork)
+        public UserMembershipPlanService(IUnitOfWork unitOfWork, IUserMembershipPlanRepository userMembershipPlanRepository)
         {
             _unitOfWork = unitOfWork;
             _userMembershipRepository = _unitOfWork.GetRepository<UserMembershipPlan, Guid>();
             _userRepository = _unitOfWork.GetRepository<User, Guid>();
             _membershipRepository = _unitOfWork.GetRepository<MembershipPlan, Guid>();
+            _userMembershipPlanRepository = userMembershipPlanRepository;
         }
 
         public async Task<CreateUserMembershipPlanResponse> ActivateUserMembershipPlan(CreateUserMembershipPlanRequest request)
@@ -108,5 +109,16 @@ namespace PregnaCare.Services.Implementations
             response.Message = Messages.GetMessageById(Messages.I00001);
             return response;
         }
+
+        public async Task<UserMembershipPlanListResponse> GetUserMembershipPlanList()
+        {
+            var response = await _userMembershipPlanRepository.GetUserMembershipPlanList();
+            return new UserMembershipPlanListResponse
+            {
+                Success = true,
+                Response = response
+            };
+        }
     }
+    
 }

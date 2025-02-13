@@ -34,6 +34,7 @@ namespace PregnaCare
             builder.Services.AddScoped<IMembershipPlansRepository, MembershipPlansRepository>();
             builder.Services.AddScoped<IFeatureRepository, FeatureRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IUserMembershipPlanRepository, UserMembershipPlanRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -49,6 +50,7 @@ namespace PregnaCare
             builder.Services.AddScoped<IFetalGrowthRecordService, FetalGrowthRecordService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IUserMembershipPlanSerivce, UserMembershipPlanService>();
             // Config identity
             builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
                             .AddEntityFrameworkStores<PregnaCareAuthDbContext>()
