@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PregnaCare.Api.Models.Requests;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Api.Controllers.Account
@@ -16,6 +17,12 @@ namespace PregnaCare.Api.Controllers.Account
         public async Task<IActionResult> GetAllMember()
         {
             var result = await _accountService.GetAllMemberAsync();
+            return Ok(result);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUserInformation(Guid id, [FromBody] UpdateAccountRequest request)
+        {
+            var result = await _accountService.UpdateAccount(id, request);
             return Ok(result);
         }
     }

@@ -52,7 +52,11 @@ namespace PregnaCare.Services.Implementations
                 new Claim("email", user.Email),
                 new Claim("role", roleName),
                 new Claim("name", user.FullName),
-                new Claim("picture", user.ImageUrl)
+                new Claim("picture", user.ImageUrl),
+                new Claim("address", user.Address),
+                new Claim("phone", user.PhoneNumber),
+                new Claim("gender", user.Gender),
+                new Claim("dateOfBirth", user.DateOfBirth?.ToString("yyyy-MM-dd"))
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));

@@ -25,7 +25,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     Id = ump.Id,
                     UserId = ump.UserId,
                     MembershipPlanId = ump.MembershipPlanId,
-                    Email = ump.User.Email,
+                    Email = ump.User.Email, 
                     FullName = ump.User.FullName,
                     MembershipPlanName = ump.MembershipPlan.PlanName,
                     ActivatedAt = ump.ActivatedAt,
