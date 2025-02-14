@@ -93,7 +93,6 @@ namespace PregnaCare.Api.Controllers.FetalGrowthRecord
         public async Task<IActionResult> CreateFetalGrowthRecord([FromBody] CreateFetalGrowthRecordRequest request)
         {
             var response = await _fetalGrowthRecordService.CreateFetalGrowthRecord(request);
-
             if (!response.Success) return BadRequest(response);
             return Ok(response);
         }

@@ -34,6 +34,7 @@ namespace PregnaCare.Common.Constants
                 "E00011" => "The email address you entered is already registered. Please use a different email address.",
                 "E00012" => "No user with this email exists.",
                 "E00013" => "Search returned no results.",
+                "E00014" => "The data is existed.",
                 "E99999" => "A system error occurred. Please contact technical support.",
 
                 // Warning

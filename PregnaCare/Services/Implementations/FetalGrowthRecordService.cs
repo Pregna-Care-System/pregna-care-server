@@ -1,8 +1,10 @@
-﻿using PregnaCare.Api.Models.Requests;
+﻿using Microsoft.EntityFrameworkCore;
+using PregnaCare.Api.Models.Requests;
 using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Constants;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
+using PregnaCare.Infrastructure.Data;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
 
@@ -10,21 +12,27 @@ namespace PregnaCare.Services.Implementations
 {
     public class FetalGrowthRecordService : IFetalGrowthRecordService
     {
+        private readonly PregnaCareAppDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGenericRepository<FetalGrowthRecord, Guid> _fetalGrowthRecordRepository;
         private readonly IGenericRepository<User, Guid> _userRepository;
         private readonly IGenericRepository<PregnancyRecord, Guid> _pregnancyRecordRepository;
+        private readonly IGrowthAlertService _growthAlertService;
 
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="unitOfWork"></param>
-        public FetalGrowthRecordService(IUnitOfWork unitOfWork)
+        /// <param name="growthAlertService"></param>
+        public FetalGrowthRecordService(PregnaCareAppDbContext context, IUnitOfWork unitOfWork, IGrowthAlertService growthAlertService)
         {
+            _context = context;
             _unitOfWork = unitOfWork;
             _fetalGrowthRecordRepository = _unitOfWork.GetRepository<FetalGrowthRecord, Guid>();
             _userRepository = _unitOfWork.GetRepository<User, Guid>();
             _pregnancyRecordRepository = _unitOfWork.GetRepository<PregnancyRecord, Guid>();
+            _growthAlertService = growthAlertService;
         }
 
         public async Task<CreateFetalGrowthRecordResponse> CreateFetalGrowthRecord(CreateFetalGrowthRecordRequest request)
@@ -48,8 +56,18 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
+            var isExisted = _context.FetalGrowthRecords.AsNoTracking().FirstOrDefault(x => x.Name == request.Name && x.Week == request.Week && x.IsDeleted == false) != null;
+
+            if (isExisted)
+            {
+                response.MessageId = Messages.E00014;
+                response.Message = Messages.GetMessageById(Messages.E00014);
+                return response;
+            }
+
             var fetalGrowthRecord = new FetalGrowthRecord
             {
+                Id = Guid.NewGuid(),
                 Name = request.Name,
                 Unit = request.Unit ?? string.Empty,
                 Description = request.Description ?? string.Empty,
@@ -61,6 +79,17 @@ namespace PregnaCare.Services.Implementations
             };
 
             await _fetalGrowthRecordRepository.AddAsync(fetalGrowthRecord);
+
+            var result = await _growthAlertService.CheckGrowthAndCreateAlert(request.UserId, fetalGrowthRecord);
+
+            if (string.IsNullOrEmpty(result))
+            {
+                response.Success = false;
+                response.MessageId = Messages.E00000;
+                response.Message = Messages.GetMessageById(Messages.E00000);
+                return response;
+            }
+
             await _unitOfWork.SaveChangesAsync();
 
             response.Success = true;

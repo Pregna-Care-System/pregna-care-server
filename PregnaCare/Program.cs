@@ -51,6 +51,10 @@ namespace PregnaCare
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IUserMembershipPlanSerivce, UserMembershipPlanService>();
+            builder.Services.AddScoped<IGrowthAlertService, GrowthAlertService>();
+
+            builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
+
             // Config identity
             builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
                             .AddEntityFrameworkStores<PregnaCareAuthDbContext>()
