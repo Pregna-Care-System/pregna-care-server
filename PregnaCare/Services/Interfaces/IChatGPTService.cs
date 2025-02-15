@@ -1,9 +1,8 @@
 ﻿namespace PregnaCare.Services.Interfaces
 {
-    public interface IChatGPTService
+    public interface IChatGPTService : IChatBotService
     {
-        Task<string> GenerateRecommendation(string issue);
-        Task<(double MinValue, double MaxValue)> GetEstimatedRange(string metricName, int week);
-        Task<string> CallChatGptApi(string prompt);
+        Task<string> GenerateRecommendation(IChatBotService chatBotService, string issue);
+        Task<(double MinValue, double MaxValue)> GetEstimatedRange(IChatBotService chatBotService, string metricName, int week);
     }
 }

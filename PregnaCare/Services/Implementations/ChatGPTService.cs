@@ -1,9 +1,8 @@
-﻿using System.Text.Json;
-using System.Text;
-using PregnaCare.Services.Interfaces;
+﻿using System.Net.Http.Headers;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using PregnaCare.Api.Models.Responses;
-using System.Net.Http.Headers;
+using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Services.Implementations
 {
@@ -18,19 +17,19 @@ namespace PregnaCare.Services.Implementations
             _apiKey = Environment.GetEnvironmentVariable("CHATGPT_API_KEY") ?? string.Empty;
         }
 
-        public async Task<string> CallChatGptApi(string prompt)
+        public async Task<string> CallChatBotApi(string prompt)
         {
-            using (var httpClient = new HttpClient())
+            using (_httpClient)
             {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("CHATGPT_API_KEY"));
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable(_apiKey));
 
                 var requestBody = new
                 {
                     model = "gpt-3.5-turbo",
-                    messages = new[] { new { role = "user", content = prompt } }    
+                    messages = new[] { new { role = "user", content = prompt } }
                 };
 
-                var response = await httpClient.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", requestBody);
+                var response = await _httpClient.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", requestBody);
                 var responseJson = await response.Content.ReadAsStringAsync();
                 var responseObject = JsonSerializer.Deserialize<ChatGPTResponse>(responseJson);
 
@@ -38,24 +37,32 @@ namespace PregnaCare.Services.Implementations
             }
         }
 
-        public async Task<string> GenerateRecommendation(string issue)
+        public async Task<string> GenerateRecommendation(IChatBotService chatBotService, string issue)
         {
             string prompt = $"A user has an issue: {issue}. Provide a detailed medical recommendation for them.";
 
-            return await CallChatGptApi(prompt);
+            return await chatBotService.CallChatBotApi(prompt);
         }
 
-        public async Task<(double MinValue, double MaxValue)> GetEstimatedRange(string metricName, int week)
+        public async Task<(double MinValue, double MaxValue)> GetEstimatedRange(IChatBotService chatBotService, string metricName, int week)
         {
-            string prompt = $"Estimate a reasonable growth range for '{metricName}' in week {week}. Provide a minimum and maximum value.";
+            var prompt = $@"Estimate the reasonable growth range for '{metricName}' in week {week}. 
+                            Respond strictly in the following JSON format without any extra text:
+                            
+                            {{
+                              ""minimum"": {{ ""value"": 0.0, ""unit"": ""unit"" }},
+                              ""maximum"": {{ ""value"": 0.0, ""unit"": ""unit"" }}
+                            }}";
 
-            string response = await CallChatGptApi(prompt);
 
-            var match = Regex.Match(response, @"Min:\s*(\d+\.?\d*),\s*Max:\s*(\d+\.?\d*)");
-            if (match.Success)
+            var response = await chatBotService.CallChatBotApi(prompt);
+            var regex = new Regex(@"\{\s*""minimum""\s*:\s*\{\s*""value""\s*:\s*([\d.]+)\s*,\s*""unit""\s*:\s*""([^""]+)""\s*\}\s*,\s*""maximum""\s*:\s*\{\s*""value""\s*:\s*([\d.]+)\s*,\s*""unit""\s*:\s*""([^""]+)""\s*\}\s*\}", RegexOptions.Singleline);
+
+            var match = regex.Match(response);
+            if (match != null && match.Success)
             {
                 double minValue = double.Parse(match.Groups[1].Value);
-                double maxValue = double.Parse(match.Groups[2].Value);
+                double maxValue = double.Parse(match.Groups[3].Value);
                 return (minValue, maxValue);
             }
 
