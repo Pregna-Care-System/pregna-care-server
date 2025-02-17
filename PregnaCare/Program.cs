@@ -54,6 +54,8 @@ namespace PregnaCare
             builder.Services.AddScoped<IGrowthAlertService, GrowthAlertService>();
 
             builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
+            builder.Services.AddScoped<IReminderTypeService, ReminderTypeService>();
+            builder.Services.AddScoped<IReminderService, ReminderService>();
             builder.Services.AddHttpClient<IChatGeminiService, ChatGeminiService>();
 
             // Config identity
