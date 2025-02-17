@@ -11,6 +11,8 @@ namespace PregnaCare.Api.Models.Requests
         public string Description { get; set; } = string.Empty;
 
         public DateTime? ReminderDate { get; set; }
+        public TimeSpan? StartTime { get; set; }
+        public TimeSpan? EndTime { get; set; }
 
         public string Status { get; set; } = string.Empty;
     }

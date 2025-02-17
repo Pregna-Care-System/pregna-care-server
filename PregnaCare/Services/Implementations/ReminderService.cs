@@ -33,6 +33,8 @@ namespace PregnaCare.Services.Implementations
                Title = request.Title,
                Status = request.Status,
                ReminderDate = request.ReminderDate,
+               StartTime = request.StartTime,
+               EndTime = request.EndTime,
                CreatedAt = DateTime.UtcNow,
                UpdatedAt = DateTime.UtcNow,
                IsDeleted = false,
@@ -83,6 +85,8 @@ namespace PregnaCare.Services.Implementations
             type.Status = request.Status;
             type.ReminderTypeId = request.ReminderTypeId;
             type.ReminderDate = request.ReminderDate;
+            type.StartTime = request.StartTime;
+            type.EndTime = request.EndTime;
             type.UpdatedAt = DateTime.UtcNow;
 
             _repository.Update(type);
