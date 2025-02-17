@@ -5,6 +5,6 @@ namespace PregnaCare.Api.Models.Responses
 {
     public class FeatureListResponse : AbstractApiResponse<IEnumerable<Feature>>
     {
-        public override IEnumerable<Feature> Response { get ; set ; }
+        public override IEnumerable<Feature> Response { get; set; }
     }
 }

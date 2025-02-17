@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PregnaCare.Api.Models.Requests;
+﻿using PregnaCare.Api.Models.Requests;
 using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
-using PregnaCare.Core.Models;
-using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -16,7 +13,7 @@ namespace PregnaCare.Services.Implementations
         private readonly IMembershipPlansRepository _repo;
         private readonly IUnitOfWork _unitOfWork;
 
-        public MembershipPlansService (IMembershipPlansRepository membershipPlansRepository, IUnitOfWork unitOfWork)
+        public MembershipPlansService(IMembershipPlansRepository membershipPlansRepository, IUnitOfWork unitOfWork)
         {
             _repo = membershipPlansRepository;
             _unitOfWork = unitOfWork;
@@ -59,6 +56,10 @@ namespace PregnaCare.Services.Implementations
             plan.UpdatedAt = DateTime.UtcNow;
 
             await _repo.AddPlanAsync(plan, featureIds);
+
+            var addPlan = await _repo.GetPlanById(plan.Id);
+
+            response.Response = addPlan;
             response.Success = true;
             response.Message = "Plan added successfully";
 
@@ -68,7 +69,7 @@ namespace PregnaCare.Services.Implementations
         public async Task<MembershipPlanResponse> DeletePlanAsync(Guid id)
         {
             var plan = await _repo.GetByIdAsync(id);
-            if(plan == null)
+            if (plan == null)
             {
                 new MembershipPlanResponse
                 {
@@ -86,7 +87,7 @@ namespace PregnaCare.Services.Implementations
                 Success = true,
                 Message = "Delete plan successfully"
             };
-            
+
         }
 
 
@@ -141,8 +142,12 @@ namespace PregnaCare.Services.Implementations
 
             await _repo.Update(existingPlan, featureIds);
             await _unitOfWork.SaveChangesAsync();
+
+            var addPlan = await _repo.GetPlanById(id);
+
             return new MembershipPlanResponse
             {
+                Response = addPlan,
                 Success = true,
                 Message = "Updated successfully"
             };

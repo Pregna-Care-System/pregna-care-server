@@ -114,9 +114,33 @@ namespace PregnaCare.Services.Implementations
                          .FirstOrDefault();
         }
 
-        public Task<UpdatePregnancyRecordResponse> UpdateGrowthMetric(UpdatePregnancyRecordRequest request)
+        public async Task<UpdateGrowthMetricResponse> UpdateGrowthMetric(UpdateGrowthMetricRequest request)
         {
-            throw new NotImplementedException();
+            var response = new UpdateGrowthMetricResponse { Success = false };
+
+            var growthMetric = (await _repository.FindAsync(x => x.Id == request.Id && x.IsDeleted == false)).FirstOrDefault();
+            if (growthMetric == null)
+            {
+                response.MessageId = Messages.E00000;
+                response.Message = Messages.GetMessageById(Messages.E00000);
+                return response;
+            }
+
+            growthMetric.Name = request.Name;
+            growthMetric.Unit = request.Unit;
+            growthMetric.Description = request.Description;
+            growthMetric.Week = request.Week;
+            growthMetric.MinValue = request.MinValue;
+            growthMetric.MaxValue = request.MaxValue;
+            growthMetric.Week = request.Week;
+
+            _repository.Update(growthMetric);
+            await _unitOfWork.SaveChangesAsync();
+
+            response.Success = true;
+            response.MessageId = Messages.I00001;
+            response.Message = Messages.GetMessageById(Messages.I00001);
+            return response;
         }
     }
 }

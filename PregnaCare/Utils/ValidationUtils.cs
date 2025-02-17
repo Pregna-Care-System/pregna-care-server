@@ -65,7 +65,7 @@ namespace PregnaCare.Utils
                     return false;
                 }
 
-                if (expectedDueDate.Value > pregnancyStartDate.AddMonths(12)) 
+                if (expectedDueDate.Value > pregnancyStartDate.AddMonths(12))
                 {
                     errorMessage = "Expected due date is too far in the future.";
                     return false;

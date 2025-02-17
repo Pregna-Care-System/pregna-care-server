@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Api.Models.Requests;
 using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Api;
@@ -38,14 +37,14 @@ namespace PregnaCare.Api.Controllers.Feature
         }
 
         [HttpPut("Update")]
-        public async Task<FeatureResponse> UpdateFeature(Guid id, FeatureRequest request) 
+        public async Task<FeatureResponse> UpdateFeature(Guid id, FeatureRequest request)
         {
             var response = await _featureService.Update(id, request);
             return response;
         }
 
         [HttpDelete("Delete")]
-        public async Task<FeatureResponse> DeleteFeature(Guid id) 
+        public async Task<FeatureResponse> DeleteFeature(Guid id)
         {
             var response = await _featureService.Delete(id);
             return response;

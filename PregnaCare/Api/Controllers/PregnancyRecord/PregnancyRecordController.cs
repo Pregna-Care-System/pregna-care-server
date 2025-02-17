@@ -29,19 +29,33 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             {
                 Id = x.Id,
                 MotherName = x.MotherInfo.MotherName,
-                MotherDateOfBirth = x.MotherInfo?.DateOfBirth ?? DateOnly.FromDateTime(DateTime.Now),
-                BloodType = x.MotherInfo?.BloodType ?? string.Empty,
-                HealhStatus = x.MotherInfo?.HealthStatus ?? string.Empty,
-                Notes = x.MotherInfo?.Notes ?? string.Empty,
+                MotherDateOfBirth = x?.MotherInfo?.DateOfBirth ?? DateOnly.FromDateTime(DateTime.Now),
+                BloodType = x?.MotherInfo?.BloodType ?? string.Empty,
+                HealhStatus = x?.MotherInfo?.HealthStatus ?? string.Empty,
+                Notes = x?.MotherInfo?.Notes ?? string.Empty,
                 BabyName = x.BabyName,
                 BabyGender = x.BabyGender,
                 PregnancyStartDate = x.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 ExpectedDueDate = x.ExpectedDueDate ?? DateOnly.FromDateTime(DateTime.Now),
-                ImageUrl = x.ImageUrl
+                ImageUrl = x.ImageUrl,
+                CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt
             });
 
-            if (response.Any()) return Ok(response);
-            return NotFound(Messages.GetMessageById(Messages.E00013));
+            if (response.Any()) return Ok(new
+            {
+                Success = true,
+                MessageId = Messages.I00001,
+                Message = Messages.GetMessageById(Messages.I00001),
+                Response = response
+            });
+
+            return NotFound(new
+            {
+                Succeess = false,
+                MessageId = Messages.E00013,
+                Message = Messages.GetMessageById(Messages.E00013)
+            });
         }
 
         [HttpGet("/api/v1/User/{userId}/[controller]/{pregnancyRecordId}")]
@@ -58,8 +72,20 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
                 ImageUrl = entity.ImageUrl
             };
 
-            if (response != null) return Ok(entity);
-            return NotFound(Messages.GetMessageById(Messages.E00013));
+            if (response != null) return Ok(new
+            {
+                Success = true,
+                MessageId = Messages.I00001,
+                Message = Messages.GetMessageById(Messages.I00001),
+                Response = response
+            });
+
+            return NotFound(new
+            {
+                Succeess = false,
+                MessageId = Messages.E00013,
+                Message = Messages.GetMessageById(Messages.E00013)
+            });
         }
 
         [HttpPost]
@@ -85,8 +111,19 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
         {
             var response = await _service.DeletePregnancyRecord(pregnancyRecordId);
 
-            if (response) return Ok(Messages.GetMessageById(Messages.I00001));
-            return BadRequest(Messages.GetMessageById(Messages.E00000));
+            if (response) return Ok(new
+            {
+                Succeess = false,
+                MessageId = Messages.I00001,
+                Message = Messages.GetMessageById(Messages.I00001)
+            });
+
+            return BadRequest(new
+            {
+                Succeess = false,
+                MessageId = Messages.E00000,
+                Message = Messages.GetMessageById(Messages.E00000)
+            });
         }
     }
 }

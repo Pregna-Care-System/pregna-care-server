@@ -26,5 +26,12 @@ namespace PregnaCare.Api.Controllers.UserMembershipPlan
             if (response.Success) return Ok(response);
             return BadRequest(response);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllUserMembershipPlan()
+        {
+            var result = await _service.GetUserMembershipPlanList();
+            return Ok(result);
+        }
     }
 }

@@ -6,5 +6,6 @@ namespace PregnaCare.Services.Interfaces
     public interface IUserMembershipPlanSerivce
     {
         Task<CreateUserMembershipPlanResponse> ActivateUserMembershipPlan(CreateUserMembershipPlanRequest request);
+        Task<UserMembershipPlanListResponse> GetUserMembershipPlanList();
     }
 }

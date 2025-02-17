@@ -1,20 +1,19 @@
-﻿using PregnaCare.Services.Interfaces;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
-using System.Text;
+using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Services.Implementations
 {
-    public class EmailService:IEmailService
+    public class EmailService : IEmailService
     {
         private string address = string.Empty;
         private string key = string.Empty;
-        public EmailService(IConfiguration configuration) 
+        public EmailService(IConfiguration configuration)
         {
             this.address = configuration.GetValue<string>("Email:Address")!;
             this.key = configuration.GetValue<string>("Email:AccessKey")!;
         }
-        
+
         public bool SendEmail(string target, string subject, string body, string attachFile)
         {
             try
@@ -28,7 +27,7 @@ namespace PregnaCare.Services.Implementations
                     {
                         mailMessage.From = new MailAddress(this.address, "PregnaCare System");
                         mailMessage.To.Add(new MailAddress(target));
-                        mailMessage.Subject = subject; 
+                        mailMessage.Subject = subject;
                         mailMessage.Body = body;
                         mailMessage.IsBodyHtml = true;
 
@@ -43,8 +42,8 @@ namespace PregnaCare.Services.Implementations
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Errors sending email:" +ex.ToString());
-               return false;
+                Console.WriteLine("Errors sending email:" + ex.ToString());
+                return false;
             }
             return true;
         }
@@ -65,6 +64,6 @@ namespace PregnaCare.Services.Implementations
 
 
 
-        
+
     }
 }

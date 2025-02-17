@@ -143,7 +143,7 @@ namespace PregnaCare.Services.Implementations
             if (identityUser is null)
             {
                 response.Success = false;
-                response.MessageId = Messages.E00003; 
+                response.MessageId = Messages.E00003;
                 response.Message = Messages.GetMessageById(Messages.E00003);
                 response.DetailErrorList = detailErrorList;
                 return response;

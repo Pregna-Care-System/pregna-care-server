@@ -2,7 +2,6 @@
 using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
-using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -97,7 +96,7 @@ namespace PregnaCare.Services.Implementations
         public async Task<FeatureResponse> Update(Guid id, FeatureRequest request)
         {
             var feature = await _repo.GetByIdAsync(id);
-            if(feature == null)
+            if (feature == null)
             {
                 return new FeatureResponse
                 {
@@ -119,6 +118,6 @@ namespace PregnaCare.Services.Implementations
                 Response = feature
             };
         }
-        
+
     }
 }

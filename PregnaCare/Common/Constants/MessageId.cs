@@ -29,6 +29,7 @@ namespace PregnaCare.Common.Constants
         public static readonly string E00011 = "E00011"; // The email address you entered is already registered. Please use a different email address.
         public static readonly string E00012 = "E00012"; // No user with this email exists.
         public static readonly string E00013 = "E00013"; // Search returned no results.
+        public static readonly string E00014 = "E00014"; // The data is existed.
         public static readonly string E99999 = "E99999"; // A system error occurred. Please contact technical support.
 
         /// <summary>

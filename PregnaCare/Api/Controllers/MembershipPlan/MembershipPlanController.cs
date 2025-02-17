@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Api.Models.Requests;
 using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Api;

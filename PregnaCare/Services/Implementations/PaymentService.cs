@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using PregnaCare.Api.Models.Requests;
 using PregnaCare.Api.Models.Responses;
+using PregnaCare.Core.Models;
 using PregnaCare.Infrastructure.Data;
 using PregnaCare.Services.Interfaces;
 using PregnaCare.Utils;
@@ -43,7 +45,7 @@ namespace PregnaCare.Services.Implementations
             pay.AddRequestData("vnp_CurrCode", _configuration["Vnpay:CurrCode"]);
             pay.AddRequestData("vnp_IpAddr", pay.GetIpAddress(context));
             pay.AddRequestData("vnp_Locale", _configuration["Vnpay:Locale"]);
-            pay.AddRequestData("vnp_OrderInfo", $"{membershipPlan.PlanName} {membershipPlan.Description}");
+            pay.AddRequestData("vnp_OrderInfo", $"{membershipPlan.PlanName}: {membershipPlan.Description ?? string.Empty} - {user.Email}");
             pay.AddRequestData("vnp_OrderType", "Upgrade MembershipPlan");
             pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
             pay.AddRequestData("vnp_TxnRef", tick);
@@ -57,6 +59,37 @@ namespace PregnaCare.Services.Implementations
         {
             var pay = new VnpayUtils();
             var response = pay.GetFullResponseData(collections, _configuration["Vnpay:HashSecret"]);
+            if (response.Success)
+            {
+                var pattern = @"^(.*?): .* - (.*?)$";
+                var match = Regex.Match(response.OrderDescription, pattern);
+
+                if (match.Success)
+                {
+                    var planName = match.Groups[1].Value;
+                    var email = match.Groups[2].Value;
+
+                    var membershipPlan = _context.MembershipPlans.AsNoTracking().FirstOrDefault(x => x.PlanName == planName);
+                    var user = _context.Users.AsNoTracking().FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+
+                    if (membershipPlan == null || user == null)
+                    {
+                        response.Success = false;
+                        return response;
+                    }
+
+                    var userMembershipPlan = new UserMembershipPlan
+                    {
+                        UserId = user.Id,
+                        MembershipPlanId = membershipPlan.Id,
+                        IsActive = false
+                    };
+
+                    _context.UserMembershipPlans.Add(userMembershipPlan);
+                    _context.SaveChanges();
+                    return response;
+                }
+            }
 
             return response;
         }
