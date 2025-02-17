@@ -6,7 +6,7 @@ namespace PregnaCare.Services.Interfaces
     public interface IReminderTypeService
     {
         Task CreateReminderType(ReminderTypeRequest request);
-        Task<IEnumerable<ReminderTypeResponse>> GetAllReminderType();
+        Task<ReminderTypeListResponse> GetAllReminderType();
         Task UpdateReminderType(Guid id, ReminderTypeRequest request);
         Task DeleteReminderType(Guid id);
     }
