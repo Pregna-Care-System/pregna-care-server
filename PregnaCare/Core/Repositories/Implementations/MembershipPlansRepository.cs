@@ -3,7 +3,6 @@ using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
-using System.Numerics;
 
 namespace PregnaCare.Core.Repositories.Implementations
 {
@@ -40,18 +39,18 @@ namespace PregnaCare.Core.Repositories.Implementations
             var plan = await _context.MembershipPlans
                 .Include(mp => mp.MembershipPlanFeatures)
                 .FirstOrDefaultAsync(mp => mp.Id == planId && mp.IsDeleted == false);
-            if(plan != null)
+            if (plan != null)
             {
                 plan.IsDeleted = true;
                 plan.UpdatedAt = DateTime.UtcNow;
-                
-                foreach(var planFeature in plan.MembershipPlanFeatures)
+
+                foreach (var planFeature in plan.MembershipPlanFeatures)
                 {
                     planFeature.IsDeleted = true;
                     planFeature.UpdatedAt = DateTime.UtcNow;
                 }
             }
-                
+
         }
 
         public async Task<MembershipPlanFeatureDTO> GetPlanById(Guid id)

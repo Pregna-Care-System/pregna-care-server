@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Api.Models.Requests;
 using PregnaCare.Services.Interfaces;
 
@@ -10,7 +9,8 @@ namespace PregnaCare.Api.Controllers.Account
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService) {
+        public AccountController(IAccountService accountService)
+        {
             _accountService = accountService;
         }
         [HttpGet]

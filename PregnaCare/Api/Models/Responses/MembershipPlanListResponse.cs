@@ -1,6 +1,5 @@
 ﻿using PregnaCare.Common.Api;
 using PregnaCare.Core.DTOs;
-using PregnaCare.Core.Models;
 
 namespace PregnaCare.Api.Models.Responses
 {

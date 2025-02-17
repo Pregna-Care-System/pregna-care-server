@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using PregnaCare.Common.Enums;
 using PregnaCare.Core.Models;
-using PregnaCare.Utils;
 
 namespace PregnaCare.Infrastructure.Data
 {
@@ -56,7 +55,7 @@ namespace PregnaCare.Infrastructure.Data
                     var adminEmail = "pregnacareadmin8386@gmail.com";
 
                     if (!await appDbContext.Users.AnyAsync(u => u.Email == adminEmail))
-                    {                      
+                    {
                         var adminRole = await appDbContext.Roles
                             .FirstOrDefaultAsync(r => r.RoleName == RoleEnum.Admin.ToString());
 

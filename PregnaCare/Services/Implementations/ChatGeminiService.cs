@@ -50,7 +50,7 @@ namespace PregnaCare.Services.Implementations
 
             if (responseObject?.Candidates != null && responseObject.Candidates.Count > 0)
             {
-                return Regex.Replace(responseObject.Candidates[0].Content.Parts[0].Text, @"^```json\n|\n```$", "").Trim(); 
+                return Regex.Replace(responseObject.Candidates[0].Content.Parts[0].Text, @"^```json\n|\n```$", "").Trim();
             }
 
             return "No recommendation available.";

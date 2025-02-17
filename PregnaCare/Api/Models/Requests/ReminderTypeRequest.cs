@@ -2,7 +2,7 @@
 
 namespace PregnaCare.Api.Models.Requests
 {
-    public class ReminderTypeRequest: AbstractApiRequest
+    public class ReminderTypeRequest : AbstractApiRequest
     {
         public string TypeName { get; set; } = string.Empty;
 

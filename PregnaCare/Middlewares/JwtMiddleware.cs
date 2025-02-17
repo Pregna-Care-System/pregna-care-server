@@ -54,7 +54,7 @@ namespace PregnaCare.Middlewares
                     httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     await httpContext.Response.WriteAsync("Token has expired");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                     await httpContext.Response.WriteAsync("Invalid token");

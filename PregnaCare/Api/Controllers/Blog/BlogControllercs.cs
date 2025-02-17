@@ -1,12 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PregnaCare.Api.Controllers.Blog
 {

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using PregnaCare.Common.Api;
+﻿using PregnaCare.Common.Api;
 
 namespace PregnaCare.Api.Models.Requests
 {

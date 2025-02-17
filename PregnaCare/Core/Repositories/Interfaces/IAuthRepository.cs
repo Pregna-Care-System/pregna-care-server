@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using PregnaCare.Core.Models;
+﻿using PregnaCare.Core.Models;
 
 namespace PregnaCare.Core.Repositories.Interfaces
 {

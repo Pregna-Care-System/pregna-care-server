@@ -56,7 +56,7 @@ namespace PregnaCare.Services.Implementations
                 new Claim("address", user.Address),
                 new Claim("phone", user.PhoneNumber),
                 new Claim("gender", user.Gender),
-                new Claim("dateOfBirth", user.DateOfBirth?.ToString("dd-MM-yyyy") ?? DateOnly.FromDateTime(DateTime.Now).ToString("dd-MM-yyyy")) 
+                new Claim("dateOfBirth", user.DateOfBirth?.ToString("dd-MM-yyyy") ?? DateOnly.FromDateTime(DateTime.Now).ToString("dd-MM-yyyy"))
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));

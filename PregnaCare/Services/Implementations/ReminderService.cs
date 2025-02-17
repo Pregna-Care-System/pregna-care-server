@@ -1,7 +1,5 @@
-﻿using Azure;
-using PregnaCare.Api.Models.Requests;
+﻿using PregnaCare.Api.Models.Requests;
 using PregnaCare.Api.Models.Responses;
-using PregnaCare.Common.Constants;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
@@ -27,18 +25,18 @@ namespace PregnaCare.Services.Implementations
         {
             var type = new Reminder
             {
-               Id = Guid.NewGuid(),
-               Description = request.Description,
-               ReminderTypeId = request.ReminderTypeId,
-               Title = request.Title,
-               Status = request.Status,
-               ReminderDate = request.ReminderDate,
-               StartTime = request.StartTime,
-               EndTime = request.EndTime,
-               CreatedAt = DateTime.UtcNow,
-               UpdatedAt = DateTime.UtcNow,
-               IsDeleted = false,
-              
+                Id = Guid.NewGuid(),
+                Description = request.Description,
+                ReminderTypeId = request.ReminderTypeId,
+                Title = request.Title,
+                Status = request.Status,
+                ReminderDate = request.ReminderDate,
+                StartTime = request.StartTime,
+                EndTime = request.EndTime,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                IsDeleted = false,
+
             };
 
             await _repository.AddAsync(type);

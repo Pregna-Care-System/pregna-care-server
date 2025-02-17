@@ -5,6 +5,6 @@ namespace PregnaCare.Api.Models.Responses
 {
     public class ReminderTypeResponse : AbstractApiResponse<ReminderType>
     {
-        public override ReminderType Response { get; set ; }
+        public override ReminderType Response { get; set; }
     }
 }
