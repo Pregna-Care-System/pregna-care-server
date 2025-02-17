@@ -101,7 +101,6 @@ namespace PregnaCare.Api.Controllers.FetalGrowthRecord
         public async Task<IActionResult> UpdateFetalGrowthRecord([FromBody] UpdateFetalGrowthRecordRequest request)
         {
             var response = await _fetalGrowthRecordService.UpdateFetalGrowthRecord(request);
-
             if (!response.Success) return BadRequest(response);
             return Ok(response);
         }
