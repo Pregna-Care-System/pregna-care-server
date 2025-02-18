@@ -11,15 +11,18 @@ namespace PregnaCare.Services.Implementations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGenericRepository<Reminder, Guid> _repository;
+        private readonly IReminderRepository _reminderRepo;
+
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="unitOfWork"></param>
-        public ReminderService(IUnitOfWork unitOfWork)
+        public ReminderService(IUnitOfWork unitOfWork, IReminderRepository reminderRepository)
         {
             _unitOfWork = unitOfWork;
             _repository = _unitOfWork.GetRepository<Reminder, Guid>();
+            _reminderRepo = reminderRepository;
         }
         public async Task CreateReminder(ReminderRequest request)
         {
@@ -53,10 +56,20 @@ namespace PregnaCare.Services.Implementations
 
         }
 
-        public async Task<ReminderListResponse> GetAllReminder()
+        public async Task<ReminderListResponse> GetAllActiveReminders()
+        {
+            var list = await _reminderRepo.GetActiveRemindersAsync();
+            return new ReminderListResponse
+            {
+                Success = true,
+                Response = list
+            };
+        }
+
+        public async Task<ReminderListResponse> GetAllReminders()
         {
             var reminderList = await _repository.GetAllAsync();
-            var activeReminders = reminderList.Where(r => r.IsDeleted == false).ToList();
+            var activeReminders = reminderList.Where(r => r.IsDeleted == false).OrderBy(x => x.ReminderDate).ToList();
 
             return new ReminderListResponse
             {

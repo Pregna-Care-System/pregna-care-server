@@ -25,10 +25,16 @@ namespace PregnaCare.Api.Controllers.Reminder
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _reminderService.GetAllReminder();
+            var result = await _reminderService.GetAllReminders();
             return Ok(result);
         }
 
+        [HttpGet("Available")]
+        public async Task<IActionResult> GetAllActiveReminder()
+        {
+            var result = await _reminderService.GetAllActiveReminders();
+            return Ok(result);
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateReminder(Guid id, [FromBody] ReminderRequest request)
         {
