@@ -35,6 +35,7 @@ namespace PregnaCare
             builder.Services.AddScoped<IFeatureRepository, FeatureRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<IUserMembershipPlanRepository, UserMembershipPlanRepository>();
+            builder.Services.AddScoped<IReminderRepository, ReminderRepository>();
             builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
