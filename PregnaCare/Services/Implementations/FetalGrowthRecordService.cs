@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+using PregnaCare.Api.Models.Requests.FetalGrowthRecordRequestModel;
+using PregnaCare.Api.Models.Responses.FetalGrowthRecordResponseModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;

@@ -57,7 +57,7 @@ namespace PregnaCare.Api.Controllers
             var result = await _growthAlertService.UpdateStatusGrowthAlert(id, status);
             if (result)
             {
-                Ok(new
+                _ = Ok(new
                 {
                     Success = true,
                     MessageId = Messages.I00001,

@@ -10,7 +10,7 @@ namespace PregnaCare.Migrations.AuthDb
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateTime>(
+            _ = migrationBuilder.AddColumn<DateTime>(
                 name: "ExpirationTime",
                 table: "AspNetUserTokens",
                 type: "datetime2",
@@ -21,7 +21,7 @@ namespace PregnaCare.Migrations.AuthDb
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "ExpirationTime",
                 table: "AspNetUserTokens");
         }

@@ -16,7 +16,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task AddPlanAsync(MembershipPlan plan, List<Guid> featureIds)
         {
-            _context.MembershipPlans.Add(plan);
+            _ = _context.MembershipPlans.Add(plan);
 
             foreach (var featureId in featureIds)
             {
@@ -28,10 +28,10 @@ namespace PregnaCare.Core.Repositories.Implementations
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
                 };
-                _context.MembershipPlanFeatures.Add(planFeature);
+                _ = _context.MembershipPlanFeatures.Add(planFeature);
             }
 
-            await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
         }
 
         public async Task DeletePlanAsync(Guid planId)
@@ -180,7 +180,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
             await _context.MembershipPlanFeatures.AddRangeAsync(newFeatures);
 
-            await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
         }
 
     }

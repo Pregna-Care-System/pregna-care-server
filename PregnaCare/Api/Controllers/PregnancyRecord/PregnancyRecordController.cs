@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+using PregnaCare.Api.Models.Requests.PregnancyRecordRequestModel;
+using PregnaCare.Api.Models.Responses.PregnancyRecordResponseModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
 

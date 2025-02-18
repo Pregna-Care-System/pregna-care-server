@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+using PregnaCare.Api.Models.Requests.AuthRequestModel;
+using PregnaCare.Api.Models.Responses.AuthResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Enums;
 using PregnaCare.Services.Interfaces;
@@ -66,7 +66,7 @@ namespace PregnaCare.Api.Controllers.Auth
                 return BadRequest("Invalid confirmation request.");
             }
 
-            string decodeCode = HttpUtility.UrlDecode(code);
+            _ = HttpUtility.UrlDecode(code);
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {

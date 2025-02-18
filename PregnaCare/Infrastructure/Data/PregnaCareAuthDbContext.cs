@@ -14,9 +14,9 @@ namespace PregnaCare.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<IdentityUserToken<Guid>>(entity =>
+            _ = modelBuilder.Entity<IdentityUserToken<Guid>>(entity =>
             {
-                entity.Property<DateTime>("ExpirationTime");
+                _ = entity.Property<DateTime>("ExpirationTime");
             });
         }
     }

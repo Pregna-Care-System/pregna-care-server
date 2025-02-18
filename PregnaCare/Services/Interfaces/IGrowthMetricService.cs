@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.GrowthMetricRequestModel;
+using PregnaCare.Api.Models.Responses.GrowthMetricResponseModel;
 using PregnaCare.Core.Models;
 
 namespace PregnaCare.Services.Interfaces

@@ -23,7 +23,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task AddAsync(T entity)
         {
-            await _dbSet.AddAsync(entity);
+            _ = await _dbSet.AddAsync(entity);
         }
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
@@ -55,12 +55,12 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public void Remove(T entity)
         {
-            _dbSet.Remove(entity);
+            _ = _dbSet.Remove(entity);
         }
 
         public void Update(T entity)
         {
-            _dbSet.Update(entity);
+            _ = _dbSet.Update(entity);
         }
     }
 }

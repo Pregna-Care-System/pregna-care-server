@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+using PregnaCare.Api.Models.Responses.FeatureResponseModel;
 
 namespace PregnaCare.Services.Interfaces
 {

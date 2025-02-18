@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.GrowthMetricRequestModel;
+using PregnaCare.Api.Models.Responses.GrowthMetricResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Constants;
 using PregnaCare.Core.Models;

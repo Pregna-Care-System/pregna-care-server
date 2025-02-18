@@ -31,14 +31,14 @@ namespace PregnaCare.Infrastructure.Data
                     {
                         if (!existingRoles.Contains(roleName))
                         {
-                            await appDbContext.Roles.AddAsync(new Role
+                            _ = await appDbContext.Roles.AddAsync(new Role
                             {
                                 RoleName = roleName,
                                 Description = roleName,
                                 IsDeleted = false,
                             });
 
-                            await roleManager.CreateAsync(new IdentityRole<Guid>
+                            _ = await roleManager.CreateAsync(new IdentityRole<Guid>
                             {
                                 Id = Guid.NewGuid(),
                                 Name = roleName,
@@ -49,7 +49,7 @@ namespace PregnaCare.Infrastructure.Data
                         }
                     }
 
-                    if (isAdded) await appDbContext.SaveChangesAsync();
+                    if (isAdded) _ = await appDbContext.SaveChangesAsync();
 
                     // Seed admin account
                     var adminEmail = "pregnacareadmin8386@gmail.com";
@@ -88,12 +88,12 @@ namespace PregnaCare.Infrastructure.Data
                             NormalizedEmail = adminEmail,
                         };
 
-                        await userManager.CreateAsync(identityUser, "Admin1234@!");
-                        await userManager.AddToRoleAsync(identityUser, adminRole.RoleName);
+                        _ = await userManager.CreateAsync(identityUser, "Admin1234@!");
+                        _ = await userManager.AddToRoleAsync(identityUser, adminRole.RoleName);
 
-                        await appDbContext.UserRoles.AddAsync(userRole);
-                        await appDbContext.Users.AddAsync(admin);
-                        await appDbContext.SaveChangesAsync();
+                        _ = await appDbContext.UserRoles.AddAsync(userRole);
+                        _ = await appDbContext.Users.AddAsync(admin);
+                        _ = await appDbContext.SaveChangesAsync();
                     }
 
                     // Commit transaction

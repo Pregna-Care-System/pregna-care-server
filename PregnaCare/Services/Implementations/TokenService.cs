@@ -21,8 +21,6 @@ namespace PregnaCare.Services.Implementations
         /// <exception cref="ArgumentException"></exception>
         public string GenerateToken(User user, string roleName, string tokenType)
         {
-            var token = string.Empty;
-
             var issuer = Environment.GetEnvironmentVariable("ISSUER");
             var audience = Environment.GetEnvironmentVariable("AUDIENCE");
             var secretKey = Environment.GetEnvironmentVariable("SECRET_KEY");
@@ -70,7 +68,7 @@ namespace PregnaCare.Services.Implementations
                 signingCredentials: credentials
             );
 
-            token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            string? token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
             return token;
         }
     }

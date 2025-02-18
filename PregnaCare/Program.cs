@@ -18,7 +18,7 @@ namespace PregnaCare
     {
         public static async Task Main(string[] args)
         {
-            Env.Load();
+            _ = Env.Load();
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -27,60 +27,61 @@ namespace PregnaCare
             var applicationDbConnection = builder.Configuration["ConnectionStrings:ApplicationDbConnection"];
 
             // Add services to the container.
-            builder.Services.AddDbContext<PregnaCareAppDbContext>(options => options.UseSqlServer(applicationDbConnection));
-            builder.Services.AddDbContext<PregnaCareAuthDbContext>(options => options.UseSqlServer(authDbConnection));
+            _ = builder.Services.AddDbContext<PregnaCareAppDbContext>(options => options.UseSqlServer(applicationDbConnection));
+            _ = builder.Services.AddDbContext<PregnaCareAuthDbContext>(options => options.UseSqlServer(authDbConnection));
 
-            builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-            builder.Services.AddScoped<IMembershipPlansRepository, MembershipPlansRepository>();
-            builder.Services.AddScoped<IFeatureRepository, FeatureRepository>();
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-            builder.Services.AddScoped<IUserMembershipPlanRepository, UserMembershipPlanRepository>();
-            builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            _ = builder.Services.AddScoped<IAuthRepository, AuthRepository>();
+            _ = builder.Services.AddScoped<IMembershipPlansRepository, MembershipPlansRepository>();
+            _ = builder.Services.AddScoped<IFeatureRepository, FeatureRepository>();
+            _ = builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            _ = builder.Services.AddScoped<IUserMembershipPlanRepository, UserMembershipPlanRepository>();
+            _ = builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
+            _ = builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            builder.Services.AddScoped<IAuthService, AuthService>();
-            builder.Services.AddScoped<ITokenService, TokenService>();
-            builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.AddScoped<IPasswordService, PasswordService>();
-            builder.Services.AddScoped<IMembershipPlansService, MembershipPlansService>();
-            builder.Services.AddScoped<IFeatureService, FeatureService>();
-            builder.Services.AddScoped<IPregnancyRecordService, PregnancyRecordService>();
-            builder.Services.AddScoped<IUserMembershipPlanSerivce, UserMembershipPlanService>();
-            builder.Services.AddScoped<IGrowthMetricService, GrowthMetricService>();
-            builder.Services.AddScoped<IFetalGrowthRecordService, FetalGrowthRecordService>();
-            builder.Services.AddScoped<IPaymentService, PaymentService>();
-            builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<IUserMembershipPlanSerivce, UserMembershipPlanService>();
-            builder.Services.AddScoped<IGrowthAlertService, GrowthAlertService>();
+            _ = builder.Services.AddScoped<IAuthService, AuthService>();
+            _ = builder.Services.AddScoped<ITokenService, TokenService>();
+            _ = builder.Services.AddScoped<IEmailService, EmailService>();
+            _ = builder.Services.AddScoped<IPasswordService, PasswordService>();
+            _ = builder.Services.AddScoped<IMembershipPlansService, MembershipPlansService>();
+            _ = builder.Services.AddScoped<IFeatureService, FeatureService>();
+            _ = builder.Services.AddScoped<IPregnancyRecordService, PregnancyRecordService>();
+            _ = builder.Services.AddScoped<IUserMembershipPlanSerivce, UserMembershipPlanService>();
+            _ = builder.Services.AddScoped<IGrowthMetricService, GrowthMetricService>();
+            _ = builder.Services.AddScoped<IFetalGrowthRecordService, FetalGrowthRecordService>();
+            _ = builder.Services.AddScoped<IPaymentService, PaymentService>();
+            _ = builder.Services.AddScoped<IAccountService, AccountService>();
+            _ = builder.Services.AddScoped<IUserMembershipPlanSerivce, UserMembershipPlanService>();
+            _ = builder.Services.AddScoped<IGrowthAlertService, GrowthAlertService>();
+            _ = builder.Services.AddScoped<IReminderTypeService, ReminderTypeService>();
+            _ = builder.Services.AddScoped<IReminderService, ReminderService>();
+            _ = builder.Services.AddScoped<IMotherInfoService, MotherInfoService>();
 
-            builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
-            builder.Services.AddScoped<IReminderTypeService, ReminderTypeService>();
-            builder.Services.AddScoped<IReminderService, ReminderService>();
-            builder.Services.AddHttpClient<IChatGeminiService, ChatGeminiService>();
+            _ = builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
+            _ = builder.Services.AddHttpClient<IChatGeminiService, ChatGeminiService>();
 
             // Config identity
-            builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
+            _ = builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
                             .AddEntityFrameworkStores<PregnaCareAuthDbContext>()
                             .AddDefaultTokenProviders();
 
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+            _ = builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
             // Config CORS
-            builder.Services.AddCors(options =>
+            _ = builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowFrontend",
                     policy =>
                     {
-                        policy.AllowAnyOrigin()
+                        _ = policy.AllowAnyOrigin()
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });
             });
 
-            builder.Services.AddControllers();
+            _ = builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(options =>
+            _ = builder.Services.AddEndpointsApiExplorer();
+            _ = builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
@@ -134,19 +135,19 @@ namespace PregnaCare
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
+                _ = app.UseSwagger();
+                _ = app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            _ = app.UseHttpsRedirection();
 
-            app.UseCors("AllowFrontend");
+            _ = app.UseCors("AllowFrontend");
 
-            app.UseAuthentication();
-            app.UseJwtMiddleware();
-            app.UseAuthorization();
+            _ = app.UseAuthentication();
+            _ = app.UseJwtMiddleware();
+            _ = app.UseAuthorization();
 
-            app.MapControllers();
+            _ = app.MapControllers();
 
             app.Run();
         }

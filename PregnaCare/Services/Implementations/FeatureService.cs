@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+using PregnaCare.Api.Models.Responses.FeatureResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Repositories.Interfaces;
@@ -53,7 +53,7 @@ namespace PregnaCare.Services.Implementations
             var feature = await _repo.GetByIdAsync(id);
             if (feature == null)
             {
-                new FeatureResponse
+                _ = new FeatureResponse
                 {
                     Success = false,
                     Message = "Feature not found",

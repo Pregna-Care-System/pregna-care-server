@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests;
+using PregnaCare.Api.Models.Requests.ReminderRequestModel;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Api.Controllers.Reminder

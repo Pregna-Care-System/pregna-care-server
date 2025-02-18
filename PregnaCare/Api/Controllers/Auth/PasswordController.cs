@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PregnaCare.Api.Models.Requests;
+using PregnaCare.Api.Models.Requests.AuthRequestModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Common.Enums;
 using PregnaCare.Infrastructure.Data;
@@ -96,8 +96,8 @@ namespace PregnaCare.Api.Controllers.Auth
                 return BadRequest(response);
             }
 
-            await _userManager.RemovePasswordAsync(identityUser);
-            await _userManager.AddPasswordAsync(identityUser, request.NewPassword);
+            _ = await _userManager.RemovePasswordAsync(identityUser);
+            _ = await _userManager.AddPasswordAsync(identityUser, request.NewPassword);
             await _authService.RemoveTokenAsync(identityUser.Id, TokenTypeEnum.ResetPasswordToken.ToString());
             return Ok(response);
         }

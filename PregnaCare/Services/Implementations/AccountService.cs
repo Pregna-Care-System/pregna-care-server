@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.AccountRequestModel;
+using PregnaCare.Api.Models.Responses.AccountResponseModel;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
@@ -35,7 +35,7 @@ namespace PregnaCare.Services.Implementations
             var existingAccount = await _repo.GetByIdAsync(id);
             if (existingAccount == null)
             {
-                new AccountResponse
+                _ = new AccountResponse
                 {
                     Success = false,
                     Message = "Plan not found",
