@@ -28,7 +28,7 @@ namespace PregnaCare.Utils
         /// <returns></returns>
         public static bool VerifyPassword(string password, string hash)
         {
-            return hash == HashPassword(password);  
+            return hash == HashPassword(password);
         }
     }
 }

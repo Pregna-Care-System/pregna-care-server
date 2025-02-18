@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PregnaCare.Api.Models.Responses;
 using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
@@ -17,24 +16,24 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<IEnumerable<UserMembershipPlanDTO>> GetUserMembershipPlanList()
         {
-             return await _context.UserMembershipPlans
-                .Include(ump => ump.MembershipPlan)
-                .Include(ump => ump.User)
-                .Select(ump => new UserMembershipPlanDTO
-                {
-                    Id = ump.Id,
-                    UserId = ump.UserId,
-                    MembershipPlanId = ump.MembershipPlanId,
-                    Email = ump.User.Email, 
-                    FullName = ump.User.FullName,
-                    MembershipPlanName = ump.MembershipPlan.PlanName,
-                    ActivatedAt = ump.ActivatedAt,
-                    ExpiryDate = ump.ExpiryDate,
-                    Price = ump.Price,
-                    IsActive = ump.IsActive,
-                    IsDeleted = ump.IsDeleted
-                })
-                .ToListAsync();
+            return await _context.UserMembershipPlans
+               .Include(ump => ump.MembershipPlan)
+               .Include(ump => ump.User)
+               .Select(ump => new UserMembershipPlanDTO
+               {
+                   Id = ump.Id,
+                   UserId = ump.UserId,
+                   MembershipPlanId = ump.MembershipPlanId,
+                   Email = ump.User.Email,
+                   FullName = ump.User.FullName,
+                   MembershipPlanName = ump.MembershipPlan.PlanName,
+                   ActivatedAt = ump.ActivatedAt,
+                   ExpiryDate = ump.ExpiryDate,
+                   Price = ump.Price,
+                   IsActive = ump.IsActive,
+                   IsDeleted = ump.IsDeleted
+               })
+               .ToListAsync();
 
         }
 

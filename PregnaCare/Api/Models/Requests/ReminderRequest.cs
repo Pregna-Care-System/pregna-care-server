@@ -2,7 +2,7 @@
 
 namespace PregnaCare.Api.Models.Requests
 {
-    public class ReminderRequest:AbstractApiRequest
+    public class ReminderRequest : AbstractApiRequest
     {
         public Guid ReminderTypeId { get; set; }
 

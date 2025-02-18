@@ -2,7 +2,7 @@
 
 namespace PregnaCare.Api.Models.Requests
 {
-    public class UpdateAccountRequest: AbstractApiRequest
+    public class UpdateAccountRequest : AbstractApiRequest
     {
         public string FullName { get; set; } = string.Empty;
 

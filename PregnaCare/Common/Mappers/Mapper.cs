@@ -10,17 +10,17 @@ namespace PregnaCare.Common.Mappers
         {
             return new AccountDTO
             {
-               Id = user.Id,
-               Address = user.Address,
-               CreatedAt = user.CreatedAt,
-               UpdatedAt = user.UpdatedAt,
-               DateOfBirth = user.DateOfBirth,
-               Email = user.Email,
-               FullName = user.FullName,
-               Gender = user.Gender,
-               ImageUrl = user.ImageUrl,
-               IsDeleted = user.IsDeleted,
-               PhoneNumber = user.PhoneNumber,
+                Id = user.Id,
+                Address = user.Address,
+                CreatedAt = user.CreatedAt,
+                UpdatedAt = user.UpdatedAt,
+                DateOfBirth = user.DateOfBirth,
+                Email = user.Email,
+                FullName = user.FullName,
+                Gender = user.Gender,
+                ImageUrl = user.ImageUrl,
+                IsDeleted = user.IsDeleted,
+                PhoneNumber = user.PhoneNumber,
             };
         }
         public static MembershipPlan MapToMembershipPlan(MembershipPlanRequest request)
@@ -42,7 +42,7 @@ namespace PregnaCare.Common.Mappers
                 Description = request.Description,
             };
         }
-        public static MembershipPlanFeatureDTO MapToMembershipPlanDTO(MembershipPlan plan) 
+        public static MembershipPlanFeatureDTO MapToMembershipPlanDTO(MembershipPlan plan)
         {
             return new MembershipPlanFeatureDTO
             {

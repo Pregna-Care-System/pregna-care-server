@@ -11,7 +11,7 @@ namespace PregnaCare.Api.Models.Requests
         public int Duration { get; set; }
 
         public string Description { get; set; } = string.Empty;
-        
+
         public string ImageUrl { get; set; } = string.Empty;
 
         public List<Guid> featuredId { get; set; }

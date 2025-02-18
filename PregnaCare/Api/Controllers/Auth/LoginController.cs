@@ -27,7 +27,7 @@ namespace PregnaCare.Api.Controllers.Auth
         }
 
         [HttpPost]
-        public async override Task<LoginResponse> Exec([FromBody] LoginRequest request)
+        public override async Task<LoginResponse> Exec([FromBody] LoginRequest request)
         {
             var response = await _authService.LoginAsync(request);
             return response;

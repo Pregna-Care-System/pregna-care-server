@@ -1,8 +1,6 @@
 ﻿using PregnaCare.Api.Models.Requests;
 using PregnaCare.Api.Models.Responses;
 using PregnaCare.Common.Mappers;
-using PregnaCare.Core.DTOs;
-using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -76,7 +74,7 @@ namespace PregnaCare.Services.Implementations
             await _unit.SaveChangesAsync();
 
             var accountDTO = Mapper.MapToAccountDTO(existingAccount);
-            
+
             return new AccountResponse
             {
                 Success = true,
