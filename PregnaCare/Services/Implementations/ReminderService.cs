@@ -53,15 +53,16 @@ namespace PregnaCare.Services.Implementations
 
         }
 
-        public async Task<IEnumerable<ReminderResponse>> GetAllReminder()
+        public async Task<ReminderListResponse> GetAllReminder()
         {
-            var typeList = await _repository.GetAllAsync();
+            var reminderList = await _repository.GetAllAsync();
+            var activeReminders = reminderList.Where(r => r.IsDeleted == false).ToList();
 
-            return typeList.Select(type => new ReminderResponse
+            return new ReminderListResponse
             {
                 Success = true,
-                Response = type
-            });
+                Response = activeReminders
+            };
         }
 
         public async Task<ReminderResponse> GetReminderById(Guid id)
