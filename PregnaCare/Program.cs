@@ -56,6 +56,7 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<IReminderTypeService, ReminderTypeService>();
             _ = builder.Services.AddScoped<IReminderService, ReminderService>();
             _ = builder.Services.AddScoped<IMotherInfoService, MotherInfoService>();
+            _ = builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
             _ = builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
             _ = builder.Services.AddHttpClient<IChatGeminiService, ChatGeminiService>();
