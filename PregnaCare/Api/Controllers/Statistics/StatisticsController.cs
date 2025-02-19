@@ -40,11 +40,7 @@ namespace PregnaCare.Api.Controllers.Statistics
                 Success = true,
                 MessageId = Messages.I00001,
                 Message = Messages.GetMessageById(Messages.I00001),
-                Response = new
-                {
-                    Total = result.Total,
-                    PercentageChange = result.PercentageChange
-                }
+                Response = result
             });
         }
 
@@ -68,11 +64,7 @@ namespace PregnaCare.Api.Controllers.Statistics
                 Success = true,
                 MessageId = Messages.I00001,
                 Message = Messages.GetMessageById(Messages.I00001),
-                Response = new
-                {
-                    Total = result.Total,
-                    PercentageChange = result.PercentageChange
-                }
+                Response = result
             });
         }
 
@@ -96,11 +88,7 @@ namespace PregnaCare.Api.Controllers.Statistics
                 Success = true,
                 MessageId = Messages.I00001,
                 Message = Messages.GetMessageById(Messages.I00001),
-                Response = new
-                {
-                    Total = result.Total,
-                    PercentageChange = result.PercentageChange
-                }
+                Response = result
             });
         }
 
@@ -124,11 +112,7 @@ namespace PregnaCare.Api.Controllers.Statistics
                 Success = true,
                 MessageId = Messages.I00001,
                 Message = Messages.GetMessageById(Messages.I00001),
-                Response = new
-                {
-                    Total = result.Total,
-                    PercentageChange = result.PercentageChange
-                }
+                Response = result
             });
         }
     }
