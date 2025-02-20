@@ -28,8 +28,10 @@ namespace PregnaCare.Services.Implementations
 
             return new StatsResponse
             {
+                Title = "Total Members",
                 Total = currentCount,
-                PercentageChange = percentageChange
+                PercentageChange = percentageChange,
+                IsIncrease = percentageChange > 0
             };
         }
 
@@ -42,8 +44,10 @@ namespace PregnaCare.Services.Implementations
 
             return new StatsResponse
             {
+                Title = "Total Users",
                 Total = currentCount,
-                PercentageChange = percentageChange
+                PercentageChange = percentageChange,
+                IsIncrease = percentageChange > 0
             };
         }
 
@@ -56,8 +60,10 @@ namespace PregnaCare.Services.Implementations
 
             return new StatsResponse
             {
+                Title = "Total Transactions",
                 Total = currentCount,
-                PercentageChange = percentageChange
+                PercentageChange = percentageChange,
+                IsIncrease = percentageChange > 0
             };
         }
 
@@ -79,9 +85,62 @@ namespace PregnaCare.Services.Implementations
 
             return new StatsResponse
             {
+                Title = "Total Revenue",
                 Total = currentRevenue,
-                PercentageChange = percentageChange
+                PercentageChange = percentageChange,
+                IsIncrease = percentageChange > 0
             };
+        }
+
+        public async Task<List<MembershipStatsResponse>> GetMembershipStatsAsync()
+        {
+            var stats = await (from plan in _context.MembershipPlans
+                               join userPlan in _context.UserMembershipPlans on plan.Id equals userPlan.MembershipPlanId
+                               where !plan.IsDeleted.Value &&
+                                     !userPlan.IsDeleted.Value &&
+                                     userPlan.IsActive.Value
+                               group userPlan by plan.PlanName into g
+                               select new
+                               {
+                                   Name = g.Key,
+                                   Users = g.Count()
+                               }).ToListAsync();
+
+            var totalUsers = stats.Sum(s => s.Users);
+
+            var membershipPlans = stats.Select(s => new MembershipStatsResponse
+            {
+                Name = s.Name,
+                Users = s.Users,
+                Percentage = totalUsers > 0 ? ((double)s.Users / totalUsers * 100).ToString("F1") + "%" : "0%"
+            }).ToList();
+
+            return membershipPlans;
+        }
+
+        public async Task<(int, int, int, List<TransactionStatsResponse>)> GetRecentTransactionsAsync(int offset, int limit)
+        {
+            if (offset < 0 || limit < 1) return (0, 0, 0, null);
+
+            var totalTransactions = await _context.UserMembershipPlans.AsNoTracking()
+                                                  .Where(up => up.IsDeleted == false)
+                                                  .CountAsync();
+
+            var transactions = await (from userPlan in _context.UserMembershipPlans
+                                      join plan in _context.MembershipPlans on userPlan.MembershipPlanId equals plan.Id
+                                      join user in _context.Users on userPlan.UserId equals user.Id
+                                      where !userPlan.IsDeleted.Value && userPlan.IsActive.Value
+                                      orderby userPlan.CreatedAt descending
+                                      select new TransactionStatsResponse
+                                      {
+                                          FullName = user.FullName,
+                                          MembershipPlan = plan.PlanName,
+                                          Price = userPlan.Price.ToString(),
+                                          Status = userPlan.Status,
+                                          BuyDate = (DateTime)userPlan.CreatedAt
+                                      }).Skip(offset).Take(limit).ToListAsync();
+
+            return (totalTransactions, offset, limit, transactions);
         }
     }
 }

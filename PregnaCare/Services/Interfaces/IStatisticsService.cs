@@ -8,5 +8,7 @@ namespace PregnaCare.Services.Interfaces
         Task<StatsResponse> GetUserStatisticsAsync();
         Task<StatsResponse> GetTotalTransactionStatisticsAsync();
         Task<StatsResponse> GetTotalRevenueStatisticsAsync();
+        Task<List<MembershipStatsResponse>> GetMembershipStatsAsync();
+        Task<(int, int, int, List<TransactionStatsResponse>)> GetRecentTransactionsAsync(int offset, int limit);
     }
 }
