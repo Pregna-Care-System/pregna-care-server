@@ -7,6 +7,7 @@ namespace PregnaCare.Services.Interfaces
     public interface IGrowthMetricService
     {
         Task<List<GrowthMetric>> GetAllGrowthMetrics();
+        Task<List<GrowthMetric>> GetAllGrowthMetricsByWeek(int week);
         Task<GrowthMetric> GetGrowthMetricById(Guid id);
         Task<CreateGrowthMetricResponse> CreateGrowthMetric(CreateGrowthMetricRequest request);
         Task<UpdateGrowthMetricResponse> UpdateGrowthMetric(UpdateGrowthMetricRequest request);
