@@ -21,6 +21,36 @@ namespace PregnaCare.Api.Controllers.GrowthMetric
         }
 
         [HttpGet]
+        public async Task<IActionResult> GetAllByWeek([FromQuery] int week)
+        {
+            var response = (await _service.GetAllGrowthMetricsByWeek(week)).Select(x => new
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Unit = x.Unit,
+                Description = x.Description,
+                Week = x.Week,
+                MinValue = x.MinValue,
+                MaxValue = x.MaxValue,
+            });
+
+            if (response == null) return NotFound(new
+            {
+                Success = false,
+                MessageId = Messages.E00013,
+                Message = Messages.GetMessageById(Messages.E00013),
+            });
+
+            return Ok(new
+            {
+                Success = true,
+                MessageId = Messages.I00001,
+                Message = Messages.GetMessageById(Messages.I00001),
+                Response = response
+            });
+        }
+
+        [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var response = (await _service.GetAllGrowthMetrics()).Select(x => new

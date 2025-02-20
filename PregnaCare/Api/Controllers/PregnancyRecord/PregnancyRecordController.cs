@@ -28,11 +28,6 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             var response = (await _service.GetAllPregnancyRecords(userId)).Select(x => new SelectPregnancyRecordResponse
             {
                 Id = x.Id,
-                MotherName = x.MotherInfo.MotherName,
-                MotherDateOfBirth = x?.MotherInfo?.DateOfBirth ?? DateOnly.FromDateTime(DateTime.Now),
-                BloodType = x?.MotherInfo?.BloodType ?? string.Empty,
-                HealhStatus = x?.MotherInfo?.HealthStatus ?? string.Empty,
-                Notes = x?.MotherInfo?.Notes ?? string.Empty,
                 BabyName = x.BabyName,
                 BabyGender = x.BabyGender,
                 PregnancyStartDate = x.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
