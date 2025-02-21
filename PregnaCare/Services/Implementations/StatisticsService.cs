@@ -31,6 +31,7 @@ namespace PregnaCare.Services.Implementations
                 Title = "Total Members",
                 Total = currentCount,
                 PercentageChange = percentageChange,
+                Icon = "FiUserCheck",
                 IsIncrease = percentageChange > 0
             };
         }
@@ -47,6 +48,7 @@ namespace PregnaCare.Services.Implementations
                 Title = "Total Users",
                 Total = currentCount,
                 PercentageChange = percentageChange,
+                Icon = "FiUsers",
                 IsIncrease = percentageChange > 0
             };
         }
@@ -63,6 +65,7 @@ namespace PregnaCare.Services.Implementations
                 Title = "Total Transactions",
                 Total = currentCount,
                 PercentageChange = percentageChange,
+                Icon = "FiPieChart",
                 IsIncrease = percentageChange > 0
             };
         }
@@ -88,6 +91,7 @@ namespace PregnaCare.Services.Implementations
                 Title = "Total Revenue",
                 Total = currentRevenue,
                 PercentageChange = percentageChange,
+                Icon = "FiDollarSign",
                 IsIncrease = percentageChange > 0
             };
         }
@@ -130,9 +134,10 @@ namespace PregnaCare.Services.Implementations
                                       join plan in _context.MembershipPlans on userPlan.MembershipPlanId equals plan.Id
                                       join user in _context.Users on userPlan.UserId equals user.Id
                                       where !userPlan.IsDeleted.Value && userPlan.IsActive.Value
-                                      orderby userPlan.CreatedAt descending
+                                      orderby plan.PlanName ascending, userPlan.CreatedAt descending
                                       select new TransactionStatsResponse
                                       {
+                                          ImageUrl = user.ImageUrl,
                                           FullName = user.FullName,
                                           MembershipPlan = plan.PlanName,
                                           Price = userPlan.Price.ToString(),
@@ -142,5 +147,80 @@ namespace PregnaCare.Services.Implementations
 
             return (totalTransactions, offset, limit, transactions);
         }
+
+        public async Task<List<RevenueStatsResponse>> GetTotalRevenueAsync()
+        {
+            var revenueData = await _context.UserMembershipPlans
+           .Where(plan => plan.IsDeleted == false && plan.IsActive == true)
+           .GroupBy(plan => new { Year = plan.ActivatedAt.Value.Year, Month = plan.ActivatedAt.Value.Month })
+           .Select(group => new
+           {
+               group.Key.Year,
+               group.Key.Month,
+               TotalRevenue = group.Sum(plan => plan.Price)
+           })
+           .ToListAsync();
+
+            // Nhóm theo năm
+            var groupedByYear = revenueData
+                .GroupBy(r => r.Year)
+                .Select(g => new RevenueStatsResponse
+                {
+                    Year = g.Key.ToString(),
+                    TotalRevenueByMonth = Enumerable.Range(1, 12)
+                        .Select(month => g.FirstOrDefault(m => m.Month == month)?.TotalRevenue ?? 0)
+                        .ToList()
+                })
+                .ToList();
+
+            return groupedByYear;
+        }
+
+        public async Task<List<NewMemberResponse>> GetNewMembersAsync(int? year, int? month, int? week)
+        {
+            var query = _context.UserMembershipPlans
+                .Where(plan => plan.IsDeleted == false && plan.IsActive == true)
+                .AsQueryable();
+
+            if (year.HasValue)
+            {
+                query = query.Where(plan => plan.ActivatedAt.HasValue && plan.ActivatedAt.Value.Year == year.Value);
+            }
+
+            if (month.HasValue)
+            {
+                query = query.Where(plan => plan.ActivatedAt.HasValue && plan.ActivatedAt.Value.Month == month.Value);
+            }
+
+            if (week.HasValue)
+            {
+                DateTime firstDayOfYear = new DateTime(year ?? DateTime.Now.Year, 1, 1);
+                DateTime startOfWeek = firstDayOfYear.AddDays((week.Value - 1) * 7);
+
+                query = query.Where(plan =>
+                    plan.ActivatedAt.HasValue &&
+                    plan.ActivatedAt.Value >= startOfWeek &&
+                    plan.ActivatedAt.Value < startOfWeek.AddDays(7));
+            }
+
+            var groupedData = await query
+                .GroupBy(plan => new
+                {
+                    Year = plan.ActivatedAt.Value.Year,
+                    Month = month.HasValue ? plan.ActivatedAt.Value.Month : (int?)null,
+                    WeekStart = week.HasValue ? plan.ActivatedAt.Value.Date.AddDays(-(int)plan.ActivatedAt.Value.DayOfWeek) : (DateTime?)null
+                })
+                .Select(group => new NewMemberResponse
+                {
+                    TimePeriod = week.HasValue ? $"Week {week.Value} ({group.Key.WeekStart:MM/dd})"
+                                : month.HasValue ? $"{group.Key.Month}/{group.Key.Year}"
+                                : group.Key.Year.ToString(),
+                    NewMembersCount = group.Count()
+                })
+                .ToListAsync();
+
+            return groupedData;
+        }
+
     }
 }

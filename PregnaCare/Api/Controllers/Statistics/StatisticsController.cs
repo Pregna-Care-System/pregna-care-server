@@ -2,6 +2,7 @@
 using PregnaCare.Services.Interfaces;
 using PregnaCare.Common.Constants;
 using PregnaCare.Api.Models.Responses.StatisticsResponseModel;
+using System.Collections.Generic;
 
 namespace PregnaCare.Api.Controllers.Statistics
 {
@@ -140,7 +141,7 @@ namespace PregnaCare.Api.Controllers.Statistics
         }
 
         [HttpGet("RecentTransactions")]
-        public async Task<IActionResult> GetRecentTransactions([FromQuery] int offset = 0, [FromQuery] int limit = 10)
+        public async Task<IActionResult> GetRecentTransactions([FromQuery] int? offset = 0, [FromQuery] int? limit = 10)
         {
 
             if (offset < 0 || limit < 1)
@@ -155,7 +156,7 @@ namespace PregnaCare.Api.Controllers.Statistics
             }
 
 
-            (int count, offset, limit, List<TransactionStatsResponse> responseList) = await _statisticsService.GetRecentTransactionsAsync(offset, limit);
+            (int count, offset, limit, List<TransactionStatsResponse> responseList) = await _statisticsService.GetRecentTransactionsAsync(offset.Value, limit.Value);
 
             if (responseList.Count > 0)
             {
@@ -171,6 +172,54 @@ namespace PregnaCare.Api.Controllers.Statistics
                         Limit = limit,
                         Transactions = responseList
                     }
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                MessageId = Messages.E00013,
+                Message = Messages.GetMessageById(Messages.E00013),
+            });
+        }
+
+        [HttpGet("Revenue")]
+        public async Task<ActionResult<List<RevenueStatsResponse>>> GetTotalRevenue()
+        {
+            var responseList = await _statisticsService.GetTotalRevenueAsync();
+
+            if (responseList.Count > 0)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    MessageId = Messages.I00001,
+                    Message = Messages.GetMessageById(Messages.I00001),
+                    Response = responseList
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                MessageId = Messages.E00013,
+                Message = Messages.GetMessageById(Messages.E00013),
+            });
+        }
+
+        [HttpGet("NewMember")]
+        public async Task<IActionResult> GetNewMembers([FromQuery] int? year, [FromQuery] int? month, [FromQuery] int? week)
+        {
+            var responseList = await _statisticsService.GetNewMembersAsync(year, month, week);
+
+            if (responseList.Count > 0)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    MessageId = Messages.I00001,
+                    Message = Messages.GetMessageById(Messages.I00001),
+                    Response = responseList
                 });
             }
 
