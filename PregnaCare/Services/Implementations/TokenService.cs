@@ -43,19 +43,22 @@ namespace PregnaCare.Services.Implementations
                 expiration = expiration.AddMinutes(double.Parse(accessTokenExpiration));
             }
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("id", user.Id.ToString()),
-                new Claim("email", user.Email),
-                new Claim("role", roleName),
-                new Claim("name", user.FullName),
-                new Claim("picture", user.ImageUrl),
-                new Claim("address", user.Address),
-                new Claim("phone", user.PhoneNumber),
-                new Claim("gender", user.Gender),
-                new Claim("dateOfBirth", user.DateOfBirth?.ToString("dd-MM-yyyy") ?? DateOnly.FromDateTime(DateTime.Now).ToString("dd-MM-yyyy"))
+                new Claim("id", user.Id.ToString() ?? string.Empty),
+                new Claim("email", user.Email ?? string.Empty),
+                new Claim("role", roleName ?? string.Empty),
+                new Claim("name", user.FullName ?? string.Empty),
+                new Claim("picture", user.ImageUrl ?? string.Empty),
+                new Claim("address", user.Address ?? string.Empty),
+                new Claim("phone", user.PhoneNumber ?? string.Empty),
+                new Claim("gender", user.Gender ?? string.Empty)
             };
+            if (user.DateOfBirth.HasValue)
+            {
+                claims.Add(new Claim("dateOfBirth", user.DateOfBirth.Value.ToString("yyyy-MM-dd")));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
