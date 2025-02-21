@@ -9,7 +9,11 @@ namespace PregnaCare.Utils
             var emailRegex = new Regex(@"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
             return emailRegex.IsMatch(email);
         }
-
+        public static bool IsValidPhone(string phone)
+        {
+            var phoneRegex = new Regex(@"^\+?[0-9]{10,15}$");
+            return phoneRegex.IsMatch(phone);
+        }
         public static bool IsValidPassword(string password)
         {
             var passwordRegex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$");

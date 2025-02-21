@@ -1,9 +1,12 @@
 ﻿using PregnaCare.Api.Models.Requests.AccountRequestModel;
 using PregnaCare.Api.Models.Responses.AccountResponseModel;
+using PregnaCare.Api.Models.Responses.AuthResponseModel;
+using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
+using PregnaCare.Utils;
 
 namespace PregnaCare.Services.Implementations
 {
@@ -52,14 +55,84 @@ namespace PregnaCare.Services.Implementations
 
         public async Task<AccountResponse> UpdateAccount(Guid id, UpdateAccountRequest request)
         {
-            var existingAccount = await _repo.GetByIdAsync(id);
-            if (existingAccount == null)
+            var response = new AccountResponse();
+            var detailErrorList = new List<DetailError>();
+
+            if (request == null)
             {
                 return new AccountResponse
                 {
                     Success = false,
+                    Message = "Invalid request data",
+                    MessageId = "E00005"
+                };
+            }
+
+            var existingAccount = await _repo.GetByIdAsync(id);
+            if (existingAccount == null)
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(id),
+                    Value = id.ToString(),
                     Message = "User not found",
                     MessageId = "E00004"
+                });
+
+                return new AccountResponse
+                {
+                    Success = false,
+                    MessageId = "E00004",
+                    Message = "User not found",
+                    DetailErrorList = detailErrorList
+                };
+            }
+
+            if (string.IsNullOrWhiteSpace(request.FullName))
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.FullName),
+                    Value = request.FullName,
+                    Message = "Full name cannot be empty",
+                });
+            }
+
+            if (!ValidationUtils.IsValidPhone(request.PhoneNumber))
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.PhoneNumber),
+                    Value = request.PhoneNumber,
+                    Message = "Phone format is not correct",
+                });
+            }
+
+            // Kiểm tra tuổi có nhỏ hơn 18 không
+            if (request.DateOfBirth.HasValue)
+            {
+                var today = DateTime.Today;
+                var age = today.Year - request.DateOfBirth.Value.Year;
+                
+                if (age < 18)
+                {
+                    detailErrorList.Add(new DetailError
+                    {
+                        FieldName = nameof(request.DateOfBirth),
+                        Value = request.DateOfBirth.Value.ToString("yyyy-MM-dd"),
+                        Message = "User must be at least 18 years old",
+                    });
+                }
+            }
+
+            if (detailErrorList.Any())
+            {
+                return new AccountResponse
+                {
+                    Success = false,
+                    Message = "Validation failed",
+                    MessageId = "E00009",
+                    DetailErrorList = detailErrorList
                 };
             }
 
