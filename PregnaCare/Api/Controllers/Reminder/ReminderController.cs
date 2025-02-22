@@ -15,10 +15,10 @@ namespace PregnaCare.Api.Controllers.Reminder
             _reminderService = reminderService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateReminder([FromBody] ReminderRequest request)
+        [HttpPost("{userId}")]
+        public async Task<IActionResult> CreateReminder([FromBody] ReminderRequest request, Guid userId)
         {
-            await _reminderService.CreateReminder(request);
+            await _reminderService.CreateReminder(request, userId);
             return NoContent();
         }
 

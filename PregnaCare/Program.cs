@@ -7,8 +7,10 @@ using Microsoft.OpenApi.Models;
 using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
+using PregnaCare.Infrastructure.Hubs;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Middlewares;
+using PregnaCare.Services.BackgroundServices;
 using PregnaCare.Services.Implementations;
 using PregnaCare.Services.Interfaces;
 
@@ -60,6 +62,11 @@ namespace PregnaCare
 
             _ = builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
             _ = builder.Services.AddHttpClient<IChatGeminiService, ChatGeminiService>();
+
+                builder.Services.AddHostedService<ReminderBackgroundService>();
+
+
+            builder.Services.AddSignalR();
 
             // Config identity
             _ = builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
@@ -144,6 +151,8 @@ namespace PregnaCare
             _ = app.UseHttpsRedirection();
 
             _ = app.UseCors("AllowFrontend");
+
+                app.MapHub<ReminderHub>("/reminderHub");
 
             _ = app.UseAuthentication();
             _ = app.UseJwtMiddleware();

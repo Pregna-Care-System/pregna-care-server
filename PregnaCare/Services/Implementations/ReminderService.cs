@@ -24,7 +24,7 @@ namespace PregnaCare.Services.Implementations
             _repository = _unitOfWork.GetRepository<Reminder, Guid>();
             _reminderRepo = reminderRepository;
         }
-        public async Task CreateReminder(ReminderRequest request)
+        public async Task CreateReminder(ReminderRequest request, Guid id)
         {
             var type = new Reminder
             {
@@ -43,7 +43,20 @@ namespace PregnaCare.Services.Implementations
             };
 
             await _repository.AddAsync(type);
+
+            var userReminder = new UserReminder
+            {
+                Id = Guid.NewGuid(),
+                UserId = id,
+                ReminderId = type.Id,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                IsDeleted = false,
+            };
+            await _userReminderRepo.AddAsync(userReminder);
+
             await _unitOfWork.SaveChangesAsync();
+
         }
 
         public async Task DeleteReminder(Guid id)

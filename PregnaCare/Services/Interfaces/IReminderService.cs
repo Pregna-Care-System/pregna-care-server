@@ -5,7 +5,7 @@ namespace PregnaCare.Services.Interfaces
 {
     public interface IReminderService
     {
-        Task CreateReminder(ReminderRequest request);
+        Task CreateReminder(ReminderRequest request, Guid id);
         Task<ReminderListResponse> GetAllReminders();
         Task<ReminderListResponse> GetAllActiveReminders();
         Task UpdateReminder(Guid id, ReminderRequest request);
