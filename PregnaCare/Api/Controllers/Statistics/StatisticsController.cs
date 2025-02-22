@@ -155,7 +155,6 @@ namespace PregnaCare.Api.Controllers.Statistics
                     });
             }
 
-
             (int count, offset, limit, List<TransactionStatsResponse> responseList) = await _statisticsService.GetRecentTransactionsAsync(offset.Value, limit.Value);
 
             if (responseList.Count > 0)

@@ -2,7 +2,7 @@
 using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
 
-namespace PregnaCare.Api.Controllers
+namespace PregnaCare.Api.Controllers.GrowthAlert
 {
     [Route("api/v1/[controller]")]
     [ApiController]
@@ -29,15 +29,15 @@ namespace PregnaCare.Api.Controllers
                     Message = Messages.GetMessageById(Messages.I00001),
                     Response = growthAlerts.Select(x => new
                     {
-                        Id = x.Id,
-                        FetalGrowthRecordId = x.FetalGrowthRecordId,
-                        Week = x.Week,
-                        AlertDate = x.AlertDate,
-                        AlertFor = x.AlertFor,
-                        Issue = x.Issue,
-                        Severity = x.Severity,
-                        Recommendation = x.Recommendation,
-                        IsResolved = x.IsResolved,
+                        x.Id,
+                        x.FetalGrowthRecordId,
+                        x.Week,
+                        x.AlertDate,
+                        x.AlertFor,
+                        x.Issue,
+                        x.Severity,
+                        x.Recommendation,
+                        x.IsResolved,
                     })
                 });
             }
