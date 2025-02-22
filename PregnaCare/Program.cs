@@ -7,8 +7,10 @@ using Microsoft.OpenApi.Models;
 using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
+using PregnaCare.Infrastructure.Hubs;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Middlewares;
+using PregnaCare.Services.BackgroundServices;
 using PregnaCare.Services.Implementations;
 using PregnaCare.Services.Interfaces;
 
@@ -36,6 +38,7 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             _ = builder.Services.AddScoped<IUserMembershipPlanRepository, UserMembershipPlanRepository>();
             _ = builder.Services.AddScoped<IReminderRepository, ReminderRepository>();
+                builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
             _ = builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             _ = builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -60,6 +63,12 @@ namespace PregnaCare
 
             _ = builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
             _ = builder.Services.AddHttpClient<IChatGeminiService, ChatGeminiService>();
+                
+                builder.Services.AddScoped<IReminderNotificationService, ReminderNotificationService>();
+                builder.Services.AddHostedService<ReminderBackgroundService>();
+                
+
+            builder.Services.AddSignalR();
 
             // Config identity
             _ = builder.Services.AddIdentity<IdentityUser<Guid>, IdentityRole<Guid>>()
@@ -144,6 +153,8 @@ namespace PregnaCare
             _ = app.UseHttpsRedirection();
 
             _ = app.UseCors("AllowFrontend");
+
+                app.MapHub<ReminderHub>("/reminderHub");
 
             _ = app.UseAuthentication();
             _ = app.UseJwtMiddleware();

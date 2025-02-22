@@ -21,5 +21,23 @@ namespace PregnaCare.Core.Repositories.Implementations
                 .OrderBy(f => f.ReminderDate)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Reminder>> GetRemindersToNotifyAsync(DateTime dateTime)
+        {
+            var notificationTime = dateTime.AddMinutes(30);
+            return await _appDbContext.Reminders
+                .Where(r => r.ReminderDate != null 
+                && r.ReminderDate < notificationTime
+                && r.Status == "Active" )
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Guid>> GetUserIdsForReminderAsync(Guid reminderId)
+        {
+            return await _appDbContext.UserReminders
+                .Where(ur => ur.ReminderId == reminderId)
+                .Select(ur => ur.UserId)
+                .ToListAsync();
+        }
     }
 }
