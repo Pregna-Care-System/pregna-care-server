@@ -10,6 +10,6 @@ namespace PregnaCare.Services.Interfaces
         Task<FeatureResponse> GetFeatureById(Guid id);
         Task<FeatureResponse> Update(Guid id, FeatureRequest request);
         Task<FeatureResponse> Delete(Guid id);
-
+        Task<List<SelectFeatureResponse>> GetAllFeaturesByUserIdAsync(Guid userId);
     }
 }

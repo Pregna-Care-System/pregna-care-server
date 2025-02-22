@@ -2,6 +2,7 @@
 using PregnaCare.Api.Models.Requests.FeatureRequestModel;
 using PregnaCare.Api.Models.Responses.FeatureResponseModel;
 using PregnaCare.Common.Api;
+using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Api.Controllers.Feature
@@ -50,6 +51,28 @@ namespace PregnaCare.Api.Controllers.Feature
             return response;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllFeaturesByUserId([FromQuery] Guid id)
+        {
+            var responseList = await _featureService.GetAllFeaturesByUserIdAsync(id);
+            if (responseList.Any())
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    MessageId = Messages.I00001,
+                    Message = Messages.GetMessageById(Messages.I00001),
+                    Response = responseList
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                MessageId = Messages.E00013,
+                Message = Messages.GetMessageById(Messages.E00013),
+            });
+        }
 
     }
 }

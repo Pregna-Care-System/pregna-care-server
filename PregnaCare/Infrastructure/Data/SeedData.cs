@@ -18,7 +18,7 @@ namespace PregnaCare.Infrastructure.Data
                 try
                 {
                     // Seed roles
-                    var roleNames = new List<string> { RoleEnum.Admin.ToString(), RoleEnum.Member.ToString(), RoleEnum.Guest.ToString() };
+                    var roleNames = new List<string> { RoleEnum.Admin.ToString(), RoleEnum.Member.ToString(), RoleEnum.Guest.ToString(), RoleEnum.User.ToString() };
 
                     // Tải tất cả các role từ database vào bộ nhớ
                     var existingRoles = await appDbContext.Roles
