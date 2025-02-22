@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PregnaCare.Api.Models.Requests.PaymentRequestModel;
 using PregnaCare.Api.Models.Responses.PaymentResponseModel;
+using PregnaCare.Common.Enums;
 using PregnaCare.Core.Models;
 using PregnaCare.Infrastructure.Data;
 using PregnaCare.Services.Interfaces;
@@ -82,7 +83,8 @@ namespace PregnaCare.Services.Implementations
                     {
                         UserId = user.Id,
                         MembershipPlanId = membershipPlan.Id,
-                        IsActive = false
+                        IsActive = false,
+                        Status = StatusEnum.Completed.ToString()
                     };
 
                     _ = _context.UserMembershipPlans.Add(userMembershipPlan);
