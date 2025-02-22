@@ -79,6 +79,18 @@ namespace PregnaCare.Services.Implementations
                         return response;
                     }
 
+                    var userRole = _context.UserRoles.FirstOrDefault(x => x.UserId == user.Id);
+
+                    if (userRole != null)
+                    {
+                        var role = _context.Roles.FirstOrDefault(x => x.RoleName == RoleEnum.Member.ToString());
+                        if (role != null)
+                        {
+                            userRole.RoleId = role.Id;
+                            _ = _context.UserRoles.Update(userRole);
+                        }
+                    }
+
                     var userMembershipPlan = new UserMembershipPlan
                     {
                         UserId = user.Id,
