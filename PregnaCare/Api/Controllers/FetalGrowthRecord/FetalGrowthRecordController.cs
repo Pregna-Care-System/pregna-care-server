@@ -56,9 +56,9 @@ namespace PregnaCare.Api.Controllers.FetalGrowthRecord
         }
 
         [HttpGet("/api/v1/PregnancyRecord/{pregnancyRecordId}/[controller]")]
-        public async Task<IActionResult> GetFetalGrowthRecordById([FromRoute] Guid pregnancyRecordId)
+        public async Task<IActionResult> GetFetalGrowthRecordById([FromRoute] Guid pregnancyRecordId, [FromQuery] int? week)
         {
-            var response = (await _fetalGrowthRecordService.GetFetalGrowthRecordById(pregnancyRecordId)).Select(x => new SelectFetalGrowthRecordResponse
+            var response = (await _fetalGrowthRecordService.GetFetalGrowthRecordById(pregnancyRecordId, week)).Select(x => new SelectFetalGrowthRecordResponse
             {
                 Id = x.Id,
                 PregnancyRecordId = x.PregnancyRecordId,
@@ -75,8 +75,8 @@ namespace PregnaCare.Api.Controllers.FetalGrowthRecord
                 return Ok(new
                 {
                     Success = true,
-                    MessageId = Messages.E00000,
-                    Message = Messages.GetMessageById(Messages.E00000),
+                    MessageId = Messages.I00001,
+                    Message = Messages.GetMessageById(Messages.I00001),
                     Response = response
                 });
             }

@@ -113,20 +113,34 @@ namespace PregnaCare.Services.Implementations
         public async Task<List<FetalGrowthRecord>> GetAllFetalGrowthRecordsByUserId(Guid userId)
         {
             var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null) return null;
+            if (user == null) return new();
 
             var pregnancyRecord = (await _pregnancyRecordRepository.FindWithIncludesAsync(x => x.UserId == userId && x.IsDeleted == false, x => x.User, x => x.FetalGrowthRecords)).FirstOrDefault();
-            if (pregnancyRecord == null) return null;
+            if (pregnancyRecord == null) return new();
 
             return pregnancyRecord.FetalGrowthRecords.OrderBy(x => x.CreatedAt).ThenBy(x => x.Id).ThenBy(x => x.PregnancyRecordId).ThenBy(x => x.Week).ToList();
         }
 
-        public async Task<List<FetalGrowthRecord>> GetFetalGrowthRecordById(Guid pregnancyRecordId)
+        public async Task<List<FetalGrowthRecord>> GetFetalGrowthRecordById(Guid pregnancyRecordId, int? week)
         {
             var pregnancyRecord = (await _pregnancyRecordRepository.FindWithIncludesAsync(x => x.Id == pregnancyRecordId && x.IsDeleted == false,
                 x => x.FetalGrowthRecords)).FirstOrDefault();
-            if (pregnancyRecord == null) return null;
-            return pregnancyRecord.FetalGrowthRecords.OrderBy(x => x.Week).ThenBy(x => x.Name).ToList();
+
+            if (pregnancyRecord == null || pregnancyRecord.FetalGrowthRecords == null) return new();
+
+            if (week.HasValue)
+            {
+                return pregnancyRecord.FetalGrowthRecords
+                    .Where(x => x.Week == week.Value)
+                    .OrderBy(x => x.Week)
+                    .ThenBy(x => x.Name)
+                    .ToList();
+            }
+
+            return pregnancyRecord.FetalGrowthRecords
+                .OrderBy(x => x.Week)
+                .ThenBy(x => x.Name)
+                .ToList();
         }
 
         public async Task<UpdateFetalGrowthRecordResponse> UpdateFetalGrowthRecord(UpdateFetalGrowthRecordRequest request)
