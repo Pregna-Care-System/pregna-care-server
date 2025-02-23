@@ -32,6 +32,7 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
                 BabyGender = x.BabyGender,
                 PregnancyStartDate = x.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 ExpectedDueDate = x.ExpectedDueDate ?? DateOnly.FromDateTime(DateTime.Now),
+                GestationalAgeResponse = _service.CalculateGestationalAge(x.PregnancyStartDate.Value.ToDateTime(TimeOnly.MinValue) ),
                 ImageUrl = x.ImageUrl,
                 CreatedAt = x.CreatedAt,
                 UpdatedAt = x.UpdatedAt
@@ -64,7 +65,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
                 BabyGender = entity.BabyGender,
                 PregnancyStartDate = entity.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 ExpectedDueDate = entity.ExpectedDueDate ?? DateOnly.FromDateTime(DateTime.Now),
-                ImageUrl = entity.ImageUrl
+                ImageUrl = entity.ImageUrl,
+                GestationalAgeResponse = _service.CalculateGestationalAge(entity.PregnancyStartDate.Value.ToDateTime(TimeOnly.MinValue)),
+                CreatedAt = entity.CreatedAt,
+                UpdatedAt = entity.UpdatedAt
             };
 
             if (response != null) return Ok(new

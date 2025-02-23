@@ -11,5 +11,6 @@ namespace PregnaCare.Services.Interfaces
         Task<CreatePregnancyRecordResponse> CreatePregnancyRecord(CreatePregnancyRecordRequest request);
         Task<UpdatePregnancyRecordResponse> UpdatePregnancyRecord(UpdatePregnancyRecordRequest request);
         Task<bool> DeletePregnancyRecord(Guid pregnancyRecordId);
+        GestationalAgeResponse CalculateGestationalAge(DateTime lmp);
     }
 }

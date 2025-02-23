@@ -8,6 +8,7 @@
         public DateOnly ExpectedDueDate { get; set; }
         public string BabyGender { get; set; }
         public string ImageUrl { get; set; }
+        public GestationalAgeResponse GestationalAgeResponse { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
