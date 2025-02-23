@@ -4,7 +4,7 @@ using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Api.Controllers.MotherInfo
 {
-    [Route("api/v1/[controller]")]
+    [Route("")]
     [ApiController]
     public class MotherInfoController : ControllerBase
     {
