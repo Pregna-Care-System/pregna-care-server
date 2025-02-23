@@ -13,12 +13,6 @@ namespace PregnaCare.Core.Repositories.Implementations
             _context = pregnaCareAppDbContext;
         }
 
-        public async Task AddNotificationAsync(Notification notification)
-        {
-            _context.Notifications.Add(notification);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task<List<Notification>> GetUserNotificationsAsync(Guid userId)
         {
             return await _context.Notifications

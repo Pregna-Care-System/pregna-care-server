@@ -26,11 +26,12 @@ namespace PregnaCare.Services.Implementations
                 ReceiverId = userId,
                 Title = title,
                 Message = message,
+                IsRead = false,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
                 Status = "Pending"
             };
-            await _notificationRepo.AddNotificationAsync(notification);
+            await _notificationRepo.AddAsync(notification);
         }
     }
 }

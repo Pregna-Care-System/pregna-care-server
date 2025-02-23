@@ -66,7 +66,7 @@ namespace PregnaCare
                 
                 builder.Services.AddScoped<IReminderNotificationService, ReminderNotificationService>();
                 builder.Services.AddHostedService<ReminderBackgroundService>();
-                
+                builder.Services.AddScoped<INotificationService, NotificationService>();
 
             builder.Services.AddSignalR();
 
