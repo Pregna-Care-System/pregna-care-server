@@ -30,6 +30,7 @@ namespace PregnaCare.Services.Implementations
         }
         public async Task CreateReminder(ReminderRequest request, Guid id)
         {
+            var reminderDateTime = request.ReminderDate.Value.Add(request.StartTime.Value); 
             var type = new Reminder
             {
                 Id = Guid.NewGuid(),
@@ -37,7 +38,7 @@ namespace PregnaCare.Services.Implementations
                 ReminderTypeId = request.ReminderTypeId,
                 Title = request.Title,
                 Status = request.Status,
-                ReminderDate = request.ReminderDate,
+                ReminderDate = reminderDateTime,
                 StartTime = request.StartTime,
                 EndTime = request.EndTime,
                 CreatedAt = DateTime.UtcNow,

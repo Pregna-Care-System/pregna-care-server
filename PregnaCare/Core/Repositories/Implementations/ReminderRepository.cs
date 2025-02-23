@@ -25,10 +25,13 @@ namespace PregnaCare.Core.Repositories.Implementations
         public async Task<IEnumerable<Reminder>> GetRemindersToNotifyAsync(DateTime dateTime)
         {
             var notificationTime = dateTime.AddMinutes(30);
+            var currentTime = dateTime.TimeOfDay;
             return await _appDbContext.Reminders
-                .Where(r => r.ReminderDate != null 
-                && r.ReminderDate < notificationTime
-                && r.Status == "Active" )
+                .Where(r => r.ReminderDate != null
+                            && r.ReminderDate.Value.Date == dateTime.Date
+                            && r.ReminderDate < notificationTime
+                            && r.EndTime > currentTime
+                            && r.Status == "Active")
                 .ToListAsync();
         }
 
