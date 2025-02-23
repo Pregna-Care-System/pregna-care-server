@@ -1,5 +1,6 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using Microsoft.IdentityModel.Tokens;
+using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+using PregnaCare.Api.Models.Responses.FeatureResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Repositories.Interfaces;
@@ -12,6 +13,7 @@ namespace PregnaCare.Services.Implementations
     {
         private readonly IFeatureRepository _repo;
         private readonly IUnitOfWork _unit;
+     
         public FeatureService(IFeatureRepository featureRepository, IUnitOfWork unitOfWork)
         {
             _repo = featureRepository;
@@ -53,7 +55,7 @@ namespace PregnaCare.Services.Implementations
             var feature = await _repo.GetByIdAsync(id);
             if (feature == null)
             {
-                new FeatureResponse
+                _ = new FeatureResponse
                 {
                     Success = false,
                     Message = "Feature not found",
@@ -81,6 +83,21 @@ namespace PregnaCare.Services.Implementations
                 Message = "Feature list retrieved successfully",
                 Response = feature
             };
+        }
+
+        public async Task<List<SelectFeatureResponse>> GetAllFeaturesByUserIdAsync(Guid userId)
+        {
+            var responseEntity = await _repo.GetAllFeaturesByUserId(userId);
+            if (!responseEntity.Any()) return null;
+
+            return responseEntity
+                .OrderBy(x => x.FeatureName)
+                .ThenBy(x => x.CreatedAt)
+                .Select(x => new SelectFeatureResponse
+            {
+                FeatureId = x.Id,
+                FeatureName = x.FeatureName,
+            }).ToList();
         }
 
         public async Task<FeatureResponse> GetFeatureById(Guid id)

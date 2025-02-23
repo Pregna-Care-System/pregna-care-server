@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+using PregnaCare.Api.Models.Requests.PregnancyRecordRequestModel;
+using PregnaCare.Api.Models.Responses.PregnancyRecordResponseModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
 
@@ -28,15 +28,11 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             var response = (await _service.GetAllPregnancyRecords(userId)).Select(x => new SelectPregnancyRecordResponse
             {
                 Id = x.Id,
-                MotherName = x.MotherInfo.MotherName,
-                MotherDateOfBirth = x?.MotherInfo?.DateOfBirth ?? DateOnly.FromDateTime(DateTime.Now),
-                BloodType = x?.MotherInfo?.BloodType ?? string.Empty,
-                HealhStatus = x?.MotherInfo?.HealthStatus ?? string.Empty,
-                Notes = x?.MotherInfo?.Notes ?? string.Empty,
                 BabyName = x.BabyName,
                 BabyGender = x.BabyGender,
                 PregnancyStartDate = x.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 ExpectedDueDate = x.ExpectedDueDate ?? DateOnly.FromDateTime(DateTime.Now),
+                GestationalAgeResponse = _service.CalculateGestationalAge(x.PregnancyStartDate.Value.ToDateTime(TimeOnly.MinValue) ),
                 ImageUrl = x.ImageUrl,
                 CreatedAt = x.CreatedAt,
                 UpdatedAt = x.UpdatedAt
@@ -69,7 +65,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
                 BabyGender = entity.BabyGender,
                 PregnancyStartDate = entity.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 ExpectedDueDate = entity.ExpectedDueDate ?? DateOnly.FromDateTime(DateTime.Now),
-                ImageUrl = entity.ImageUrl
+                ImageUrl = entity.ImageUrl,
+                GestationalAgeResponse = _service.CalculateGestationalAge(entity.PregnancyStartDate.Value.ToDateTime(TimeOnly.MinValue)),
+                CreatedAt = entity.CreatedAt,
+                UpdatedAt = entity.UpdatedAt
             };
 
             if (response != null) return Ok(new

@@ -1,6 +1,6 @@
-﻿using PregnaCare.Services.Interfaces;
-using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.CommunityRequestModel;
+using PregnaCare.Api.Models.Responses.CommunityResponseModel;
+using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Services.Implementations
 {
@@ -43,7 +43,7 @@ namespace PregnaCare.Services.Implementations
         {
             var community = _communities.FirstOrDefault(c => c.Id == id);
             if (community == null) return false;
-            _communities.Remove(community);
+            _ = _communities.Remove(community);
             return await Task.FromResult(true);
         }
     }

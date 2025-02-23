@@ -1,7 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
-using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+using PregnaCare.Api.Models.Requests.PaymentRequestModel;
+using PregnaCare.Api.Models.Responses.PaymentResponseModel;
+using PregnaCare.Common.Enums;
 using PregnaCare.Core.Models;
 using PregnaCare.Infrastructure.Data;
 using PregnaCare.Services.Interfaces;
@@ -78,15 +79,28 @@ namespace PregnaCare.Services.Implementations
                         return response;
                     }
 
+                    var userRole = _context.UserRoles.FirstOrDefault(x => x.UserId == user.Id);
+
+                    if (userRole != null)
+                    {
+                        var role = _context.Roles.FirstOrDefault(x => x.RoleName == RoleEnum.Member.ToString());
+                        if (role != null)
+                        {
+                            userRole.RoleId = role.Id;
+                            _ = _context.UserRoles.Update(userRole);
+                        }
+                    }
+
                     var userMembershipPlan = new UserMembershipPlan
                     {
                         UserId = user.Id,
                         MembershipPlanId = membershipPlan.Id,
-                        IsActive = false
+                        IsActive = false,
+                        Status = StatusEnum.Completed.ToString()
                     };
 
-                    _context.UserMembershipPlans.Add(userMembershipPlan);
-                    _context.SaveChanges();
+                    _ = _context.UserMembershipPlans.Add(userMembershipPlan);
+                    _ = _context.SaveChanges();
                     return response;
                 }
             }

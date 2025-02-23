@@ -2,6 +2,7 @@
 {
     public enum RoleEnum
     {
+        User,
         Admin,
         Member,
         Guest,

@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+using PregnaCare.Api.Models.Responses.FeatureResponseModel;
 
 namespace PregnaCare.Services.Interfaces
 {
@@ -10,6 +10,6 @@ namespace PregnaCare.Services.Interfaces
         Task<FeatureResponse> GetFeatureById(Guid id);
         Task<FeatureResponse> Update(Guid id, FeatureRequest request);
         Task<FeatureResponse> Delete(Guid id);
-
+        Task<List<SelectFeatureResponse>> GetAllFeaturesByUserIdAsync(Guid userId);
     }
 }

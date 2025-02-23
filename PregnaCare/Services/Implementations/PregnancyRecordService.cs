@@ -1,5 +1,5 @@
-using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+using PregnaCare.Api.Models.Requests.PregnancyRecordRequestModel;
+using PregnaCare.Api.Models.Responses.PregnancyRecordResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Constants;
 using PregnaCare.Core.Models;
@@ -23,6 +23,26 @@ namespace PregnaCare.Services.Implementations
         {
             _unitOfWork = unitOfWork;
             _repository = _unitOfWork.GetRepository<PregnancyRecord, Guid>();
+        }
+
+        public GestationalAgeResponse CalculateGestationalAge(DateTime lmp)
+        {
+            var today = DateTime.Today;
+            var difference = today - lmp;
+            var totalDays = (int)difference.TotalDays;
+
+            var weeks = totalDays / 7;
+            var days = totalDays % 7;
+
+            var estimatedDueDate = lmp.AddDays(280); // 40 weeks
+
+            return new GestationalAgeResponse
+            {
+                Weeks = weeks,
+                Days = days,
+                EstimatedDueDate = estimatedDueDate,
+                CalculationMethod = "LMP"
+            };
         }
 
         public async Task<CreatePregnancyRecordResponse> CreatePregnancyRecord(CreatePregnancyRecordRequest request)

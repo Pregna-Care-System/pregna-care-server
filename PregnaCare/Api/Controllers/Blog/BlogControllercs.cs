@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests;
+using PregnaCare.Api.Models.Requests.BlogRequestModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
 

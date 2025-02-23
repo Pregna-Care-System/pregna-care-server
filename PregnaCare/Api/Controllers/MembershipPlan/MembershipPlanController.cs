@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+using PregnaCare.Api.Models.Requests.UserMembersipPlanRequestModel;
+using PregnaCare.Api.Models.Responses.UserMembershipPlanResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Services.Interfaces;
 

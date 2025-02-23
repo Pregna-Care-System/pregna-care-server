@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.PregnancyRecordRequestModel;
+using PregnaCare.Api.Models.Responses.PregnancyRecordResponseModel;
 using PregnaCare.Core.Models;
 
 namespace PregnaCare.Services.Interfaces
@@ -11,5 +11,6 @@ namespace PregnaCare.Services.Interfaces
         Task<CreatePregnancyRecordResponse> CreatePregnancyRecord(CreatePregnancyRecordRequest request);
         Task<UpdatePregnancyRecordResponse> UpdatePregnancyRecord(UpdatePregnancyRecordRequest request);
         Task<bool> DeletePregnancyRecord(Guid pregnancyRecordId);
+        GestationalAgeResponse CalculateGestationalAge(DateTime lmp);
     }
 }

@@ -1,3 +1,5 @@
+using PregnaCare.Common.Enums;
+
 namespace PregnaCare.Core.Models;
 public partial class UserMembershipPlan
 {
@@ -12,6 +14,8 @@ public partial class UserMembershipPlan
     public DateTime? ExpiryDate { get; set; }
 
     public decimal Price { get; set; }
+
+    public string Status { get; set; } = StatusEnum.InProgress.ToString();
 
     public bool? IsActive { get; set; }
 

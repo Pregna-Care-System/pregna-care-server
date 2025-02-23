@@ -93,8 +93,8 @@ namespace PregnaCare.Services.Implementations
                 AlertDate = DateTime.Now,
             };
 
-            await _context.GrowthAlerts.AddAsync(alert);
-            await _context.SaveChangesAsync();
+            _ = await _context.GrowthAlerts.AddAsync(alert);
+            _ = await _context.SaveChangesAsync();
             return fullRecommendation.FirstOrDefault().ToString() ?? string.Empty;
         }
 

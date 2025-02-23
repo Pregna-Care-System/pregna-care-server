@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+using PregnaCare.Api.Models.Requests.AuthRequestModel;
+using PregnaCare.Api.Models.Responses.AuthResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Constants;
 using PregnaCare.Common.Enums;
@@ -50,8 +50,8 @@ namespace PregnaCare.Services.Implementations
 
             if (existingToken != null)
             {
-                _authContext.Set<IdentityUserToken<Guid>>().Remove(existingToken);
-                await _authContext.SaveChangesAsync();
+                _ = _authContext.Set<IdentityUserToken<Guid>>().Remove(existingToken);
+                _ = await _authContext.SaveChangesAsync();
             }
 
             var token = new IdentityUserToken<Guid>
@@ -62,9 +62,9 @@ namespace PregnaCare.Services.Implementations
                 Value = otp,
             };
 
-            _authContext.Set<IdentityUserToken<Guid>>().Add(token);
+            _ = _authContext.Set<IdentityUserToken<Guid>>().Add(token);
             _authContext.Entry(token).Property("ExpirationTime").CurrentValue = expirationTime;
-            await _authContext.SaveChangesAsync();
+            _ = await _authContext.SaveChangesAsync();
         }
 
         public async Task<LoginResponse> LoginAsync(LoginRequest request)
@@ -195,13 +195,13 @@ namespace PregnaCare.Services.Implementations
                     Name = TokenTypeEnum.RefreshToken.ToString(),
                     Value = responseRefreshToken,
                 };
-                _authContext.Set<IdentityUserToken<Guid>>().Add(tokenObject);
+                _ = _authContext.Set<IdentityUserToken<Guid>>().Add(tokenObject);
                 _authContext.Entry(tokenObject).Property("ExpirationTime").CurrentValue = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration));
 
             }
 
-            await _dbContext.SaveChangesAsync();
-            await _authContext.SaveChangesAsync();
+            _ = await _dbContext.SaveChangesAsync();
+            _ = await _authContext.SaveChangesAsync();
 
             response.Success = true;
             response.MessageId = Messages.I00001;
@@ -215,6 +215,7 @@ namespace PregnaCare.Services.Implementations
             var response = new LoginResponse();
             var detailErrorList = new List<DetailError>();
 
+            var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == request.Email);
             var identityUser = await _userManager.FindByEmailAsync(request.Email);
             if (identityUser == null)
             {
@@ -225,6 +226,12 @@ namespace PregnaCare.Services.Implementations
                     MessageId = Messages.E00002,
                     Message = Messages.GetMessageById(Messages.E00002)
                 });
+
+                response.Success = false;
+                response.MessageId = Messages.E00002;
+                response.Message = Messages.GetMessageById(Messages.E00002);
+                response.DetailErrorList = detailErrorList;
+                return response;
             }
 
             var roleName = (await _userManager.GetRolesAsync(identityUser)).FirstOrDefault();
@@ -259,21 +266,46 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            var user = await _dbContext.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == request.Email);
-            var accessToken = _tokenService.GenerateToken(user, roleName, TokenTypeEnum.AccessToken.ToString());
+            var userRole = await _dbContext.UserRoles.AsNoTracking().Include(x => x.Role).FirstOrDefaultAsync(x => x.UserId == user.Id);
+            var accessToken = _tokenService.GenerateToken(user, userRole.Role.RoleName, TokenTypeEnum.AccessToken.ToString());
+            var tokenObject = await _authContext.Set<IdentityUserToken<Guid>>()
+                                                  .FirstOrDefaultAsync(t =>
+                                                                            t.UserId == identityUser.Id &&
+                                                                            t.LoginProvider == LoginProviderEnum.InternalProvider.ToString() &&
+                                                                            t.Name == TokenTypeEnum.RefreshToken.ToString());
 
-            var refreshToken = await _userManager.GetAuthenticationTokenAsync(identityUser, LoginProviderEnum.ExternalProvider.ToString(), TokenTypeEnum.RefreshToken.ToString());
-            if (string.IsNullOrEmpty(refreshToken))
+            string responseRefreshToken = _tokenService.GenerateToken(user, userRole.Role.RoleName, TokenTypeEnum.RefreshToken.ToString()).Substring(100);
+            var refreshTokenExpiration = Environment.GetEnvironmentVariable("REFRESH_TOKEN_EXPIRATION") ?? "0";
+            if (tokenObject != null)
             {
-                refreshToken = _tokenService.GenerateToken(user, roleName, TokenTypeEnum.RefreshToken.ToString());
-
-                await _userManager.SetAuthenticationTokenAsync(identityUser, LoginProviderEnum.ExternalProvider.ToString(), TokenTypeEnum.RefreshToken.ToString(), refreshToken);
+                var expirationTime = (DateTime?)_authContext?.Entry(tokenObject).Property("ExpirationTime").OriginalValue;
+                if (expirationTime.HasValue && expirationTime.Value < DateTime.Now)
+                {
+                    tokenObject.Value = responseRefreshToken;
+                    _authContext.Entry(tokenObject).Property("ExpirationTime").CurrentValue = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration));
+                }
             }
+            else
+            {
+                tokenObject = new IdentityUserToken<Guid>
+                {
+                    UserId = identityUser.Id,
+                    LoginProvider = LoginProviderEnum.InternalProvider.ToString(),
+                    Name = TokenTypeEnum.RefreshToken.ToString(),
+                    Value = responseRefreshToken,
+                };
+                _ = _authContext.Set<IdentityUserToken<Guid>>().Add(tokenObject);
+                _authContext.Entry(tokenObject).Property("ExpirationTime").CurrentValue = DateTime.Now.AddDays(double.Parse(refreshTokenExpiration));
+
+            }
+
+            _ = await _dbContext.SaveChangesAsync();
+            _ = await _authContext.SaveChangesAsync();
 
             response.Success = true;
             response.MessageId = Messages.I00001;
             response.Message = Messages.GetMessageById(Messages.I00001);
-            //response.Response = new Token { RefreshToken = refreshToken, AccessToken = accessToken };
+            response.Response = new Token { RefreshToken = tokenObject.Value, AccessToken = accessToken };
             return response;
         }
 
@@ -417,7 +449,7 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            await _userManager.CreateAsync(new IdentityUser<Guid>
+            _ = await _userManager.CreateAsync(new IdentityUser<Guid>
             {
                 Id = Guid.NewGuid(),
                 UserName = request.Email,
@@ -427,7 +459,7 @@ namespace PregnaCare.Services.Implementations
             }, request.Password);
 
             var identityUser = await _userManager.FindByEmailAsync(request.Email);
-            await _userManager.AddToRoleAsync(identityUser, request.RoleName);
+            _ = await _userManager.AddToRoleAsync(identityUser, request.RoleName);
 
             var userAccount = new User
             {
@@ -461,8 +493,8 @@ namespace PregnaCare.Services.Implementations
 
             if (token != null)
             {
-                _authContext.Set<IdentityUserToken<Guid>>().Remove(token);
-                await _authContext.SaveChangesAsync();
+                _ = _authContext.Set<IdentityUserToken<Guid>>().Remove(token);
+                _ = await _authContext.SaveChangesAsync();
             }
         }
 

@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.UserMembersipPlanRequestModel;
+using PregnaCare.Api.Models.Responses.UserMembershipPlanResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Repositories.Interfaces;
@@ -71,7 +71,7 @@ namespace PregnaCare.Services.Implementations
             var plan = await _repo.GetByIdAsync(id);
             if (plan == null)
             {
-                new MembershipPlanResponse
+                _ = new MembershipPlanResponse
                 {
                     Success = false,
                     Message = "Plan not found",
@@ -126,7 +126,7 @@ namespace PregnaCare.Services.Implementations
             var existingPlan = await _repo.GetByIdAsync(id);
             if (existingPlan == null)
             {
-                new MembershipPlanResponse
+                _ = new MembershipPlanResponse
                 {
                     Success = false,
                     Message = "Plan not found",

@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.GrowthMetricRequestModel;
+using PregnaCare.Api.Models.Responses.GrowthMetricResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Constants;
 using PregnaCare.Core.Models;
@@ -105,6 +105,11 @@ namespace PregnaCare.Services.Implementations
         public async Task<List<GrowthMetric>> GetAllGrowthMetrics()
         {
             return (await _repository.GetAllAsync()).ToList();
+        }
+
+        public async Task<List<GrowthMetric>> GetAllGrowthMetricsByWeek(int week)
+        {
+           return (await _repository.FindAsync(x => x.Week == week && x.IsDeleted == false)).ToList();
         }
 
         public async Task<GrowthMetric> GetGrowthMetricById(Guid id)

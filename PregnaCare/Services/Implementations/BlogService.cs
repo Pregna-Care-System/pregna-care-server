@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
+using PregnaCare.Api.Models.Responses.BlogResponseModel;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Services.Implementations
@@ -44,7 +44,7 @@ namespace PregnaCare.Services.Implementations
         {
             var blog = _blogs.FirstOrDefault(b => b.Id == id);
             if (blog == null) return false;
-            _blogs.Remove(blog);
+            _ = _blogs.Remove(blog);
             return await Task.FromResult(true);
         }
     }

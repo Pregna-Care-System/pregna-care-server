@@ -56,7 +56,7 @@ namespace PregnaCare.Infrastructure.UnitOfWork
         /// <returns></returns>
         public async Task SaveChangesAsync()
         {
-            await _pregnaCareAppDbContext.SaveChangesAsync();
+            _ = await _pregnaCareAppDbContext.SaveChangesAsync();
         }
     }
 }

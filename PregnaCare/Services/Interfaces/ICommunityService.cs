@@ -1,5 +1,6 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.CommunityRequestModel;
+using PregnaCare.Api.Models.Responses.CommunityResponseModel;
+
 namespace PregnaCare.Services.Interfaces
 {
     public interface ICommunityService

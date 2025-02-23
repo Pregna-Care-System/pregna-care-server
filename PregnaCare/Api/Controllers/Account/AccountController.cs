@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests;
 using PregnaCare.Services.Interfaces;
+using PregnaCare.Api.Models.Requests.AccountRequestModel;
 
 namespace PregnaCare.Api.Controllers.Account
 {

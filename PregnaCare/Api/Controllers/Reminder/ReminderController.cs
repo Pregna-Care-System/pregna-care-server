@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests;
+using PregnaCare.Api.Models.Requests.ReminderRequestModel;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Api.Controllers.Reminder
@@ -15,20 +15,26 @@ namespace PregnaCare.Api.Controllers.Reminder
             _reminderService = reminderService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateReminder([FromBody] ReminderRequest request)
+        [HttpPost("{userId}")]
+        public async Task<IActionResult> CreateReminder([FromBody] ReminderRequest request, Guid userId)
         {
-            await _reminderService.CreateReminder(request);
+            await _reminderService.CreateReminder(request, userId);
             return NoContent();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _reminderService.GetAllReminder();
+            var result = await _reminderService.GetAllReminders();
             return Ok(result);
         }
 
+        [HttpGet("Available")]
+        public async Task<IActionResult> GetAllActiveReminder()
+        {
+            var result = await _reminderService.GetAllActiveReminders();
+            return Ok(result);
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateReminder(Guid id, [FromBody] ReminderRequest request)
         {

@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using PregnaCare.Api.Models.Responses;
+using PregnaCare.Api.Models.Responses.PaymentResponseModel;
 
 namespace PregnaCare.Utils
 {
@@ -104,7 +104,7 @@ namespace PregnaCare.Utils
 
             foreach (var (key, value) in _requestData.Where(kv => !string.IsNullOrEmpty(kv.Value)))
             {
-                data.Append(WebUtility.UrlEncode(key) + "=" + WebUtility.UrlEncode(value) + "&");
+                _ = data.Append(WebUtility.UrlEncode(key) + "=" + WebUtility.UrlEncode(value) + "&");
             }
 
             var querystring = data.ToString();
@@ -139,7 +139,7 @@ namespace PregnaCare.Utils
                 var hashValue = hmac.ComputeHash(inputBytes);
                 foreach (var theByte in hashValue)
                 {
-                    hash.Append(theByte.ToString("x2"));
+                    _ = hash.Append(theByte.ToString("x2"));
                 }
             }
 
@@ -151,23 +151,23 @@ namespace PregnaCare.Utils
             var data = new StringBuilder();
             if (_responseData.ContainsKey("vnp_SecureHashType"))
             {
-                _responseData.Remove("vnp_SecureHashType");
+                _ = _responseData.Remove("vnp_SecureHashType");
             }
 
             if (_responseData.ContainsKey("vnp_SecureHash"))
             {
-                _responseData.Remove("vnp_SecureHash");
+                _ = _responseData.Remove("vnp_SecureHash");
             }
 
             foreach (var (key, value) in _responseData.Where(kv => !string.IsNullOrEmpty(kv.Value)))
             {
-                data.Append(WebUtility.UrlEncode(key) + "=" + WebUtility.UrlEncode(value) + "&");
+                _ = data.Append(WebUtility.UrlEncode(key) + "=" + WebUtility.UrlEncode(value) + "&");
             }
 
             //remove last '&'
             if (data.Length > 0)
             {
-                data.Remove(data.Length - 1, 1);
+                _ = data.Remove(data.Length - 1, 1);
             }
 
             return data.ToString();

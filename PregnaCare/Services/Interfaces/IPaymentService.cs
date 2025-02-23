@@ -1,5 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.PaymentRequestModel;
+using PregnaCare.Api.Models.Responses.PaymentResponseModel;
 
 namespace PregnaCare.Services.Interfaces
 {

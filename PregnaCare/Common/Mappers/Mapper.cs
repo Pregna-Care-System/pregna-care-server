@@ -1,4 +1,5 @@
-﻿using PregnaCare.Api.Models.Requests;
+﻿using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+using PregnaCare.Api.Models.Requests.UserMembersipPlanRequestModel;
 using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 

@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests;
+using PregnaCare.Api.Models.Requests.GrowthMetricRequestModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
 
@@ -21,32 +21,63 @@ namespace PregnaCare.Api.Controllers.GrowthMetric
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int? week)
         {
-            var response = (await _service.GetAllGrowthMetrics()).Select(x => new
+            if(week.HasValue)
             {
-                Name = x.Name,
-                Unit = x.Unit,
-                Description = x.Description,
-                MinValue = x.MinValue,
-                MaxValue = x.MaxValue,
-                Week = x.Week,
-            });
+                var response = (await _service.GetAllGrowthMetricsByWeek(week.Value)).Select(x => new
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Unit = x.Unit,
+                    Description = x.Description,
+                    Week = x.Week,
+                    MinValue = x.MinValue,
+                    MaxValue = x.MaxValue,
+                });
 
-            if (response == null) return NotFound(new
-            {
-                Success = false,
-                MessageId = Messages.E00013,
-                Message = Messages.GetMessageById(Messages.E00013),
-            });
+                if (response == null) return NotFound(new
+                {
+                    Success = false,
+                    MessageId = Messages.E00013,
+                    Message = Messages.GetMessageById(Messages.E00013),
+                });
 
-            return Ok(new
+                return Ok(new
+                {
+                    Success = true,
+                    MessageId = Messages.I00001,
+                    Message = Messages.GetMessageById(Messages.I00001),
+                    Response = response
+                });
+            }
+            else
             {
-                Success = true,
-                MessageId = Messages.I00001,
-                Message = Messages.GetMessageById(Messages.I00001),
-                Response = response
-            });
+                var response = (await _service.GetAllGrowthMetrics()).Select(x => new
+                {
+                    Name = x.Name,
+                    Unit = x.Unit,
+                    Description = x.Description,
+                    MinValue = x.MinValue,
+                    MaxValue = x.MaxValue,
+                    Week = x.Week,
+                });
+
+                if (response == null) return NotFound(new
+                {
+                    Success = false,
+                    MessageId = Messages.E00013,
+                    Message = Messages.GetMessageById(Messages.E00013),
+                });
+
+                return Ok(new
+                {
+                    Success = true,
+                    MessageId = Messages.I00001,
+                    Message = Messages.GetMessageById(Messages.I00001),
+                    Response = response
+                });
+            }          
         }
 
         [HttpGet("{id}")]
