@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PregnaCare.Common.Enums;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
@@ -37,7 +38,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                                     && r.ReminderDate.Value.Date == dateTime.Date
                                     && notifyTimes.Any(nt => r.ReminderDate.Value - nt <= dateTime
                                     && r.ReminderDate > dateTime)
-                                    && r.Status == "Active");
+                                    && r.Status == StatusEnum.Active.ToString());
         }
 
 
