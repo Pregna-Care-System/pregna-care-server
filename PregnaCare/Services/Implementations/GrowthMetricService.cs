@@ -109,7 +109,7 @@ namespace PregnaCare.Services.Implementations
 
         public async Task<List<GrowthMetric>> GetAllGrowthMetricsByWeek(int week)
         {
-           return (await _repository.FindAsync(x => x.Week == week && x.IsDeleted == false)).ToList();
+            return (await _repository.FindAsync(x => x.Week == week && x.IsDeleted == false)).ToList();
         }
 
         public async Task<GrowthMetric> GetGrowthMetricById(Guid id)

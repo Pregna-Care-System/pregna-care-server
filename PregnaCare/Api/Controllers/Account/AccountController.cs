@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Services.Interfaces;
 using PregnaCare.Api.Models.Requests.AccountRequestModel;
+using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Api.Controllers.Account
 {
@@ -14,7 +14,7 @@ namespace PregnaCare.Api.Controllers.Account
             _accountService = accountService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllMember([FromQuery] string filterType = null,[FromQuery] string name = null)
+        public async Task<IActionResult> GetAllMember([FromQuery] string filterType = null, [FromQuery] string name = null)
         {
             var result = await _accountService.GetAllMemberAsync(filterType, name);
 

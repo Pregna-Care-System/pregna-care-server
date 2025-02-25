@@ -1,9 +1,7 @@
 ﻿using PregnaCare.Api.Models.Requests.AccountRequestModel;
 using PregnaCare.Api.Models.Responses.AccountResponseModel;
-using PregnaCare.Api.Models.Responses.AuthResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
-using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -62,7 +60,7 @@ namespace PregnaCare.Services.Implementations
 
         public async Task<AccountResponse> UpdateAccount(Guid id, UpdateAccountRequest request)
         {
-            var response = new AccountResponse();
+            _ = new AccountResponse();
             var detailErrorList = new List<DetailError>();
 
             if (request == null)
@@ -120,7 +118,7 @@ namespace PregnaCare.Services.Implementations
             {
                 var today = DateTime.Today;
                 var age = today.Year - request.DateOfBirth.Value.Year;
-                
+
                 if (age < 18)
                 {
                     detailErrorList.Add(new DetailError
