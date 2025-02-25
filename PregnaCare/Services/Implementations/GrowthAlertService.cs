@@ -73,7 +73,7 @@ namespace PregnaCare.Services.Implementations
                                }}";
 
 
-            (string issue, string returnSeverity, double min, double max, string recommendation) = await
+            (string issue, string returnSeverity, double min, double max, string recommendation) =
                 ParseChatbotResponse(await _chatGPTService.GenerateRecommendation(_geminiService, issuePrompt));
 
             var fullRecommendation = $"Severity: {returnSeverity}\n" +
@@ -91,10 +91,12 @@ namespace PregnaCare.Services.Implementations
                 Recommendation = fullRecommendation,
                 AlertFor = record.Description.ToLower().Contains("fetal") ? "Fetal" : "Mother",
                 AlertDate = DateTime.Now,
+                Status = string.Empty,
             };
 
             _ = await _context.GrowthAlerts.AddAsync(alert);
             _ = await _context.SaveChangesAsync();
+
             return fullRecommendation.FirstOrDefault().ToString() ?? string.Empty;
         }
 
@@ -114,6 +116,11 @@ namespace PregnaCare.Services.Implementations
             }
 
             growthAlert.IsResolved = true;
+            growthAlert.Status = status;
+
+            _ = _context.GrowthAlerts.Update(growthAlert);
+            _ = await _context.SaveChangesAsync();
+
             return true;
         }
 
@@ -136,7 +143,7 @@ namespace PregnaCare.Services.Implementations
             return SeverityEnum.Moderate;
         }
 
-        private async Task<(string Issue, string Severity, double Min, double Max, string Recommendation)> ParseChatbotResponse(string response)
+        private (string Issue, string Severity, double Min, double Max, string Recommendation) ParseChatbotResponse(string response)
         {
             var regex = new Regex(@"""issue""\s*:\s*""([^""]+)""\s*,\s*""severity""\s*:\s*""([^""]+)""\s*,\s*""expectedRange""\s*:\s*\{\s*""min""\s*:\s*([\d.]+)\s*,\s*""max""\s*:\s*([\d.]+)\s*\}\s*,\s*""recommendation""\s*:\s*""([^""]+)""", RegexOptions.Singleline);
 
