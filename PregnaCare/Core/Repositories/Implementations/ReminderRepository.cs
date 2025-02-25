@@ -31,8 +31,8 @@ namespace PregnaCare.Core.Repositories.Implementations
                 TimeSpan.FromMinutes(5)
             };
 
-            return _appDbContext.Reminders
-                        .ToList()
+            return (await _appDbContext.Reminders
+                        .ToListAsync())
                         .Where(r => r.ReminderDate != null
                                     && r.ReminderDate.Value.Date == dateTime.Date
                                     && notifyTimes.Any(nt => r.ReminderDate.Value - nt <= dateTime
