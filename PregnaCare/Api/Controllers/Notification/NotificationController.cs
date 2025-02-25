@@ -25,7 +25,7 @@ namespace PregnaCare.Api.Controllers.Notification
             await _notiService.DeleteNotification(id);
             return NoContent();
         }
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> UpdateNotificationIsRead(Guid id)
         {
             await _notiService.UpdateIsReadNotification(id);

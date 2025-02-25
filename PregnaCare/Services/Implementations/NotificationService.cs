@@ -21,8 +21,8 @@ namespace PregnaCare.Services.Implementations
             var noti = await _notiRepo.GetByIdAsync(id);
             if (noti != null) { 
             noti.IsDeleted = true;
-            _notiRepo.Update(noti);
-                _unitOfWork.SaveChangesAsync();
+             _notiRepo.Update(noti);
+             _unitOfWork.SaveChangesAsync();
             }
         }
 

@@ -14,9 +14,15 @@ namespace PregnaCare.Api.Controllers.Account
             _accountService = accountService;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllMember()
+        public async Task<IActionResult> GetAllMember([FromQuery] string filterType = null,[FromQuery] string name = null)
         {
-            var result = await _accountService.GetAllMemberAsync();
+            var result = await _accountService.GetAllMemberAsync(filterType, name);
+
+            if (!result.Success)
+            {
+                return NotFound(new { message = result.Message });
+            }
+
             return Ok(result);
         }
         [HttpPut("{id}")]
