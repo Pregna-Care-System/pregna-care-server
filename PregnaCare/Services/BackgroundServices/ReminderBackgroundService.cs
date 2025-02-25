@@ -11,6 +11,7 @@ namespace PregnaCare.Services.BackgroundServices
         {
             _scopeFactory = scopeFactory;
         }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)

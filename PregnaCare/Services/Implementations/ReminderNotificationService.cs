@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using PregnaCare.Common.Enums;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Hubs;
@@ -24,6 +25,18 @@ namespace PregnaCare.Services.Implementations
         {
             await _hubContext.Clients.User(userId.ToString()).SendAsync("ReceiveReminder", message);
 
+            var notificationEntity = (await _notificationRepo.FindAsync(x => x.ReceiverId == userId &&
+                                                                            x.Title == title &&
+                                                                            x.Message == message &&
+                                                                            x.IsRead == false &&
+                                                                            x.IsDeleted == false &&
+                                                                            x.Status == StatusEnum.Pending.ToString()))
+                                                             .FirstOrDefault();
+            if (notificationEntity != null)
+            {
+                return;
+            }
+
             var notification = new Notification
             {
                 ReceiverId = userId,
@@ -32,7 +45,7 @@ namespace PregnaCare.Services.Implementations
                 IsRead = false,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
-                Status = "Pending"
+                Status = StatusEnum.Pending.ToString(),
             };
 
             await _notificationRepo.AddAsync(notification);

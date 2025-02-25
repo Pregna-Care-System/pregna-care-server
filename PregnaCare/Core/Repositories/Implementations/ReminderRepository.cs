@@ -24,16 +24,22 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<IEnumerable<Reminder>> GetRemindersToNotifyAsync(DateTime dateTime)
         {
-            var notificationTime = dateTime.AddMinutes(30);
-            var currentTime = dateTime.TimeOfDay;
-            return await _appDbContext.Reminders
-                .Where(r => r.ReminderDate != null
-                            && r.ReminderDate.Value.Date == dateTime.Date
-                            && r.ReminderDate < notificationTime
-                            && r.EndTime > currentTime
-                            && r.Status == "Active")
-                .ToListAsync();
+            var notifyTimes = new List<TimeSpan>
+            {
+                //TimeSpan.FromMinutes(60), 
+                TimeSpan.FromMinutes(30),
+                TimeSpan.FromMinutes(5)
+            };
+
+            return _appDbContext.Reminders
+                        .ToList()
+                        .Where(r => r.ReminderDate != null
+                                    && r.ReminderDate.Value.Date == dateTime.Date
+                                    && notifyTimes.Any(nt => r.ReminderDate.Value - nt <= dateTime
+                                    && r.ReminderDate > dateTime)
+                                    && r.Status == "Active");
         }
+
 
         public async Task<IEnumerable<Guid>> GetUserIdsForReminderAsync(Guid reminderId)
         {

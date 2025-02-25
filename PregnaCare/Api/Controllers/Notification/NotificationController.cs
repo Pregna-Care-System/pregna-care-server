@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Api.Controllers.Notification
@@ -21,7 +20,8 @@ namespace PregnaCare.Api.Controllers.Notification
             return Ok(result);
         }
         [HttpDelete]
-        public async Task<IActionResult> DeleteNotification(Guid id) { 
+        public async Task<IActionResult> DeleteNotification(Guid id)
+        {
             await _notiService.DeleteNotification(id);
             return NoContent();
         }

@@ -19,10 +19,11 @@ namespace PregnaCare.Services.Implementations
         public async Task DeleteNotification(Guid id)
         {
             var noti = await _notiRepo.GetByIdAsync(id);
-            if (noti != null) { 
-            noti.IsDeleted = true;
-             _notiRepo.Update(noti);
-             _unitOfWork.SaveChangesAsync();
+            if (noti != null)
+            {
+                noti.IsDeleted = true;
+                _notiRepo.Update(noti);
+                _ = _unitOfWork.SaveChangesAsync();
             }
         }
 
@@ -49,10 +50,11 @@ namespace PregnaCare.Services.Implementations
         public async Task UpdateIsReadNotification(Guid id)
         {
             var noti = await _notiRepo.GetByIdAsync(id);
-            if (noti != null) {
+            if (noti != null)
+            {
                 noti.IsRead = true;
                 _notiRepo.Update(noti);
-                _unitOfWork.SaveChangesAsync();
+                _ = _unitOfWork.SaveChangesAsync();
             }
         }
     }
