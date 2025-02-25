@@ -60,6 +60,9 @@ namespace PregnaCare.Core.Repositories.Implementations
                     CreatedAt = u.CreatedAt,
                     UpdatedAt = u.UpdatedAt,
                     IsDeleted = u.IsDeleted,
+                    IsActive = u.UserMembershipPlans
+                        .Select(ump => ump.IsActive)
+                         .FirstOrDefault(),
                     PlanName = u.UserMembershipPlans
                         .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.MembershipPlan.PlanName)

@@ -182,6 +182,22 @@ namespace PregnaCare.Core.Repositories.Implementations
 
             _ = await _context.SaveChangesAsync();
         }
-
+        public async Task<string> GetMostUsedPlanNameAsync()
+        {
+            var mostUsedPlan = await _context.UserMembershipPlans
+                .GroupBy(ump => ump.MembershipPlanId)
+                .OrderByDescending(g => g.Count())
+                .Select(g => g.Key)
+                .FirstOrDefaultAsync();
+            if (mostUsedPlan == default)
+            {
+                return "No Plan";
+            }
+            var planName = await _context.MembershipPlans
+                .Where(mp => mp.Id == mostUsedPlan)
+                .Select(mp => mp.PlanName)
+                .FirstOrDefaultAsync();
+            return planName ?? "No Plan";
+        }
     }
 }

@@ -28,6 +28,8 @@
         public DateTime? UpdatedAt { get; set; }
 
         public bool? IsDeleted { get; set; }
+        public bool? IsActive { get; set; }
+
 
     }
 }
