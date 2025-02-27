@@ -23,7 +23,7 @@ namespace PregnaCare.Services.Implementations
             {
                 noti.IsDeleted = true;
                 _notiRepo.Update(noti);
-                _ = _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
             }
         }
 
@@ -47,6 +47,17 @@ namespace PregnaCare.Services.Implementations
             return null;
         }
 
+        public async Task UpdateAllIsRead(List<Guid> ids)
+        {
+            var notifications = await _notiRepo.FindAsync(n => ids.Contains(n.Id));
+            foreach( var noti in notifications)
+            {
+                noti.IsRead = true;
+                _notiRepo.Update(noti);
+            }
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public async Task UpdateIsReadNotification(Guid id)
         {
             var noti = await _notiRepo.GetByIdAsync(id);
@@ -54,7 +65,7 @@ namespace PregnaCare.Services.Implementations
             {
                 noti.IsRead = true;
                 _notiRepo.Update(noti);
-                _ = _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.SaveChangesAsync();
             }
         }
     }
