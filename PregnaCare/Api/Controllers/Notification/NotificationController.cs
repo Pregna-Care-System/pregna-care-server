@@ -31,5 +31,11 @@ namespace PregnaCare.Api.Controllers.Notification
             await _notiService.UpdateIsReadNotification(id);
             return NoContent();
         }
+        [HttpPut("all")]
+        public async Task<IActionResult> UpdateAllIsRead([FromBody] List<Guid> ids)
+        {
+            await _notiService.UpdateAllIsRead(ids);
+            return NoContent();
+        }
     }
 }
