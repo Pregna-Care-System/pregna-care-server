@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
-using PregnaCare.Core.Repositories.Interfaces;
-using PregnaCare.Infrastructure.Data;
-using PregnaCare.Infrastructure.Hubs;
+﻿using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Services.Interfaces;
-using System;
 
 namespace PregnaCare.Services.BackgroundServices
 {
@@ -16,6 +11,7 @@ namespace PregnaCare.Services.BackgroundServices
         {
             _scopeFactory = scopeFactory;
         }
+
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)

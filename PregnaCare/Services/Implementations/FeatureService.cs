@@ -1,5 +1,4 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+﻿using PregnaCare.Api.Models.Requests.FeatureRequestModel;
 using PregnaCare.Api.Models.Responses.FeatureResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
@@ -13,7 +12,7 @@ namespace PregnaCare.Services.Implementations
     {
         private readonly IFeatureRepository _repo;
         private readonly IUnitOfWork _unit;
-     
+
         public FeatureService(IFeatureRepository featureRepository, IUnitOfWork unitOfWork)
         {
             _repo = featureRepository;
@@ -94,10 +93,10 @@ namespace PregnaCare.Services.Implementations
                 .OrderBy(x => x.FeatureName)
                 .ThenBy(x => x.CreatedAt)
                 .Select(x => new SelectFeatureResponse
-            {
-                FeatureId = x.Id,
-                FeatureName = x.FeatureName,
-            }).ToList();
+                {
+                    FeatureId = x.Id,
+                    FeatureName = x.FeatureName,
+                }).ToList();
         }
 
         public async Task<FeatureResponse> GetFeatureById(Guid id)

@@ -1,7 +1,4 @@
-﻿using PregnaCare.Api.Models.Requests.ReminderRequestModel;
-using PregnaCare.Api.Models.Responses.NotificationResponseModel;
-using PregnaCare.Api.Models.Responses.ReminderResponseModel;
-using PregnaCare.Core.Models;
+﻿using PregnaCare.Api.Models.Responses.NotificationResponseModel;
 
 namespace PregnaCare.Services.Interfaces
 {

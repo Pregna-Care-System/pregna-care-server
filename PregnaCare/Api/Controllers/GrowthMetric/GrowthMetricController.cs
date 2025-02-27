@@ -23,7 +23,7 @@ namespace PregnaCare.Api.Controllers.GrowthMetric
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] int? week)
         {
-            if(week.HasValue)
+            if (week.HasValue)
             {
                 var response = (await _service.GetAllGrowthMetricsByWeek(week.Value)).Select(x => new
                 {
@@ -77,7 +77,7 @@ namespace PregnaCare.Api.Controllers.GrowthMetric
                     Message = Messages.GetMessageById(Messages.I00001),
                     Response = response
                 });
-            }          
+            }
         }
 
         [HttpGet("{id}")]

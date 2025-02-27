@@ -11,6 +11,7 @@ namespace PregnaCare.Services.Interfaces
         Task<MembershipPlanResponse> AddPlanAsync(MembershipPlanRequest request, List<Guid> featureIds);
         Task<MembershipPlanResponse> UpdatePlanAsync(Guid id, MembershipPlanRequest plan, List<Guid> featureIds);
         Task<MembershipPlanResponse> DeletePlanAsync(Guid id);
+        Task<string> GetMostUsedPlanNameAsync();
 
     }
 }

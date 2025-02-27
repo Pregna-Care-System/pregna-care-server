@@ -1,6 +1,4 @@
-﻿using PregnaCare.Api.Models.Requests;
-using PregnaCare.Api.Models.Requests.ReminderRequestModel;
-using PregnaCare.Api.Models.Responses;
+﻿using PregnaCare.Api.Models.Requests.ReminderRequestModel;
 using PregnaCare.Api.Models.Responses.ReminderResponseModel;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
@@ -30,7 +28,7 @@ namespace PregnaCare.Services.Implementations
         }
         public async Task CreateReminder(ReminderRequest request, Guid id)
         {
-            var reminderDateTime = request.ReminderDate.Value.Add(request.StartTime.Value); 
+            var reminderDateTime = request.ReminderDate.Value.Add(request.StartTime.Value);
             var type = new Reminder
             {
                 Id = Guid.NewGuid(),

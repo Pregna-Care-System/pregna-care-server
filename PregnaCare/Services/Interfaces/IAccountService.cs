@@ -5,7 +5,7 @@ namespace PregnaCare.Services.Interfaces
 {
     public interface IAccountService
     {
-        Task<AccountListResponse> GetAllMemberAsync();
+        Task<AccountListResponse> GetAllMemberAsync(string filterType = null, string name = null);
         Task<AccountResponse> GetUserById(Guid id);
         Task<AccountResponse> UpdateAccount(Guid id, UpdateAccountRequest request);
     }

@@ -90,6 +90,10 @@ namespace PregnaCare.Services.Implementations
 
         }
 
+        public async Task<string> GetMostUsedPlanNameAsync()
+        {
+            return await _repo.GetMostUsedPlanNameAsync();
+        }
 
         public async Task<MembershipPlanResponse> GetPlanByIdAsync(Guid id)
         {
