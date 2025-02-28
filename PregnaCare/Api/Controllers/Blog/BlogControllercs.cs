@@ -39,9 +39,9 @@ namespace PregnaCare.Api.Controllers.Blog
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBlog(BlogRequest request)
+        public async Task<IActionResult> CreateBlog(BlogRequest request, Guid tagId)
         {
-            var response = await _service.CreateBlog(request);
+            var response = await _service.CreateBlog(request, tagId);
             if (!response.Success) return BadRequest(response);
             return Ok(response);
         }

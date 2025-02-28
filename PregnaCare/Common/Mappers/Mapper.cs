@@ -1,5 +1,6 @@
 ﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
 using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+using PregnaCare.Api.Models.Requests.TagRequestModel;
 using PregnaCare.Api.Models.Requests.UserMembersipPlanRequestModel;
 using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
@@ -42,6 +43,14 @@ namespace PregnaCare.Common.Mappers
             {
                 FeatureName = request.FeatureName,
                 Description = request.Description,
+            };
+        }
+        public static Tag MapToTag(TagRequest request)
+        {
+            return new Tag
+            {
+                Description = request.Description,
+                Name = request.Name,
             };
         }
         public static Blog MapToBlog(BlogRequest blogRequest)

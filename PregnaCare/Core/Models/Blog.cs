@@ -1,4 +1,6 @@
-﻿namespace PregnaCare.Core.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace PregnaCare.Core.Models;
 
 public partial class Blog
 {
@@ -28,6 +30,7 @@ public partial class Blog
 
     public bool? IsDeleted { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<BlogTag> BlogTags { get; set; } = new List<BlogTag>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();

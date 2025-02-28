@@ -1,6 +1,7 @@
 ﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
 using PregnaCare.Api.Models.Responses.BlogResponseModel;
 using PregnaCare.Common.Mappers;
+using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -37,7 +38,7 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
-        public async Task<BlogResponse> CreateBlog(BlogRequest request)
+        public async Task<BlogResponse> CreateBlog(BlogRequest request, Guid tagId)
         {
             var response = new BlogResponse();
 
@@ -48,6 +49,17 @@ namespace PregnaCare.Services.Implementations
             blog.IsDeleted = false;
 
             await _blogRepository.AddAsync(blog);
+
+            var blogTag = new BlogTag
+            {
+                Id = Guid.NewGuid(),
+                BlogId = blog.Id,
+                TagId = tagId,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                IsDeleted = false
+            };
+            await _unitOfWork.GetRepository<BlogTag, Guid>().AddAsync(blogTag);
             await _unitOfWork.SaveChangesAsync();
 
             response.Response = blog;
