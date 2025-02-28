@@ -1,4 +1,5 @@
 ﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
+using PregnaCare.Api.Models.Requests.CommentBlogRequestModel;
 using PregnaCare.Api.Models.Requests.FeatureRequestModel;
 using PregnaCare.Api.Models.Requests.TagRequestModel;
 using PregnaCare.Api.Models.Requests.UserMembersipPlanRequestModel;
@@ -64,6 +65,16 @@ namespace PregnaCare.Common.Mappers
                 ShortDescription = blogRequest.ShortDescription,
                 UrlHandle = blogRequest.UrlHandle,
                 UserId = blogRequest.UserId,
+            };
+        }
+        public static Comment MapToComment(CreateCommentRequest request)
+        {
+            return new Comment
+            {
+                CommentText = request.CommentText,
+                UserId = request.UserId,
+                BlogId = request.BlogId,
+                ParentCommentId = request.ParentCommentId,
             };
         }
         public static MembershipPlanFeatureDTO MapToMembershipPlanDTO(MembershipPlan plan)

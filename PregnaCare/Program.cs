@@ -41,6 +41,7 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
             builder.Services.AddScoped<IBlogRepository, BlogRepository>();
             builder.Services.AddScoped<ITagRepository, TagRepository>();
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
             _ = builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             _ = builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -72,6 +73,7 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<INotificationService, NotificationService>();
             builder.Services.AddScoped<IBlogService, BlogService>();
             builder.Services.AddScoped<ITagService, TagService>();
+            builder.Services.AddScoped<ICommentService, CommentService>();
 
             _ = builder.Services.AddSignalR();
 
