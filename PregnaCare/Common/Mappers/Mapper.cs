@@ -1,4 +1,6 @@
-﻿using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
+using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+using PregnaCare.Api.Models.Requests.TagRequestModel;
 using PregnaCare.Api.Models.Requests.UserMembersipPlanRequestModel;
 using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
@@ -41,6 +43,27 @@ namespace PregnaCare.Common.Mappers
             {
                 FeatureName = request.FeatureName,
                 Description = request.Description,
+            };
+        }
+        public static Tag MapToTag(TagRequest request)
+        {
+            return new Tag
+            {
+                Description = request.Description,
+                Name = request.Name,
+            };
+        }
+        public static Blog MapToBlog(BlogRequest blogRequest)
+        {
+            return new Blog
+            {
+                Content = blogRequest.Content,
+                FeaturedImageUrl = blogRequest.FeaturedImageUrl,
+                Heading = blogRequest.Heading, 
+                PageTitle = blogRequest.PageTitle,
+                ShortDescription = blogRequest.ShortDescription,
+                UrlHandle = blogRequest.UrlHandle,
+                UserId = blogRequest.UserId,
             };
         }
         public static MembershipPlanFeatureDTO MapToMembershipPlanDTO(MembershipPlan plan)

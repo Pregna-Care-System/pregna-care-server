@@ -6,10 +6,11 @@ namespace PregnaCare.Services.Interfaces
 {
     public interface IBlogService
     {
-        Task<IEnumerable<BlogResponse>> GetAllBlogs();
+        Task<BlogListResponse> GetAllBlogs();
+        Task<BlogListResponse> GetAllByUserIdBlogs(Guid id);
         Task<BlogResponse> GetBlogById(Guid id);
-        Task<BlogResponse> CreateBlog(BlogRequests request);
-        Task<BlogResponse> UpdateBlog(BlogRequests request);
-        Task<bool> DeleteBlog(Guid id);
+        Task<BlogResponse> CreateBlog(BlogRequest request, Guid tagId);
+        Task<BlogResponse> UpdateBlog(BlogRequest request, Guid id);
+        Task DeleteBlog(Guid id);
     }
 }

@@ -3,9 +3,9 @@ using PregnaCare.Core.Models;
 
 namespace PregnaCare.Api.Models.Responses.BlogResponseModel
 {
-    public class BlogResponse : AbstractApiResponse<Blog>
+    public class BlogListResponse : AbstractApiResponse<IEnumerable<Blog>>
     {
-        public override Blog Response { get; set; }
+        public override IEnumerable<Blog> Response { get; set; }
 
     }
 }
