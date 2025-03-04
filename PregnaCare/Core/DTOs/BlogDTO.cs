@@ -1,12 +1,10 @@
-﻿using PregnaCare.Common.Api;
-
-namespace PregnaCare.Api.Models.Requests.BlogRequestModel
+﻿namespace PregnaCare.Core.DTOs
 {
-    public class BlogRequest : AbstractApiRequest
+    public class BlogDTO
     {
         public Guid UserId { get; set; }
 
-        public List<Guid> TagIds { get; set; }
+        public List<TagDTO> Tags { get; set; } = new List<TagDTO>();
         public string PageTitle { get; set; } = string.Empty;
 
         public string Heading { get; set; } = string.Empty;
@@ -16,7 +14,6 @@ namespace PregnaCare.Api.Models.Requests.BlogRequestModel
         public string ShortDescription { get; set; } = string.Empty;
 
         public string FeaturedImageUrl { get; set; } = string.Empty;
-        public bool IsVisible { get; set; }
-
+        public bool? IsVisible { get; set; }
     }
 }

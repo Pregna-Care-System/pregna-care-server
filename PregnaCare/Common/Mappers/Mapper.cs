@@ -63,10 +63,11 @@ namespace PregnaCare.Common.Mappers
                 Heading = blogRequest.Heading, 
                 PageTitle = blogRequest.PageTitle,
                 ShortDescription = blogRequest.ShortDescription,
-                UrlHandle = blogRequest.UrlHandle,
+                IsVisible = blogRequest.IsVisible,
                 UserId = blogRequest.UserId,
             };
         }
+        
         public static Comment MapToComment(CreateCommentRequest request)
         {
             return new Comment

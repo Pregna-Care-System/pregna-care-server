@@ -26,7 +26,7 @@ namespace PregnaCare.Api.Controllers.Blog
         [HttpGet("User/{id}")]
         public async Task<IActionResult> GetAllBlogByUser(Guid id)
         {
-            var response = await _service.GetAllBlogs();
+            var response = await _service.GetAllByUserIdBlogs(id);
             return Ok(response);
         }
 
@@ -39,9 +39,9 @@ namespace PregnaCare.Api.Controllers.Blog
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBlog(BlogRequest request, Guid tagId)
+        public async Task<IActionResult> CreateBlog([FromBody] BlogRequest request)
         {
-            var response = await _service.CreateBlog(request, tagId);
+            var response = await _service.CreateBlog(request, request.TagIds);
             if (!response.Success) return BadRequest(response);
             return Ok(response);
         }

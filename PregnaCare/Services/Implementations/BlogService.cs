@@ -38,7 +38,7 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
-        public async Task<BlogResponse> CreateBlog(BlogRequest request, Guid tagId)
+        public async Task<BlogResponse> CreateBlog(BlogRequest request, List<Guid> tagIds)
         {
             var response = new BlogResponse();
 
@@ -50,16 +50,25 @@ namespace PregnaCare.Services.Implementations
 
             await _blogRepository.AddAsync(blog);
 
-            var blogTag = new BlogTag
+            var blogTagRepo = _unitOfWork.GetRepository<BlogTag, Guid>();
+            if(tagIds != null && tagIds.Any())
             {
-                Id = Guid.NewGuid(),
-                BlogId = blog.Id,
-                TagId = tagId,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
-                IsDeleted = false
-            };
-            await _unitOfWork.GetRepository<BlogTag, Guid>().AddAsync(blogTag);
+                foreach (var tagId in tagIds)
+                {
+                    var blogTag = new BlogTag
+                    {
+                        Id = Guid.NewGuid(),
+                        BlogId = blog.Id,
+                        TagId = tagId,
+                        CreatedAt = DateTime.Now,
+                        UpdatedAt = DateTime.Now,
+                        IsDeleted = false
+                    };
+
+                    await blogTagRepo.AddAsync(blogTag);
+                }
+            }
+          
             await _unitOfWork.SaveChangesAsync();
 
             response.Response = blog;
