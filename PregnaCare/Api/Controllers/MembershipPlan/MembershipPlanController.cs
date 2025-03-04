@@ -64,5 +64,12 @@ namespace PregnaCare.Api.Controllers.MembershipPlan
             var response = await _planService.UpdatePlanAsync(id, request, request.featuredId);
             return response;
         }
+        [HttpGet("MostUsed")]
+        public async Task<IActionResult> GetPlanMostUsed()
+        {
+            var response = await _planService.GetMostUsedPlanNameAsync();
+            return Ok(response);
+        }
+
     }
 }

@@ -38,6 +38,7 @@ namespace PregnaCare.Api.Controllers.GrowthAlert
                         x.Severity,
                         x.Recommendation,
                         x.IsResolved,
+                        x.Status,
                     })
                 });
             }
@@ -57,7 +58,7 @@ namespace PregnaCare.Api.Controllers.GrowthAlert
             var result = await _growthAlertService.UpdateStatusGrowthAlert(id, status);
             if (result)
             {
-                _ = Ok(new
+                return Ok(new
                 {
                     Success = true,
                     MessageId = Messages.I00001,

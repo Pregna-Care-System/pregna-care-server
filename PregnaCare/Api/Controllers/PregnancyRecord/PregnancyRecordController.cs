@@ -32,10 +32,11 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
                 BabyGender = x.BabyGender,
                 PregnancyStartDate = x.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 ExpectedDueDate = x.ExpectedDueDate ?? DateOnly.FromDateTime(DateTime.Now),
-                GestationalAgeResponse = _service.CalculateGestationalAge(x.PregnancyStartDate.Value.ToDateTime(TimeOnly.MinValue) ),
                 ImageUrl = x.ImageUrl,
+                TotalWeeks = (x.ExpectedDueDate.Value.DayNumber - DateOnly.FromDateTime(DateTime.Now).DayNumber) / 7,
                 CreatedAt = x.CreatedAt,
-                UpdatedAt = x.UpdatedAt
+                UpdatedAt = x.UpdatedAt,
+                GestationalAgeResponse = _service.CalculateGestationalAge(x.PregnancyStartDate.Value.ToDateTime(TimeOnly.MinValue)),
             });
 
             if (response.Any()) return Ok(new
@@ -66,9 +67,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
                 PregnancyStartDate = entity.PregnancyStartDate ?? DateOnly.FromDateTime(DateTime.Now),
                 ExpectedDueDate = entity.ExpectedDueDate ?? DateOnly.FromDateTime(DateTime.Now),
                 ImageUrl = entity.ImageUrl,
-                GestationalAgeResponse = _service.CalculateGestationalAge(entity.PregnancyStartDate.Value.ToDateTime(TimeOnly.MinValue)),
+                TotalWeeks = (entity.ExpectedDueDate.Value.DayNumber - DateOnly.FromDateTime(DateTime.Now).DayNumber) / 7,
                 CreatedAt = entity.CreatedAt,
-                UpdatedAt = entity.UpdatedAt
+                UpdatedAt = entity.UpdatedAt,
+                GestationalAgeResponse = _service.CalculateGestationalAge(entity.PregnancyStartDate.Value.ToDateTime(TimeOnly.MinValue)),
             };
 
             if (response != null) return Ok(new

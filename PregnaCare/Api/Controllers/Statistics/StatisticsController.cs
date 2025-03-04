@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Services.Interfaces;
-using PregnaCare.Common.Constants;
 using PregnaCare.Api.Models.Responses.StatisticsResponseModel;
-using System.Collections.Generic;
+using PregnaCare.Common.Constants;
+using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Api.Controllers.Statistics
 {

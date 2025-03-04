@@ -2,7 +2,7 @@
 {
     public class RevenueStatsResponse
     {
-        public string Year { get; set; } 
+        public string Year { get; set; }
         public List<decimal> TotalRevenueByMonth { get; set; }
     }
 }

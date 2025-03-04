@@ -17,9 +17,16 @@ namespace PregnaCare.Api.Controllers.Blog
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllActive()
         {
             var response = await _service.GetAllBlogs();
+            return Ok(response);
+        }
+
+        [HttpGet("User/{id}")]
+        public async Task<IActionResult> GetAllBlogByUser(Guid id)
+        {
+            var response = await _service.GetAllByUserIdBlogs(id);
             return Ok(response);
         }
 
@@ -32,27 +39,26 @@ namespace PregnaCare.Api.Controllers.Blog
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(BlogRequests request)
+        public async Task<IActionResult> CreateBlog([FromBody] BlogRequest request)
         {
-            var response = await _service.CreateBlog(request);
+            var response = await _service.CreateBlog(request, request.TagIds);
             if (!response.Success) return BadRequest(response);
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> Update(BlogRequests request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromBody] BlogRequest request, Guid id)
         {
-            var response = await _service.UpdateBlog(request);
+            var response = await _service.UpdateBlog(request, id);
             if (!response.Success) return BadRequest(response);
             return Ok(response);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
-        {
-            var success = await _service.DeleteBlog(id);
-            if (!success) return BadRequest(Messages.GetMessageById(Messages.E00013));
-            return Ok("Blog deleted successfully.");
+        {   
+            await _service.DeleteBlog(id);
+            return NoContent();
         }
     }
 }

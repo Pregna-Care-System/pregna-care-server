@@ -1,6 +1,5 @@
 ﻿using PregnaCare.Api.Models.Requests.AccountRequestModel;
 using PregnaCare.Api.Models.Responses.AccountResponseModel;
-using PregnaCare.Api.Models.Responses.AuthResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Repositories.Interfaces;
@@ -21,15 +20,21 @@ namespace PregnaCare.Services.Implementations
             _unit = unitOfWork;
         }
 
-        public async Task<AccountListResponse> GetAllMemberAsync()
+        public async Task<AccountListResponse> GetAllMemberAsync(string filterType = null, string name = null)
         {
-            var users = await _repo.GetAllAsync();
-            var accountList = users.Select(user => Mapper.MapToAccountDTO(user)).ToList();
-
+            var users = await _repo.GetMembers(filterType, name);
+            if (users == null)
+            {
+                return new AccountListResponse
+                {
+                    Success = false,
+                    Message = "Cannot find any members"
+                };
+            }
             return new AccountListResponse
             {
                 Success = true,
-                Response = accountList
+                Response = users
             };
         }
 
@@ -55,7 +60,7 @@ namespace PregnaCare.Services.Implementations
 
         public async Task<AccountResponse> UpdateAccount(Guid id, UpdateAccountRequest request)
         {
-            var response = new AccountResponse();
+            _ = new AccountResponse();
             var detailErrorList = new List<DetailError>();
 
             if (request == null)
@@ -113,7 +118,7 @@ namespace PregnaCare.Services.Implementations
             {
                 var today = DateTime.Today;
                 var age = today.Year - request.DateOfBirth.Value.Year;
-                
+
                 if (age < 18)
                 {
                     detailErrorList.Add(new DetailError

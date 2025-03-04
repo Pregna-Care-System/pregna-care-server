@@ -7,7 +7,5 @@ namespace PregnaCare.Core.Repositories.Interfaces
         Task<IEnumerable<Reminder>> GetActiveRemindersAsync();
         Task<IEnumerable<Reminder>> GetRemindersToNotifyAsync(DateTime dateTime);
         Task<IEnumerable<Guid>> GetUserIdsForReminderAsync(Guid reminderId);
-
-
     }
 }

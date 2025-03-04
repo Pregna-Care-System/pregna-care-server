@@ -13,6 +13,9 @@
         public string PhoneNumber { get; set; } = string.Empty;
 
         public string Gender { get; set; } = string.Empty;
+        public string PlanName { get; set; } = string.Empty;
+
+        public int remainingDate { get; set; }
 
         public DateOnly? DateOfBirth { get; set; }
 
@@ -25,6 +28,8 @@
         public DateTime? UpdatedAt { get; set; }
 
         public bool? IsDeleted { get; set; }
+        public bool? IsActive { get; set; }
+
 
     }
 }
