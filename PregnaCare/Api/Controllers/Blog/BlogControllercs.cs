@@ -56,7 +56,7 @@ namespace PregnaCare.Api.Controllers.Blog
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
-        {   
+        {
             await _service.DeleteBlog(id);
             return NoContent();
         }

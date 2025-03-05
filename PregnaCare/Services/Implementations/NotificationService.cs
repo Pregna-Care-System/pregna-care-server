@@ -50,7 +50,7 @@ namespace PregnaCare.Services.Implementations
         public async Task UpdateAllIsRead(List<Guid> ids)
         {
             var notifications = await _notiRepo.FindAsync(n => ids.Contains(n.Id));
-            foreach( var noti in notifications)
+            foreach (var noti in notifications)
             {
                 noti.IsRead = true;
                 _notiRepo.Update(noti);

@@ -49,7 +49,7 @@ namespace PregnaCare.Api.Controllers.Tag
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
-        {   
+        {
             await _service.DeleteTag(id);
             return NoContent();
         }

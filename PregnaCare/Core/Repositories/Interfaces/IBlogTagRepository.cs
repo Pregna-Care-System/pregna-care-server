@@ -2,7 +2,7 @@
 
 namespace PregnaCare.Core.Repositories.Interfaces
 {
-    public interface IBlogTagRepository: IGenericRepository<BlogTag, Guid>
+    public interface IBlogTagRepository : IGenericRepository<BlogTag, Guid>
     {
     }
 }

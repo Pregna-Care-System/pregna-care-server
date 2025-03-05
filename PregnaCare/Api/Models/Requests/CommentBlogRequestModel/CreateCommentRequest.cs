@@ -2,7 +2,7 @@
 
 namespace PregnaCare.Api.Models.Requests.CommentBlogRequestModel
 {
-    public class CreateCommentRequest: AbstractApiRequest
+    public class CreateCommentRequest : AbstractApiRequest
     {
         public Guid BlogId { get; set; }
 
