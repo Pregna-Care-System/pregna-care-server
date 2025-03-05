@@ -19,6 +19,7 @@ namespace PregnaCare.Core.Repositories.Implementations
             var blogList = await _context.Blogs.Where(b => b.IsDeleted == false && b.IsVisible == true)
                 .Select(blog => new BlogDTO
                 {
+                    id = blog.Id,
                     UserId = blog.UserId,
                     PageTitle = blog.PageTitle,
                     Heading = blog.Heading,
@@ -46,6 +47,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                 .Where(b => b.IsDeleted == false && b.UserId == userId)
                 .Select(blog => new BlogDTO
                 {
+                    id = blog.Id,
                     UserId = blog.UserId,
                     PageTitle = blog.PageTitle,
                     Heading = blog.Heading,

@@ -2,6 +2,7 @@
 {
     public class BlogDTO
     {
+        public Guid id { get; set; }
         public Guid UserId { get; set; }
 
         public List<TagDTO> Tags { get; set; } = new List<TagDTO>();
