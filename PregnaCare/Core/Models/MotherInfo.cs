@@ -3,7 +3,7 @@ public partial class MotherInfo
 {
     public Guid Id { get; set; }
 
-    public Guid? PregnancyRecordId { get; set; }
+    public Guid? UserId { get; set; }
 
     public string MotherName { get; set; } = string.Empty;
 
@@ -19,5 +19,7 @@ public partial class MotherInfo
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual PregnancyRecord PregnancyRecord { get; set; }
+    public virtual User? User { get; set; }
+
+    public virtual ICollection<PregnancyRecord> PregnancyRecords { get; set; } = new List<PregnancyRecord>();
 }

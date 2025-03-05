@@ -53,7 +53,7 @@ namespace PregnaCare.Services.Implementations
             await _blogRepository.AddAsync(blog);
 
             var blogTagRepo = _unitOfWork.GetRepository<BlogTag, Guid>();
-            if(tagIds != null && tagIds.Any())
+            if (tagIds != null && tagIds.Any())
             {
                 foreach (var tagId in tagIds)
                 {
@@ -70,7 +70,7 @@ namespace PregnaCare.Services.Implementations
                     await blogTagRepo.AddAsync(blogTag);
                 }
             }
-          
+
             await _unitOfWork.SaveChangesAsync();
 
             response.Response = blog;
@@ -82,7 +82,7 @@ namespace PregnaCare.Services.Implementations
         public async Task<BlogResponse> UpdateBlog(BlogRequest request, Guid id)
         {
             var blog = await _blogRepository.GetByIdAsync(id);
-            if(blog == null)
+            if (blog == null)
             {
                 return new BlogResponse
                 {
@@ -100,7 +100,8 @@ namespace PregnaCare.Services.Implementations
 
             _blogRepository.Update(blog);
 
-            if (request.TagIds != null && request.TagIds.Any()) {
+            if (request.TagIds != null && request.TagIds.Any())
+            {
 
                 var existingTags = await _blogTagRepository.FindAsync(x => x.BlogId == id);
                 var newTagIds = request.TagIds ?? new List<Guid>();

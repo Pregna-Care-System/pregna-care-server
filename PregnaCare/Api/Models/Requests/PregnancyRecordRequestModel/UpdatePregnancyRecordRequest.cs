@@ -4,7 +4,7 @@ namespace PregnaCare.Api.Models.Requests.PregnancyRecordRequestModel
 {
     public class UpdatePregnancyRecordRequest : AbstractApiRequest
     {
-        public Guid UserId { get; set; }
+        public Guid MotherInfoId { get; set; }
         public Guid PregnancyRecordId { get; set; }
         public string MotherName { get; set; }
         public DateOnly MotherDateOfBirth { get; set; }

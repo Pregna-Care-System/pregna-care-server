@@ -16,7 +16,7 @@ namespace PregnaCare.Services.Implementations
         {
             _httpClient = httpClient;
             _apiKey = Environment.GetEnvironmentVariable("GEMINI_API_KEY") ?? string.Empty;
-            _geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=";
+            _geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=";
         }
 
         public async Task<string> CallChatBotApi(string prompt)

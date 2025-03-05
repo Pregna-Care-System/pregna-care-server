@@ -17,6 +17,7 @@ namespace PregnaCare.Services.Implementations
         private readonly IGenericRepository<FetalGrowthRecord, Guid> _fetalGrowthRecordRepository;
         private readonly IGenericRepository<User, Guid> _userRepository;
         private readonly IGenericRepository<PregnancyRecord, Guid> _pregnancyRecordRepository;
+        private readonly IGenericRepository<MotherInfo, Guid> _motherInfoRepository;
         private readonly IGrowthAlertService _growthAlertService;
 
         /// <summary>
@@ -33,6 +34,7 @@ namespace PregnaCare.Services.Implementations
             _userRepository = _unitOfWork.GetRepository<User, Guid>();
             _pregnancyRecordRepository = _unitOfWork.GetRepository<PregnancyRecord, Guid>();
             _growthAlertService = growthAlertService;
+            _motherInfoRepository = _unitOfWork.GetRepository<MotherInfo, Guid>();
         }
 
         public async Task<CreateFetalGrowthRecordResponse> CreateFetalGrowthRecord(CreateFetalGrowthRecordRequest request)
@@ -40,7 +42,7 @@ namespace PregnaCare.Services.Implementations
             var response = new CreateFetalGrowthRecordResponse { Success = false };
 
             var user = (await _userRepository.FindWithIncludesAsync(x => x.Id == request.UserId && x.IsDeleted == false,
-                x => x.PregnancyRecords)).FirstOrDefault();
+                x => x.MotherInfo, x => x.MotherInfo.PregnancyRecords)).FirstOrDefault();
             if (user == null)
             {
                 response.MessageId = Messages.E00000;
@@ -48,7 +50,7 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            var pregnancyRecord = user.PregnancyRecords.FirstOrDefault(x => x.Id == request.PregnancyRecordId);
+            var pregnancyRecord = user.MotherInfo.PregnancyRecords.FirstOrDefault(x => x.Id == request.PregnancyRecordId);
             if (pregnancyRecord == null)
             {
                 response.MessageId = Messages.E00000;
@@ -110,12 +112,12 @@ namespace PregnaCare.Services.Implementations
             return true;
         }
 
-        public async Task<List<FetalGrowthRecord>> GetAllFetalGrowthRecordsByUserId(Guid userId)
+        public async Task<List<FetalGrowthRecord>> GetAllFetalGrowthRecordsByMotherInfoId(Guid motherInfoId)
         {
-            var user = await _userRepository.GetByIdAsync(userId);
-            if (user == null) return new();
+            var motherInfo = await _motherInfoRepository.GetByIdAsync(motherInfoId);
+            if (motherInfo == null) return new();
 
-            var pregnancyRecord = (await _pregnancyRecordRepository.FindWithIncludesAsync(x => x.UserId == userId && x.IsDeleted == false, x => x.User, x => x.FetalGrowthRecords)).FirstOrDefault();
+            var pregnancyRecord = (await _pregnancyRecordRepository.FindWithIncludesAsync(x => x.MotherInfoId == motherInfoId && x.IsDeleted == false, x => x.FetalGrowthRecords)).FirstOrDefault();
             if (pregnancyRecord == null) return new();
 
             return pregnancyRecord.FetalGrowthRecords.OrderBy(x => x.CreatedAt).ThenBy(x => x.Id).ThenBy(x => x.PregnancyRecordId).ThenBy(x => x.Week).ToList();

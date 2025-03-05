@@ -25,13 +25,13 @@ public partial class User
 
     public bool? IsDeleted { get; set; }
 
+    public virtual MotherInfo MotherInfo { get; set; } = new MotherInfo();
+
     public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
 
     public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
 
     public virtual ICollection<GrowthAlert> GrowthAlerts { get; set; } = new List<GrowthAlert>();
-
-    public virtual ICollection<PregnancyRecord> PregnancyRecords { get; set; } = new List<PregnancyRecord>();
 
     public virtual ICollection<UserMembershipPlan> UserMembershipPlans { get; set; } = new List<UserMembershipPlan>();
 

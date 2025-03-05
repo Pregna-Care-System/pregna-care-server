@@ -3,7 +3,7 @@ public partial class PregnancyRecord
 {
     public Guid Id { get; set; }
 
-    public Guid? UserId { get; set; }
+    public Guid? MotherInfoId { get; set; }
 
     public string BabyName { get; set; } = string.Empty;
 
@@ -24,6 +24,4 @@ public partial class PregnancyRecord
     public virtual ICollection<FetalGrowthRecord> FetalGrowthRecords { get; set; } = new List<FetalGrowthRecord>();
 
     public virtual MotherInfo MotherInfo { get; set; }
-
-    public virtual User User { get; set; }
 }

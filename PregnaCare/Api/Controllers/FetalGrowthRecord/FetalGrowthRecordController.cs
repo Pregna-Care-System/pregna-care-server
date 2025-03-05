@@ -21,10 +21,10 @@ namespace PregnaCare.Api.Controllers.FetalGrowthRecord
             _fetalGrowthRecordService = fetalGrowthRecordService;
         }
 
-        [HttpGet("/api/v1/User/{userId}/[controller]")]
-        public async Task<IActionResult> GetAllFetalGrowthRecordsByUserId([FromRoute] Guid userId)
+        [HttpGet("/api/v1/MotherInfo/{motherInfoId}/[controller]")]
+        public async Task<IActionResult> GetAllFetalGrowthRecordsByUserId([FromRoute] Guid motherInfoId)
         {
-            var response = (await _fetalGrowthRecordService.GetAllFetalGrowthRecordsByUserId(userId)).Select(x => new SelectFetalGrowthRecordResponse
+            var response = (await _fetalGrowthRecordService.GetAllFetalGrowthRecordsByMotherInfoId(motherInfoId)).Select(x => new SelectFetalGrowthRecordResponse
             {
                 Id = x.Id,
                 PregnancyRecordId = x.PregnancyRecordId,
