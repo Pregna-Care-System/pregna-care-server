@@ -6,7 +6,7 @@ namespace PregnaCare.Services.Interfaces
 {
     public interface IFetalGrowthRecordService
     {
-        Task<List<FetalGrowthRecord>> GetAllFetalGrowthRecordsByUserId(Guid userId);
+        Task<List<FetalGrowthRecord>> GetAllFetalGrowthRecordsByMotherInfoId(Guid motherInfoId);
         Task<List<FetalGrowthRecord>> GetFetalGrowthRecordById(Guid pregnancyRecordId, int? week);
         Task<CreateFetalGrowthRecordResponse> CreateFetalGrowthRecord(CreateFetalGrowthRecordRequest request);
         Task<UpdateFetalGrowthRecordResponse> UpdateFetalGrowthRecord(UpdateFetalGrowthRecordRequest request);

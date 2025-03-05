@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,7 +10,7 @@ namespace PregnaCare.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Feature",
                 columns: table => new
                 {
@@ -24,10 +23,10 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Feature__3214EC078D774F65", x => x.Id);
+                    _ = table.PrimaryKey("PK__Feature__3214EC078D774F65", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "GrowthMetric",
                 columns: table => new
                 {
@@ -44,10 +43,10 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__GrowthMe__3214EC079F959C7D", x => x.Id);
+                    _ = table.PrimaryKey("PK__GrowthMe__3214EC079F959C7D", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "MembershipPlan",
                 columns: table => new
                 {
@@ -63,10 +62,10 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Membersh__3214EC0759A84688", x => x.Id);
+                    _ = table.PrimaryKey("PK__Membersh__3214EC0759A84688", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Notification",
                 columns: table => new
                 {
@@ -83,10 +82,10 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Notifica__3214EC07CC6FDA03", x => x.Id);
+                    _ = table.PrimaryKey("PK__Notifica__3214EC07CC6FDA03", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ReminderType",
                 columns: table => new
                 {
@@ -99,10 +98,10 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Reminder__3214EC07BCC21D48", x => x.Id);
+                    _ = table.PrimaryKey("PK__Reminder__3214EC07BCC21D48", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Role",
                 columns: table => new
                 {
@@ -115,10 +114,10 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Role__3214EC070B95F870", x => x.Id);
+                    _ = table.PrimaryKey("PK__Role__3214EC070B95F870", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Tag",
                 columns: table => new
                 {
@@ -131,10 +130,10 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Tag__3214EC076482AF67", x => x.Id);
+                    _ = table.PrimaryKey("PK__Tag__3214EC076482AF67", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -153,10 +152,10 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__User__3214EC0783A4FABB", x => x.Id);
+                    _ = table.PrimaryKey("PK__User__3214EC0783A4FABB", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "MembershipPlanFeature",
                 columns: table => new
                 {
@@ -169,20 +168,20 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Membersh__3214EC075093C74B", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__Membersh__3214EC075093C74B", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__Membershi__Featu__503BEA1C",
                         column: x => x.FeatureId,
                         principalTable: "Feature",
                         principalColumn: "Id");
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK__Membershi__Membe__4F47C5E3",
                         column: x => x.MembershipPlanId,
                         principalTable: "MembershipPlan",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Reminder",
                 columns: table => new
                 {
@@ -200,15 +199,15 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Reminder__3214EC07D1B5B42B", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__Reminder__3214EC07D1B5B42B", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__Reminder__Remind__778AC167",
                         column: x => x.ReminderTypeId,
                         principalTable: "ReminderType",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Blog",
                 columns: table => new
                 {
@@ -228,15 +227,15 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Blog__3214EC072531253D", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__Blog__3214EC072531253D", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__Blog__UserId__245D67DE",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "MotherInfo",
                 columns: table => new
                 {
@@ -252,8 +251,8 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__MotherIn__3214EC07333353E5", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__MotherIn__3214EC07333353E5", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_MotherInfo_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
@@ -261,7 +260,7 @@ namespace PregnaCare.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "UserMembershipPlan",
                 columns: table => new
                 {
@@ -279,20 +278,20 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__UserMemb__3214EC07B4262E50", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__UserMemb__3214EC07B4262E50", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__UserMembe__Membe__57DD0BE4",
                         column: x => x.MembershipPlanId,
                         principalTable: "MembershipPlan",
                         principalColumn: "Id");
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK__UserMembe__UserI__56E8E7AB",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "UserRole",
                 columns: table => new
                 {
@@ -305,20 +304,20 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__UserRole__3214EC071336C9DE", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__UserRole__3214EC071336C9DE", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__UserRole__RoleId__5EBF139D",
                         column: x => x.RoleId,
                         principalTable: "Role",
                         principalColumn: "Id");
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK__UserRole__UserId__5DCAEF64",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "UserReminder",
                 columns: table => new
                 {
@@ -331,20 +330,20 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__UserRemi__3214EC07CD4B0FB8", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__UserRemi__3214EC07CD4B0FB8", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__UserRemin__Remin__02084FDA",
                         column: x => x.ReminderId,
                         principalTable: "Reminder",
                         principalColumn: "Id");
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK__UserRemin__UserI__01142BA1",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "BlogTag",
                 columns: table => new
                 {
@@ -357,20 +356,20 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__BlogTag__3214EC07DB6D1A4E", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__BlogTag__3214EC07DB6D1A4E", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__BlogTag__BlogId__690797E6",
                         column: x => x.BlogId,
                         principalTable: "Blog",
                         principalColumn: "Id");
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK__BlogTag__TagId__69FBBC1F",
                         column: x => x.TagId,
                         principalTable: "Tag",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "Comment",
                 columns: table => new
                 {
@@ -385,25 +384,25 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Comment__3214EC07AA0617CF", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__Comment__3214EC07AA0617CF", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__Comment__BlogId__32AB8735",
                         column: x => x.BlogId,
                         principalTable: "Blog",
                         principalColumn: "Id");
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK__Comment__ParentC__3493CFA7",
                         column: x => x.ParentCommentId,
                         principalTable: "Comment",
                         principalColumn: "Id");
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK__Comment__UserId__339FAB6E",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "PregnancyRecord",
                 columns: table => new
                 {
@@ -420,8 +419,8 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__Pregnanc__3214EC0744B8C9AF", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__Pregnanc__3214EC0744B8C9AF", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__Pregnancy__MotherInfoI__656C112C",
                         column: x => x.MotherInfoId,
                         principalTable: "MotherInfo",
@@ -429,7 +428,7 @@ namespace PregnaCare.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "FetalGrowthRecord",
                 columns: table => new
                 {
@@ -447,15 +446,15 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__FetalGro__3214EC0770636744", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__FetalGro__3214EC0770636744", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__FetalGrow__Pregn__19DFD96B",
                         column: x => x.PregnancyRecordId,
                         principalTable: "PregnancyRecord",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "GrowthAlert",
                 columns: table => new
                 {
@@ -476,135 +475,135 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK__GrowthAl__3214EC07E416DF1F", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK__GrowthAl__3214EC07E416DF1F", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK__GrowthAle__Fetal__7B264821",
                         column: x => x.FetalGrowthRecordId,
                         principalTable: "FetalGrowthRecord",
                         principalColumn: "Id");
-                    table.ForeignKey(
+                    _ = table.ForeignKey(
                         name: "FK__GrowthAle__UserI__7C1A6C5A",
                         column: x => x.UserId,
                         principalTable: "User",
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Blog_UserId",
                 table: "Blog",
                 column: "UserId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_BlogTag_BlogId",
                 table: "BlogTag",
                 column: "BlogId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_BlogTag_TagId",
                 table: "BlogTag",
                 column: "TagId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Comment_BlogId",
                 table: "Comment",
                 column: "BlogId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Comment_ParentCommentId",
                 table: "Comment",
                 column: "ParentCommentId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Comment_UserId",
                 table: "Comment",
                 column: "UserId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "UQ__Feature__55ABBB7126C564CB",
                 table: "Feature",
                 column: "FeatureName",
                 unique: true);
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_FetalGrowthRecord_PregnancyRecordId",
                 table: "FetalGrowthRecord",
                 column: "PregnancyRecordId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_GrowthAlert_FetalGrowthRecordId",
                 table: "GrowthAlert",
                 column: "FetalGrowthRecordId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_GrowthAlert_UserId",
                 table: "GrowthAlert",
                 column: "UserId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_MembershipPlanFeature_FeatureId",
                 table: "MembershipPlanFeature",
                 column: "FeatureId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_MembershipPlanFeature_MembershipPlanId",
                 table: "MembershipPlanFeature",
                 column: "MembershipPlanId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_MotherInfo_UserId",
                 table: "MotherInfo",
                 column: "UserId",
                 unique: true,
                 filter: "[UserId] IS NOT NULL");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_PregnancyRecord_MotherInfoId",
                 table: "PregnancyRecord",
                 column: "MotherInfoId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_Reminder_ReminderTypeId",
                 table: "Reminder",
                 column: "ReminderTypeId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "UQ__Tag__737584F6E702CB57",
                 table: "Tag",
                 column: "Name",
                 unique: true);
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "UQ__User__A9D105349BB5D819",
                 table: "User",
                 column: "Email",
                 unique: true);
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_UserMembershipPlan_MembershipPlanId",
                 table: "UserMembershipPlan",
                 column: "MembershipPlanId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_UserMembershipPlan_UserId",
                 table: "UserMembershipPlan",
                 column: "UserId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_UserReminder_ReminderId",
                 table: "UserReminder",
                 column: "ReminderId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_UserReminder_UserId",
                 table: "UserReminder",
                 column: "UserId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_UserRole_RoleId",
                 table: "UserRole",
                 column: "RoleId");
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_UserRole_UserId",
                 table: "UserRole",
                 column: "UserId");
@@ -613,64 +612,64 @@ namespace PregnaCare.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "BlogTag");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Comment");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "GrowthAlert");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "GrowthMetric");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "MembershipPlanFeature");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Notification");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "UserMembershipPlan");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "UserReminder");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "UserRole");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Tag");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Blog");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "FetalGrowthRecord");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Feature");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "MembershipPlan");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Reminder");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "Role");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "PregnancyRecord");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ReminderType");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "MotherInfo");
 
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "User");
         }
     }

@@ -15,7 +15,7 @@ namespace PregnaCare.Api.Controllers.GrowthAlert
             _growthAlertService = growthAlertService;
         }
 
-        [HttpGet("api/v1/User/{userId}/GrowthAlert")]
+        [HttpGet("/api/v1/User/{userId}/GrowthAlert")]
         public async Task<IActionResult> GetGrowthAlerts([FromRoute] Guid userId)
         {
             var growthAlerts = await _growthAlertService.GetGrowthAlerts(userId);

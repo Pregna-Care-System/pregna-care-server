@@ -22,10 +22,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             _service = service;
         }
 
-        [HttpGet("/api/v1/User/{userId}/[controller]")]
-        public async Task<IActionResult> GetAllPregancyRecordsByUserId([FromRoute] Guid userId)
+        [HttpGet("/api/v1/User/{motherInfoId}/[controller]")]
+        public async Task<IActionResult> GetAllPregancyRecordsByMotherInfoId([FromRoute] Guid motherInfoId)
         {
-            var response = (await _service.GetAllPregnancyRecords(userId)).Select(x => new SelectPregnancyRecordResponse
+            var response = (await _service.GetAllPregnancyRecords(motherInfoId)).Select(x => new SelectPregnancyRecordResponse
             {
                 Id = x.Id,
                 BabyName = x.BabyName,

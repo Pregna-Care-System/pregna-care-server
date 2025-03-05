@@ -14,6 +14,7 @@ namespace PregnaCare.Services.Implementations
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IGenericRepository<PregnancyRecord, Guid> _repository;
+        private readonly IGenericRepository<MotherInfo, Guid> _motherInfoRepository;
 
         /// <summary>
         /// Constructor
@@ -23,6 +24,7 @@ namespace PregnaCare.Services.Implementations
         {
             _unitOfWork = unitOfWork;
             _repository = _unitOfWork.GetRepository<PregnancyRecord, Guid>();
+            _motherInfoRepository = _unitOfWork.GetRepository<MotherInfo, Guid>();
         }
 
         public GestationalAgeResponse CalculateGestationalAge(DateTime lmp)
@@ -94,6 +96,18 @@ namespace PregnaCare.Services.Implementations
                 });
             }
 
+            var motherInfo = await _motherInfoRepository.GetByIdAsync(request.MotherInfoId);
+            if (motherInfo == null)
+            {
+                detailErrorList.Add(new DetailError
+                {
+                    FieldName = nameof(request.MotherInfoId),
+                    Value = request.MotherInfoId.ToString(),
+                    MessageId = Messages.E00002,
+                    Message = Messages.GetMessageById(Messages.E00002)
+                });
+            }
+
             if (detailErrorList.Any())
             {
                 response.Success = false;
@@ -106,20 +120,13 @@ namespace PregnaCare.Services.Implementations
             var pregnancyRecord = new PregnancyRecord
             {
                 Id = Guid.NewGuid(),
-                UserId = request.UserId,
+                MotherInfoId = request.MotherInfoId,
                 BabyName = request.BabyName,
-                PregnancyStartDate = request.ExpectedDueDate,
+                PregnancyStartDate = request.PregnancyStartDate,
                 ExpectedDueDate = request.ExpectedDueDate,
                 BabyGender = request.BabyGender ?? string.Empty,
                 ImageUrl = request.ImageUrl ?? string.Empty,
-                MotherInfo = new MotherInfo
-                {
-                    MotherName = request.MotherName,
-                    DateOfBirth = request.MotherDateOfBirth,
-                    BloodType = request.BloodType,
-                    HealthStatus = request.HealhStatus,
-                    Notes = request.Notes,
-                }
+                MotherInfo = motherInfo
             };
 
             await _repository.AddAsync(pregnancyRecord);
@@ -143,21 +150,20 @@ namespace PregnaCare.Services.Implementations
             return true;
         }
 
-        public async Task<List<PregnancyRecord>> GetAllPregnancyRecords(Guid userId)
+        public async Task<List<PregnancyRecord>> GetAllPregnancyRecords(Guid motherInfoId)
         {
             return (await _repository.FindWithIncludesAsync(
-                x => x.UserId == userId && x.IsDeleted == false,
+                x => x.MotherInfoId == motherInfoId && x.IsDeleted == false,
                 x => x.MotherInfo
             )).ToList();
         }
 
-        public async Task<PregnancyRecord> GetPregnancyRecordById(Guid userId, Guid pregnancyRecordId)
+        public async Task<PregnancyRecord> GetPregnancyRecordById(Guid motherInfoId, Guid pregnancyRecordId)
         {
             return (await _repository.FindWithIncludesAsync(
-                x => x.UserId == userId && x.Id == pregnancyRecordId && x.IsDeleted == false,
+                x => x.MotherInfoId == motherInfoId && x.Id == pregnancyRecordId && x.IsDeleted == false,
                 x => x.MotherInfo
             )).FirstOrDefault();
-
         }
 
         public async Task<UpdatePregnancyRecordResponse> UpdatePregnancyRecord(UpdatePregnancyRecordRequest request)
@@ -211,7 +217,7 @@ namespace PregnaCare.Services.Implementations
             }
 
             var entity = (await _repository.FindWithIncludesAsync(
-                x => x.UserId == request.UserId && x.Id == request.PregnancyRecordId && x.IsDeleted == false,
+                x => x.MotherInfoId == request.MotherInfoId && x.Id == request.PregnancyRecordId && x.IsDeleted == false,
                 x => x.MotherInfo
             )).FirstOrDefault();
 

@@ -19,7 +19,7 @@ public partial class MotherInfo
 
     public DateTime? UpdatedAt { get; set; }
 
-    public virtual User User { get; set; } = new User();
+    public virtual User? User { get; set; }
 
     public virtual ICollection<PregnancyRecord> PregnancyRecords { get; set; } = new List<PregnancyRecord>();
 }
