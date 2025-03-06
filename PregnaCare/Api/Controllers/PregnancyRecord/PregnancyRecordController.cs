@@ -98,10 +98,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdatePregnancyRecord([FromBody] UpdatePregnancyRecordRequest request)
+        [HttpPut("{pregnancyRecordId}")]
+        public async Task<IActionResult> UpdatePregnancyRecord([FromRoute] Guid pregnancyRecordId, [FromBody] UpdatePregnancyRecordRequest request)
         {
-            var response = await _service.UpdatePregnancyRecord(request);
+            var response = await _service.UpdatePregnancyRecord(pregnancyRecordId, request);
 
             if (!response.Success) return BadRequest(response);
             return Ok(response);

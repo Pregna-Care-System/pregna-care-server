@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Api.Models.Requests.MotherInfoModel;
+using PregnaCare.Api.Models.Requests.MotherInfoRequestModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
 
@@ -52,6 +53,14 @@ namespace PregnaCare.Api.Controllers.MotherInfo
         public async Task<IActionResult> CreateMotherInfo([FromBody] CreateMotherInfoRequest request)
         {
             var response = await _motherInfoService.CreateMotherInfoAsync(request);
+            if (response.Success) return Ok(response);
+            return BadRequest(response);
+        }
+
+        [HttpPut("{motherInfoId}")]
+        public async Task<IActionResult> UpdateMotherInfo([FromRoute] Guid motherInfoId, [FromBody] UpdateMotherInfoRequest request)
+        {
+            var response = await _motherInfoService.UpdateMotherInfoAsync(motherInfoId, request);
             if (response.Success) return Ok(response);
             return BadRequest(response);
         }

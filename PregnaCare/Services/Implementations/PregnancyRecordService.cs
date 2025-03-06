@@ -166,7 +166,7 @@ namespace PregnaCare.Services.Implementations
             )).FirstOrDefault();
         }
 
-        public async Task<UpdatePregnancyRecordResponse> UpdatePregnancyRecord(UpdatePregnancyRecordRequest request)
+        public async Task<UpdatePregnancyRecordResponse> UpdatePregnancyRecord(Guid pregnancyRecordId, UpdatePregnancyRecordRequest request)
         {
             var response = new UpdatePregnancyRecordResponse { Success = false };
             var detailErrorList = new List<DetailError>();
@@ -216,8 +216,7 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            var entity = (await _repository.FindWithIncludesAsync(
-                x => x.MotherInfoId == request.MotherInfoId && x.Id == request.PregnancyRecordId && x.IsDeleted == false,
+            var entity = (await _repository.FindWithIncludesAsync(x => x.Id == pregnancyRecordId && x.IsDeleted == false,
                 x => x.MotherInfo
             )).FirstOrDefault();
 
@@ -228,11 +227,6 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            entity.MotherInfo.MotherName = request.MotherName;
-            entity.MotherInfo.DateOfBirth = request.MotherDateOfBirth;
-            entity.MotherInfo.BloodType = request.BloodType;
-            entity.MotherInfo.HealthStatus = request.HealhStatus;
-            entity.MotherInfo.Notes = request.Notes;
             entity.BabyName = request.BabyName ?? string.Empty;
             entity.BabyGender = request.BabyGender ?? string.Empty;
             entity.PregnancyStartDate = request.PregnancyStartDate;

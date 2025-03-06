@@ -9,7 +9,7 @@ namespace PregnaCare.Services.Interfaces
         Task<List<PregnancyRecord>> GetAllPregnancyRecords(Guid motherInfoId);
         Task<PregnancyRecord> GetPregnancyRecordById(Guid userId, Guid pregnancyRecordId);
         Task<CreatePregnancyRecordResponse> CreatePregnancyRecord(CreatePregnancyRecordRequest request);
-        Task<UpdatePregnancyRecordResponse> UpdatePregnancyRecord(UpdatePregnancyRecordRequest request);
+        Task<UpdatePregnancyRecordResponse> UpdatePregnancyRecord(Guid pregnancyRecordId, UpdatePregnancyRecordRequest request);
         Task<bool> DeletePregnancyRecord(Guid pregnancyRecordId);
         GestationalAgeResponse CalculateGestationalAge(DateTime lmp);
     }
