@@ -12,5 +12,6 @@ namespace PregnaCare.Services.Interfaces
         Task<(int, int, int, List<TransactionStatsResponse>)> GetRecentTransactionsAsync(int offset, int limit);
         Task<List<RevenueStatsResponse>> GetTotalRevenueAsync();
         Task<List<NewMemberResponse>> GetNewMembersAsync(int? year, int? month, int? week);
+        Task<FetalGrowthStatsResponse> GetFetalGrowthStatsResponse(Guid pregnancyRecordId);
     }
 }
