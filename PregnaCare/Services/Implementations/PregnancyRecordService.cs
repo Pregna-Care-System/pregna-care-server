@@ -158,11 +158,10 @@ namespace PregnaCare.Services.Implementations
             )).ToList();
         }
 
-        public async Task<PregnancyRecord> GetPregnancyRecordById(Guid motherInfoId, Guid pregnancyRecordId)
+        public async Task<PregnancyRecord> GetPregnancyRecordById(Guid pregnancyRecordId)
         {
-            return (await _repository.FindWithIncludesAsync(
-                x => x.MotherInfoId == motherInfoId && x.Id == pregnancyRecordId && x.IsDeleted == false,
-                x => x.MotherInfo
+            return (await _repository.FindAsync(
+                x => x.Id == pregnancyRecordId && x.IsDeleted == false
             )).FirstOrDefault();
         }
 

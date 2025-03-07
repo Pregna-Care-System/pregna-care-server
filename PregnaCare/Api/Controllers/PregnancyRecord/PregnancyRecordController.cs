@@ -55,10 +55,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             });
         }
 
-        [HttpGet("/api/v1/User/{userId}/[controller]/{pregnancyRecordId}")]
-        public async Task<IActionResult> GetPregnancyRecordById([FromRoute] Guid userId, [FromRoute] Guid pregnancyRecordId)
+        [HttpGet("{pregnancyRecordId}")]
+        public async Task<IActionResult> GetPregnancyRecordById([FromRoute] Guid pregnancyRecordId)
         {
-            var entity = (await _service.GetPregnancyRecordById(userId, pregnancyRecordId));
+            var entity = (await _service.GetPregnancyRecordById(pregnancyRecordId));
             var response = new SelectPregnancyRecordResponse
             {
                 Id = entity.Id,
