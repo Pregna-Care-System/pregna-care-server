@@ -229,7 +229,7 @@ namespace PregnaCare.Api.Controllers.Statistics
             });
         }
 
-        [HttpGet("/PregnancyRecord/{pregnancyRecordId}/FetalGrowthStats")]
+        [HttpGet("/api/v1/PregnancyRecord/{pregnancyRecordId}/FetalGrowthStats")]
         public async Task<IActionResult> GetFetalGrowthStats([FromRoute] Guid pregnancyRecordId)
         {
             var response = await _statisticsService.GetFetalGrowthStatsResponse(pregnancyRecordId);

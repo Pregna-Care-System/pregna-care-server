@@ -150,7 +150,7 @@ namespace PregnaCare.Services.Implementations
             motherInfo.HealthStatus = request.HealhStatus;
             motherInfo.Notes = request.Notes;
 
-            _ = await _context.MotherInfos.AddAsync(motherInfo);
+            _ = _context.MotherInfos.Update(motherInfo);
             _ = await _context.SaveChangesAsync();
 
             response.Success = true;
