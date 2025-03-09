@@ -58,38 +58,43 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            var isExisted = _context.FetalGrowthRecords.AsNoTracking().FirstOrDefault(x => x.Name == request.Name && x.Week == request.Week && x.IsDeleted == false) != null;
 
-            if (isExisted)
+
+            foreach(var createEntity in request.CreateFetalGrowthRecordEntities)
             {
-                response.MessageId = Messages.E00014;
-                response.Message = Messages.GetMessageById(Messages.E00014);
-                return response;
-            }
+                var isExisted = _context.FetalGrowthRecords.AsNoTracking().FirstOrDefault(x => x.Name == createEntity.Name && x.Week == createEntity.Week && x.IsDeleted == false) != null;
 
-            var fetalGrowthRecord = new FetalGrowthRecord
-            {
-                Id = Guid.NewGuid(),
-                Name = request.Name,
-                Unit = request.Unit ?? string.Empty,
-                Description = request.Description ?? string.Empty,
-                Week = request.Week ?? 0,
-                Value = request.Value ?? 0,
-                Note = request.Note ?? string.Empty,
-                IsDeleted = false,
-                PregnancyRecordId = request.PregnancyRecordId,
-            };
+                if (isExisted)
+                {
+                    response.MessageId = Messages.E00014;
+                    response.Message = Messages.GetMessageById(Messages.E00014);
+                    return response;
+                }
 
-            await _fetalGrowthRecordRepository.AddAsync(fetalGrowthRecord);
+                var fetalGrowthRecord = new FetalGrowthRecord
+                {
+                    Id = Guid.NewGuid(),
+                    Name = createEntity.Name,
+                    Unit = createEntity.Unit ?? string.Empty,
+                    Description = createEntity.Description ?? string.Empty,
+                    Week = createEntity.Week ?? 0,
+                    Value = createEntity.Value ?? 0,
+                    Note = createEntity.Note ?? string.Empty,
+                    IsDeleted = false,
+                    PregnancyRecordId = request.PregnancyRecordId,
+                };
 
-            var result = await _growthAlertService.CheckGrowthAndCreateAlert(request.UserId, fetalGrowthRecord);
+                await _fetalGrowthRecordRepository.AddAsync(fetalGrowthRecord);
 
-            if (string.IsNullOrEmpty(result))
-            {
-                response.Success = false;
-                response.MessageId = Messages.E00000;
-                response.Message = Messages.GetMessageById(Messages.E00000);
-                return response;
+                var result = await _growthAlertService.CheckGrowthAndCreateAlert(request.UserId, fetalGrowthRecord);
+
+                if (string.IsNullOrEmpty(result))
+                {
+                    response.Success = false;
+                    response.MessageId = Messages.E00000;
+                    response.Message = Messages.GetMessageById(Messages.E00000);
+                    return response;
+                }
             }
 
             await _unitOfWork.SaveChangesAsync();

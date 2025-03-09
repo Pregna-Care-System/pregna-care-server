@@ -8,6 +8,11 @@ namespace PregnaCare.Api.Models.Requests.FetalGrowthRecordRequestModel
 
         public Guid PregnancyRecordId { get; set; }
 
+        public List<CreateFetalGrowthRecordEntity> CreateFetalGrowthRecordEntities { get; set; }
+    }
+
+    public class CreateFetalGrowthRecordEntity
+    {
         public string Name { get; set; } = string.Empty;
 
         public string Unit { get; set; } = string.Empty;
