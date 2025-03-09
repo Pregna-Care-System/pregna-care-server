@@ -10,7 +10,6 @@ namespace PregnaCare.Api.Models.Requests.FetalGrowthRecordRequestModel
 
         public int? Week { get; set; }
 
-
         public List<CreateFetalGrowthRecordEntity> CreateFetalGrowthRecordEntities { get; set; }
     }
 
