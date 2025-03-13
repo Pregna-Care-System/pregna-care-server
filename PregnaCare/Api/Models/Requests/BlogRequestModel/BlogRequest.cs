@@ -1,4 +1,5 @@
 ﻿using PregnaCare.Common.Api;
+using PregnaCare.Common.Enums;
 
 namespace PregnaCare.Api.Models.Requests.BlogRequestModel
 {
@@ -17,6 +18,8 @@ namespace PregnaCare.Api.Models.Requests.BlogRequestModel
 
         public string FeaturedImageUrl { get; set; } = string.Empty;
         public bool IsVisible { get; set; }
-
+        public string Type { get; set; } = BlogTypeEnum.Blog.ToString();
+        public string Status { get; set; } = string.Empty;
+        public string? SharedChartData { get; set; } = string.Empty;
     }
 }
