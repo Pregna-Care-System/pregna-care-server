@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PregnaCare.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using PregnaCare.Infrastructure.Data;
 namespace PregnaCare.Migrations
 {
     [DbContext(typeof(PregnaCareAppDbContext))]
-    partial class PregnaCareAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250313155655_AddSharedChartAndReactions")]
+    partial class AddSharedChartAndReactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,10 +82,6 @@ namespace PregnaCare.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)")
                         .HasDefaultValue("");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()

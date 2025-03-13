@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using PregnaCare.Common.Enums;
 
 namespace PregnaCare.Core.Models;
 
@@ -23,6 +24,12 @@ public partial class Blog
     public bool? IsVisible { get; set; }
 
     public int? ViewCount { get; set; }
+
+    public string? SharedChartData { get; set; }
+
+    public string Type { get; set; } = BlogTypeEnum.Blog.ToString();
+
+    public string Status { get; set; } = StatusEnum.Pending.ToString();
 
     public DateTime? CreatedAt { get; set; }
 

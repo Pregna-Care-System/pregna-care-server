@@ -54,6 +54,8 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
+    public virtual DbSet<Reaction> Reactions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         _ = modelBuilder.Entity<Blog>(entity =>
