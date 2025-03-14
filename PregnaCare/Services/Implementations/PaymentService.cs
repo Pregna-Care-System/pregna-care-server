@@ -95,8 +95,10 @@ namespace PregnaCare.Services.Implementations
                     {
                         UserId = user.Id,
                         MembershipPlanId = membershipPlan.Id,
-                        IsActive = false,
-                        Status = StatusEnum.Completed.ToString()
+                        IsActive = true,
+                        Status = StatusEnum.Completed.ToString(),
+                        ExpiryDate = DateTime.UtcNow.AddDays(30),
+                        Price = membershipPlan.Price
                     };
 
                     _ = _context.UserMembershipPlans.Add(userMembershipPlan);
