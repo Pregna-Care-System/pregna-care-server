@@ -71,7 +71,7 @@ namespace PregnaCare.Api.Controllers.MembershipPlan
             return Ok(response);
         }
 
-        [HttpPut("${id}")]
+        [HttpPut("{id}")]
         public async Task UpgradeGuestToMember(Guid id)
         {
             await _planService.UpgradeGuestToMemberWithFreePlanAsync(id);

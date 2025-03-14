@@ -212,12 +212,18 @@ namespace PregnaCare.Core.Repositories.Implementations
             if (memberRole == null)
                 throw new Exception("Member role not found.");
 
-            // Kiểm tra nếu user hiện tại là Guest
+            // Kiểm tra nếu user hiện tại là Guest và User
             var userRole = await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userId);
             if (userRole != null)
             {
                 var guestRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == RoleEnum.Guest.ToString());
+                var roleUser = await _context.Roles.FirstOrDefaultAsync(ur => ur.RoleName == RoleEnum.User.ToString());
                 if (userRole.RoleId == guestRole.Id)
+                {
+                    userRole.RoleId = memberRole.Id;
+                    _context.UserRoles.Update(userRole);
+                }
+                if(userRole.RoleId == roleUser.Id)
                 {
                     userRole.RoleId = memberRole.Id;
                     _context.UserRoles.Update(userRole);
