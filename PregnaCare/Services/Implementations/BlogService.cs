@@ -46,6 +46,9 @@ namespace PregnaCare.Services.Implementations
 
             var blog = Mapper.MapToBlog(request);
             blog.Id = Guid.NewGuid();
+            blog.Type = request.Type;
+            blog.Status = request.Status;
+            blog.SharedChartData = request.SharedChartData;
             blog.CreatedAt = DateTime.Now;
             blog.UpdatedAt = DateTime.Now;
             blog.IsDeleted = false;
@@ -96,6 +99,9 @@ namespace PregnaCare.Services.Implementations
             blog.Heading = request.Heading;
             blog.PageTitle = request.PageTitle;
             blog.UpdatedAt = DateTime.Now;
+            blog.Type = request.Type;
+            blog.Status = request.Status;
+            blog.SharedChartData = request.SharedChartData;
             blog.IsVisible = request.IsVisible;
 
             _blogRepository.Update(blog);
