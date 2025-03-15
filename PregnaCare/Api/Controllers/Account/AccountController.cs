@@ -25,6 +25,18 @@ namespace PregnaCare.Api.Controllers.Account
 
             return Ok(result);
         }
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetMemberWithPLanDetail(Guid userId)
+        {
+            var result = await _accountService.GetMemberInforWithPlanDetail(userId);
+
+            if (!result.Success)
+            {
+                return NotFound(new { message = result.Message });
+            }
+
+            return Ok(result);
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserInformation(Guid id, [FromBody] UpdateAccountRequest request)
         {
