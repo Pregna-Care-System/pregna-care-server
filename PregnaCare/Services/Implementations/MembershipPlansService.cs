@@ -156,5 +156,10 @@ namespace PregnaCare.Services.Implementations
                 Message = "Updated successfully"
             };
         }
+
+        public async Task UpgradeGuestToMemberWithFreePlanAsync(Guid userId)
+        {
+            await _repo.UpgradeGuestToMemberWithFreePlanAsync(userId);
+        }
     }
 }
