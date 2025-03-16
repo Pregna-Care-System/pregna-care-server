@@ -19,6 +19,7 @@ namespace PregnaCare.Core.Repositories.Implementations
             var blogList = await _context.Blogs.Where(b => b.IsDeleted == false && b.IsVisible == true)
                 .Select(blog => new BlogDTO
                 {
+                    id = blog.Id,
                     UserId = blog.UserId,
                     PageTitle = blog.PageTitle,
                     Heading = blog.Heading,
@@ -26,7 +27,9 @@ namespace PregnaCare.Core.Repositories.Implementations
                     ShortDescription = blog.ShortDescription,
                     FeaturedImageUrl = blog.FeaturedImageUrl,
                     IsVisible = blog.IsVisible,
-
+                    SharedChartData = blog.SharedChartData,
+                    Status = blog.Status,
+                    Type = blog.Type,
                     Tags = _context.BlogTags
                                 .Where(bt => bt.BlogId == blog.Id && bt.IsDeleted == false)
                                 .Join(_context.Tags, bt => bt.TagId, t => t.Id, (bt, t) => new TagDTO
@@ -46,6 +49,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                 .Where(b => b.IsDeleted == false && b.UserId == userId)
                 .Select(blog => new BlogDTO
                 {
+                    id = blog.Id,
                     UserId = blog.UserId,
                     PageTitle = blog.PageTitle,
                     Heading = blog.Heading,
@@ -53,7 +57,9 @@ namespace PregnaCare.Core.Repositories.Implementations
                     ShortDescription = blog.ShortDescription,
                     FeaturedImageUrl = blog.FeaturedImageUrl,
                     IsVisible = blog.IsVisible,
-
+                    SharedChartData = blog.SharedChartData,
+                    Status = blog.Status,
+                    Type = blog.Type,
                     Tags = _context.BlogTags
                                 .Where(bt => bt.BlogId == blog.Id && bt.IsDeleted == false)
                                 .Join(_context.Tags, bt => bt.TagId, t => t.Id, (bt, t) => new TagDTO

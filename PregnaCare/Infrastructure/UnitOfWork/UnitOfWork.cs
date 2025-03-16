@@ -58,5 +58,10 @@ namespace PregnaCare.Infrastructure.UnitOfWork
         {
             _ = await _pregnaCareAppDbContext.SaveChangesAsync();
         }
+
+        //private void SetCommonValue()
+        //{
+        //    var added
+        //}
     }
 }

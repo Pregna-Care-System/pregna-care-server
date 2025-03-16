@@ -1,9 +1,6 @@
-﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
-using PregnaCare.Api.Models.Requests.TagRequestModel;
-using PregnaCare.Api.Models.Responses.BlogResponseModel;
+﻿using PregnaCare.Api.Models.Requests.TagRequestModel;
 using PregnaCare.Api.Models.Responses.TagResponseModel;
 using PregnaCare.Common.Mappers;
-using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -67,7 +64,7 @@ namespace PregnaCare.Services.Implementations
             tag.Name = request.Name;
             tag.UpdatedAt = DateTime.Now;
 
-             _tagRepository.Update(tag);
+            _tagRepository.Update(tag);
             await _unitOfWork.SaveChangesAsync();
             return new TagResponse
             {

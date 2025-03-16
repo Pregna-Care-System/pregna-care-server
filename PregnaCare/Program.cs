@@ -39,10 +39,10 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<IUserMembershipPlanRepository, UserMembershipPlanRepository>();
             _ = builder.Services.AddScoped<IReminderRepository, ReminderRepository>();
             _ = builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
-            builder.Services.AddScoped<IBlogRepository, BlogRepository>();
-            builder.Services.AddScoped<ITagRepository, TagRepository>();
-            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-
+            _ = builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+            _ = builder.Services.AddScoped<ITagRepository, TagRepository>();
+            _ = builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            _ = builder.Services.AddScoped<IBlogTagRepository, BlogTagRepository>();
             _ = builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             _ = builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -64,6 +64,8 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<IReminderService, ReminderService>();
             _ = builder.Services.AddScoped<IMotherInfoService, MotherInfoService>();
             _ = builder.Services.AddScoped<IStatisticsService, StatisticsService>();
+            _ = builder.Services.AddScoped<IFAQCategoryService, FAQCategoryService>();
+            _ = builder.Services.AddScoped<IFAQService, FAQService>();
 
             _ = builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
             _ = builder.Services.AddHttpClient<IChatGeminiService, ChatGeminiService>();
@@ -71,10 +73,9 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<IReminderNotificationService, ReminderNotificationService>();
             _ = builder.Services.AddHostedService<ReminderBackgroundService>();
             _ = builder.Services.AddScoped<INotificationService, NotificationService>();
-            builder.Services.AddScoped<IBlogService, BlogService>();
-            builder.Services.AddScoped<ITagService, TagService>();
-            builder.Services.AddScoped<ICommentService, CommentService>();
-
+            _ = builder.Services.AddScoped<IBlogService, BlogService>();
+            _ = builder.Services.AddScoped<ITagService, TagService>();
+            _ = builder.Services.AddScoped<ICommentService, CommentService>();
             _ = builder.Services.AddSignalR();
 
             // Config identity

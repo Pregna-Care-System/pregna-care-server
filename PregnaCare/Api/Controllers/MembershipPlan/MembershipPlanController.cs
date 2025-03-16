@@ -71,5 +71,16 @@ namespace PregnaCare.Api.Controllers.MembershipPlan
             return Ok(response);
         }
 
+        [HttpPut("{id}")]
+        public async Task UpgradeGuestToMember(Guid id)
+        {
+            await _planService.UpgradeGuestToMemberWithFreePlanAsync(id);
+        }
+        [HttpGet("Has-free-plan/{userId}")]
+        public async Task<IActionResult> HasFreePlan(Guid userId)
+        {
+            var hasFreePlan = await _planService.HasFreePlanAsync(userId);
+            return Ok(new {hasFreePlan});
+        }
     }
 }

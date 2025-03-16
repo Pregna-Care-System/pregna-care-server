@@ -60,14 +60,14 @@ namespace PregnaCare.Common.Mappers
             {
                 Content = blogRequest.Content,
                 FeaturedImageUrl = blogRequest.FeaturedImageUrl,
-                Heading = blogRequest.Heading, 
+                Heading = blogRequest.Heading,
                 PageTitle = blogRequest.PageTitle,
                 ShortDescription = blogRequest.ShortDescription,
                 IsVisible = blogRequest.IsVisible,
                 UserId = blogRequest.UserId,
             };
         }
-        
+
         public static Comment MapToComment(CreateCommentRequest request)
         {
             return new Comment

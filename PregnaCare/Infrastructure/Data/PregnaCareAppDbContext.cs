@@ -54,6 +54,12 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
+    public virtual DbSet<Reaction> Reactions { get; set; }
+
+    public DbSet<FAQ> FAQs { get; set; }
+
+    public DbSet<FAQCategory> FAQCategories { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         _ = modelBuilder.Entity<Blog>(entity =>
@@ -322,8 +328,6 @@ public partial class PregnaCareAppDbContext : DbContext
 
             _ = entity.ToTable("MotherInfo");
 
-            _ = entity.HasIndex(e => e.PregnancyRecordId, "UQ__MotherIn__06D3067E0B86D5C8").IsUnique();
-
             _ = entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             _ = entity.Property(e => e.BloodType)
                 .HasMaxLength(2)
@@ -340,9 +344,10 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
-            _ = entity.HasOne(d => d.PregnancyRecord).WithOne(p => p.MotherInfo)
-                .HasForeignKey<MotherInfo>(d => d.PregnancyRecordId)
-                .HasConstraintName("FK__MotherInf__Pregn__719CDDE7");
+            _ = entity.HasMany(m => m.PregnancyRecords)
+                .WithOne(p => p.MotherInfo)
+                .HasForeignKey(p => p.Id)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         _ = modelBuilder.Entity<Notification>(entity =>
@@ -392,9 +397,10 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
-            _ = entity.HasOne(d => d.User).WithMany(p => p.PregnancyRecords)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Pregnancy__UserI__656C112C");
+            _ = entity.HasOne(d => d.MotherInfo)
+                      .WithMany(p => p.PregnancyRecords)
+                      .HasForeignKey(d => d.MotherInfoId)
+                      .HasConstraintName("FK__Pregnancy__MotherInfoI__656C112C");
         });
 
         _ = modelBuilder.Entity<Reminder>(entity =>
@@ -524,6 +530,11 @@ public partial class PregnaCareAppDbContext : DbContext
             _ = entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+
+            _ = entity.HasOne(u => u.MotherInfo)
+                      .WithOne(m => m.User)
+                      .HasForeignKey<MotherInfo>(m => m.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
         });
 
         _ = modelBuilder.Entity<UserMembershipPlan>(entity =>
@@ -606,6 +617,26 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__UserRole__UserId__5DCAEF64");
         });
+
+        _ = modelBuilder.Entity<FAQ>()
+                    .HasOne(f => f.Category)
+                    .WithMany(c => c.FAQs)
+                    .HasForeignKey(f => f.CategoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<FAQ>()
+                    .Property(f => f.Question)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+        _ = modelBuilder.Entity<FAQ>()
+                    .Property(f => f.Answer)
+                    .IsRequired();
+
+        _ = modelBuilder.Entity<FAQCategory>()
+                    .Property(c => c.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
         OnModelCreatingPartial(modelBuilder);
     }

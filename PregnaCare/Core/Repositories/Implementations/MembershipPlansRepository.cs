@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PregnaCare.Common.Enums;
 using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
@@ -25,8 +26,8 @@ namespace PregnaCare.Core.Repositories.Implementations
                     Id = Guid.NewGuid(),
                     MembershipPlanId = plan.Id,
                     FeatureId = featureId,
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.Now,
+                    UpdatedAt = DateTime.Now
                 };
                 _ = _context.MembershipPlanFeatures.Add(planFeature);
             }
@@ -42,12 +43,12 @@ namespace PregnaCare.Core.Repositories.Implementations
             if (plan != null)
             {
                 plan.IsDeleted = true;
-                plan.UpdatedAt = DateTime.UtcNow;
+                plan.UpdatedAt = DateTime.Now;
 
                 foreach (var planFeature in plan.MembershipPlanFeatures)
                 {
                     planFeature.IsDeleted = true;
-                    planFeature.UpdatedAt = DateTime.UtcNow;
+                    planFeature.UpdatedAt = DateTime.Now;
                 }
             }
 
@@ -151,7 +152,7 @@ namespace PregnaCare.Core.Repositories.Implementations
             existingPlan.Price = plan.Price;
             existingPlan.Duration = plan.Duration;
             existingPlan.Description = plan.Description;
-            existingPlan.UpdatedAt = DateTime.UtcNow;
+            existingPlan.UpdatedAt = DateTime.Now;
             existingPlan.ImageUrl = plan.ImageUrl;
             // Tìm các FeatureIds đã tồn tại trong MembershipPlan
             var existingFeatureIds = existingPlan.MembershipPlanFeatures
@@ -165,7 +166,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                 .ForEach(mpf =>
                 {
                     mpf.IsDeleted = true;
-                    mpf.UpdatedAt = DateTime.UtcNow;
+                    mpf.UpdatedAt = DateTime.Now;
                 });
 
             var newFeatureIds = featureIds.Except(existingFeatureIds);
@@ -174,8 +175,8 @@ namespace PregnaCare.Core.Repositories.Implementations
                 Id = Guid.NewGuid(),
                 MembershipPlanId = plan.Id,
                 FeatureId = featureId,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now
             });
 
             await _context.MembershipPlanFeatures.AddRangeAsync(newFeatures);
@@ -198,6 +199,71 @@ namespace PregnaCare.Core.Repositories.Implementations
                 .Select(mp => mp.PlanName)
                 .FirstOrDefaultAsync();
             return planName ?? "No Plan";
+        }
+        public async Task UpgradeGuestToMemberWithFreePlanAsync(Guid userId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+                throw new Exception("User not found.");
+
+            // Lấy Role 'Member'
+            var memberRole = _context.Roles.FirstOrDefault(x => x.RoleName == RoleEnum.Member.ToString());
+            if (memberRole == null)
+                throw new Exception("Member role not found.");
+
+            // Kiểm tra nếu user hiện tại là Guest và User
+            var userRole = await _context.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == userId);
+            if (userRole != null)
+            {
+                var guestRole = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == RoleEnum.Guest.ToString());
+                var roleUser = await _context.Roles.FirstOrDefaultAsync(ur => ur.RoleName == RoleEnum.User.ToString());
+                if (userRole.RoleId == guestRole.Id)
+                {
+                    userRole.RoleId = memberRole.Id;
+                    _ = _context.UserRoles.Update(userRole);
+                }
+                if (userRole.RoleId == roleUser.Id)
+                {
+                    userRole.RoleId = memberRole.Id;
+                    _ = _context.UserRoles.Update(userRole);
+                }
+            }
+
+            // Lấy gói Membership Free
+            var freePlan = await _context.MembershipPlans.FirstOrDefaultAsync(p => p.PlanName == PlanEnum.FreePlan.ToString());
+            if (freePlan == null)
+                throw new Exception("Free membership plan not found.");
+
+            // Kiểm tra nếu user đã có gói Free
+            var existingMembership = await _context.UserMembershipPlans
+                .FirstOrDefaultAsync(ump => ump.UserId == userId && ump.MembershipPlanId == freePlan.Id);
+
+            if (existingMembership == null)
+            {
+                var userMembership = new UserMembershipPlan
+                {
+                    UserId = userId,
+                    MembershipPlanId = freePlan.Id,
+                    ExpiryDate = DateTime.UtcNow.AddDays(3),
+                    IsActive = true,
+                    Status = StatusEnum.Completed.ToString()
+                };
+                _ = await _context.UserMembershipPlans.AddAsync(userMembership);
+            }
+
+            _ = await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> HasFreePlanAsync(Guid userId)
+        {
+            var freePlan = await _context.MembershipPlans.FirstOrDefaultAsync(mp => mp.PlanName == PlanEnum.FreePlan.ToString());
+            if(freePlan == null)
+            {
+                throw new Exception("Free Plan is not found");
+            }
+            var hasFreePlan = await _context.UserMembershipPlans.AnyAsync(ump => ump.MembershipPlanId == freePlan.Id && ump.UserId == userId && ump.IsActive == false);
+
+            return hasFreePlan;
         }
     }
 }

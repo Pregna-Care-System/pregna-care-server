@@ -22,10 +22,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             _service = service;
         }
 
-        [HttpGet("/api/v1/User/{userId}/[controller]")]
-        public async Task<IActionResult> GetAllPregancyRecordsByUserId([FromRoute] Guid userId)
+        [HttpGet("/api/v1/User/{motherInfoId}/[controller]")]
+        public async Task<IActionResult> GetAllPregancyRecordsByMotherInfoId([FromRoute] Guid motherInfoId)
         {
-            var response = (await _service.GetAllPregnancyRecords(userId)).Select(x => new SelectPregnancyRecordResponse
+            var response = (await _service.GetAllPregnancyRecords(motherInfoId)).Select(x => new SelectPregnancyRecordResponse
             {
                 Id = x.Id,
                 BabyName = x.BabyName,
@@ -55,10 +55,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             });
         }
 
-        [HttpGet("/api/v1/User/{userId}/[controller]/{pregnancyRecordId}")]
-        public async Task<IActionResult> GetPregnancyRecordById([FromRoute] Guid userId, [FromRoute] Guid pregnancyRecordId)
+        [HttpGet("{pregnancyRecordId}")]
+        public async Task<IActionResult> GetPregnancyRecordById([FromRoute] Guid pregnancyRecordId)
         {
-            var entity = (await _service.GetPregnancyRecordById(userId, pregnancyRecordId));
+            var entity = (await _service.GetPregnancyRecordById(pregnancyRecordId));
             var response = new SelectPregnancyRecordResponse
             {
                 Id = entity.Id,
@@ -98,10 +98,10 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdatePregnancyRecord([FromBody] UpdatePregnancyRecordRequest request)
+        [HttpPut("{pregnancyRecordId}")]
+        public async Task<IActionResult> UpdatePregnancyRecord([FromRoute] Guid pregnancyRecordId, [FromBody] UpdatePregnancyRecordRequest request)
         {
-            var response = await _service.UpdatePregnancyRecord(request);
+            var response = await _service.UpdatePregnancyRecord(pregnancyRecordId, request);
 
             if (!response.Success) return BadRequest(response);
             return Ok(response);

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PregnaCare.Api.Models.Responses.StatisticsResponseModel;
+using PregnaCare.Common.Constants;
 using PregnaCare.Common.Enums;
 using PregnaCare.Infrastructure.Data;
 using PregnaCare.Services.Interfaces;
@@ -222,5 +223,41 @@ namespace PregnaCare.Services.Implementations
             return groupedData;
         }
 
+        public async Task<FetalGrowthStatsResponse> GetFetalGrowthStatsResponse(Guid pregnancyRecordId)
+        {
+            var response = new FetalGrowthStatsResponse { Success = false };
+            var fetalGrowthRecords = _context.FetalGrowthRecords.AsNoTracking()
+                                                                .Where(x => x.PregnancyRecordId == pregnancyRecordId && x.IsDeleted == false);
+
+            var query = from f in fetalGrowthRecords
+                        join g in _context.GrowthMetrics.AsNoTracking().Where(x => x.IsDeleted == false)
+                        on new { f.Name, f.Week } equals new { g.Name, g.Week }
+                        group new { f, g } by new { f.Name, f.Week } into groupedData
+                        select new FetalGrowthStats
+                        {
+                            MetricName = groupedData.Key.Name,
+                            Week = groupedData.Key.Week ?? 0,
+                            MetricResponseList = groupedData.Select(x => new MetricResponse
+                            {
+                                CurrentValue = x.f.Value ?? 0,
+                                MinValue = x.g.MinValue ?? 0,
+                                MaxValue = x.g.MaxValue ?? 0,
+                            }).ToList()
+                        };
+
+            var responseList = await query.OrderBy(x => x.MetricName).OrderBy(x => x.Week).ToListAsync();
+            if (responseList.Count == 0)
+            {
+                response.MessageId = Messages.E00013;
+                response.Message = Messages.GetMessageById(Messages.E00013);
+                return response;
+            }
+
+            response.Success = true;
+            response.MessageId = Messages.I00001;
+            response.Message = Messages.GetMessageById(Messages.I00001);
+            response.Response = responseList;
+            return response;
+        }
     }
 }

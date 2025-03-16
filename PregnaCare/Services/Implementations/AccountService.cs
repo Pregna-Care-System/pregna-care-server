@@ -38,6 +38,24 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
+        public async Task<AccountResponse> GetMemberInforWithPlanDetail(Guid userId)
+        {
+            var user = await _repo.GetMemberInforWithPlanDetail(userId);
+            if (user == null)
+            {
+                return new AccountResponse
+                {
+                    Success = false,
+                    Message = "Cannt find member"
+                };
+            }
+            return new AccountResponse
+            {
+                Success = true,
+                Response = user
+            };
+        }
+
         public async Task<AccountResponse> GetUserById(Guid id)
         {
             var existingAccount = await _repo.GetByIdAsync(id);

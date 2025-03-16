@@ -55,7 +55,7 @@ namespace PregnaCare.Api.Controllers.Feature
         public async Task<IActionResult> GetAllFeaturesByUserId([FromQuery] Guid userId)
         {
             var responseList = await _featureService.GetAllFeaturesByUserIdAsync(userId);
-            if (responseList.Any())
+            if (responseList != null && responseList.Any())
             {
                 return Ok(new
                 {

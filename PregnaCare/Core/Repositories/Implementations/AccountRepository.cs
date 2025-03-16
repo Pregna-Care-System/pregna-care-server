@@ -80,6 +80,45 @@ namespace PregnaCare.Core.Repositories.Implementations
             return members.Any() ? members : null;
         }
 
+        public async Task<AccountDTO> GetMemberInforWithPlanDetail(Guid userId)
+        {
+            DateTime currentDate = DateTime.UtcNow;
+
+            var member = await _appDbContext.Users
+                .Where(u => u.IsDeleted == false && u.UserRoles.Any(ur => ur.Role.RoleName == "Member") && u.Id == userId)
+                .Include(u => u.UserMembershipPlans)
+                    .ThenInclude(ump => ump.MembershipPlan)
+                .Select(u => new AccountDTO
+                {
+                    Id = u.Id,
+                    FullName = u.FullName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    Gender = u.Gender,
+                    DateOfBirth = u.DateOfBirth,
+                    Address = u.Address,
+                    ImageUrl = u.ImageUrl,
+                    CreatedAt = u.CreatedAt,
+                    UpdatedAt = u.UpdatedAt,
+                    IsDeleted = u.IsDeleted,
+                    IsActive = u.UserMembershipPlans
+                        .Select(ump => ump.IsActive)
+                        .FirstOrDefault(),
+                    PlanName = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
+                        .Select(ump => ump.MembershipPlan.PlanName)
+                        .FirstOrDefault() ?? "No Plan",
+                    remainingDate = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
+                        .Select(ump => ump.ExpiryDate.HasValue
+                            ? (ump.ExpiryDate.Value - DateTime.UtcNow).Days
+                            : (int?)null)
+                        .FirstOrDefault() ?? 0
+                })
+                .FirstOrDefaultAsync();
+
+            return member;
+        }
 
     }
 }

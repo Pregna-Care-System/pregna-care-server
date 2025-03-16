@@ -228,5 +228,13 @@ namespace PregnaCare.Api.Controllers.Statistics
                 Message = Messages.GetMessageById(Messages.E00013),
             });
         }
+
+        [HttpGet("/api/v1/PregnancyRecord/{pregnancyRecordId}/FetalGrowthStats")]
+        public async Task<IActionResult> GetFetalGrowthStats([FromRoute] Guid pregnancyRecordId)
+        {
+            var response = await _statisticsService.GetFetalGrowthStatsResponse(pregnancyRecordId);
+            if (response.Success) return Ok(response);
+            return BadRequest(response);
+        }
     }
 }

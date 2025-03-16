@@ -41,7 +41,6 @@ namespace PregnaCare.Services.Implementations
             }
 
             var severity = GetSeverity(record.Value, growthMetric.MinValue, growthMetric.MaxValue);
-            if (severity == SeverityEnum.Normal) return SeverityEnum.Normal.ToString();
 
             var issuePrompt = $@"
                                A new fetal growth record has been added with the following detail:

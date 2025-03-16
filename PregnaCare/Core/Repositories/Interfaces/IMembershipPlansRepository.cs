@@ -14,5 +14,7 @@ namespace PregnaCare.Core.Repositories.Interfaces
         Task DeletePlanAsync(Guid planId);
         Task Update(MembershipPlan plan, List<Guid> featureIds);
         Task<string> GetMostUsedPlanNameAsync();
+        Task UpgradeGuestToMemberWithFreePlanAsync(Guid userId);
+        Task<bool> HasFreePlanAsync(Guid userId);
     }
 }
