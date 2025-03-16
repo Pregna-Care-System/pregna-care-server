@@ -3,6 +3,7 @@ using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
+using PregnaCare.Utils;
 
 namespace PregnaCare.Core.Repositories.Implementations
 {
@@ -16,7 +17,10 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogAsync()
         {
-            var blogList = await _context.Blogs.Where(b => b.IsDeleted == false && b.IsVisible == true).Include(x => x.User)
+            var blogList = await _context.Blogs
+                .Where(b => b.IsDeleted == false && b.IsVisible == true).Include(x => x.User)
+                .OrderByDescending(b => b.UpdatedAt)
+                .ThenByDescending(b => b.CreatedAt)
                 .Select(blog => new BlogDTO
                 {
                     Id = blog.Id,
@@ -31,6 +35,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     SharedChartData = blog.SharedChartData,
                     Status = blog.Status,
                     Type = blog.Type,
+                    TimeAgo = CommonUtils.GetTimeAgo(blog.UpdatedAt.Value),
                     Tags = _context.BlogTags
                                 .Where(bt => bt.BlogId == blog.Id && bt.IsDeleted == false)
                                 .Join(_context.Tags, bt => bt.TagId, t => t.Id, (bt, t) => new TagDTO
@@ -48,6 +53,8 @@ namespace PregnaCare.Core.Repositories.Implementations
         {
             var blogList = await _context.Blogs
                 .Where(b => b.IsDeleted == false && b.UserId == userId)
+                .OrderByDescending(b => b.UpdatedAt)
+                .ThenByDescending(b => b.CreatedAt)
                 .Include(x => x.User)
                 .Select(blog => new BlogDTO
                 {
@@ -63,6 +70,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     SharedChartData = blog.SharedChartData,
                     Status = blog.Status,
                     Type = blog.Type,
+                    TimeAgo = CommonUtils.GetTimeAgo(blog.UpdatedAt.Value),
                     Tags = _context.BlogTags
                                 .Where(bt => bt.BlogId == blog.Id && bt.IsDeleted == false)
                                 .Join(_context.Tags, bt => bt.TagId, t => t.Id, (bt, t) => new TagDTO
