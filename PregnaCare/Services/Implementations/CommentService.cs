@@ -117,6 +117,8 @@ namespace PregnaCare.Services.Implementations
             {
                 var childComments = comment.InverseParentComment
                     .Where(c => c.IsDeleted != true)
+                    .OrderByDescending(c => c.UpdatedAt)
+                    .ThenByDescending(c => c.CreatedAt)
                     .ToList();
 
                 foreach (var childComment in childComments)
