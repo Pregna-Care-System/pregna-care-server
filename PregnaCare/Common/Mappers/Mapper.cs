@@ -1,6 +1,7 @@
 ﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
 using PregnaCare.Api.Models.Requests.CommentBlogRequestModel;
 using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+using PregnaCare.Api.Models.Requests.FeedBackRequestModel;
 using PregnaCare.Api.Models.Requests.TagRequestModel;
 using PregnaCare.Api.Models.Requests.UserMembersipPlanRequestModel;
 using PregnaCare.Core.DTOs;
@@ -94,6 +95,15 @@ namespace PregnaCare.Common.Mappers
                     FeatureDescription = x.Feature.Description
                 }).ToList()
             };
+        }
+        public static FeedBack MapToFeedBack(FeedbackRequest request)
+        {
+            return new FeedBack
+            {
+                Content = request.Content,
+                Rating = request.Rating,
+            };
+         
         }
     }
 }
