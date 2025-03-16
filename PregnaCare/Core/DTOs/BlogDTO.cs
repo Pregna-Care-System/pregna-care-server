@@ -1,6 +1,4 @@
-﻿using PregnaCare.Common.Enums;
-
-namespace PregnaCare.Core.DTOs
+﻿namespace PregnaCare.Core.DTOs
 {
     public class BlogDTO
     {

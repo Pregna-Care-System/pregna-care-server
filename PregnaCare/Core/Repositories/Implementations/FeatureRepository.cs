@@ -26,14 +26,14 @@ namespace PregnaCare.Core.Repositories.Implementations
             var exiredMemberships = await _appDbContext.UserMembershipPlans.
                 Where(x => x.ExpiryDate <= DateTime.Now && x.IsActive == true && x.IsDeleted == false).ToListAsync();
             //update active
-            foreach(var membership in exiredMemberships)
+            foreach (var membership in exiredMemberships)
             {
                 membership.IsActive = false;
-                
+
                 // assign guest role 
                 var userRole = await _appDbContext.UserRoles.FirstOrDefaultAsync(ur => ur.UserId == membership.UserId);
 
-                if(userRole != null)
+                if (userRole != null)
                 {
                     var guestRole = await _appDbContext.Roles
                 .FirstOrDefaultAsync(r => r.RoleName == RoleEnum.Guest.ToString());
@@ -44,7 +44,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     }
                 }
             }
-            await _appDbContext.SaveChangesAsync();
+            _ = await _appDbContext.SaveChangesAsync();
             // retrieve active membership plans for the user 
             var membershipPlansByUserId = _appDbContext.UserMembershipPlans
                                                       .AsNoTracking()

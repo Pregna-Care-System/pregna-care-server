@@ -58,7 +58,7 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            foreach(var createEntity in request.CreateFetalGrowthRecordEntities)
+            foreach (var createEntity in request.CreateFetalGrowthRecordEntities)
             {
                 var isExisted = _context.FetalGrowthRecords.AsNoTracking().FirstOrDefault(x => x.Name == createEntity.Name && x.Week == request.Week && x.IsDeleted == false) != null;
 

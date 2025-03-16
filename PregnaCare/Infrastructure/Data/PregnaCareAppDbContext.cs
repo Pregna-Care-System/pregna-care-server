@@ -56,6 +56,10 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public virtual DbSet<Reaction> Reactions { get; set; }
 
+    public DbSet<FAQ> FAQs { get; set; }
+
+    public DbSet<FAQCategory> FAQCategories { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         _ = modelBuilder.Entity<Blog>(entity =>
@@ -613,6 +617,26 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK__UserRole__UserId__5DCAEF64");
         });
+
+        _ = modelBuilder.Entity<FAQ>()
+                    .HasOne(f => f.Category)
+                    .WithMany(c => c.FAQs)
+                    .HasForeignKey(f => f.CategoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+        _ = modelBuilder.Entity<FAQ>()
+                    .Property(f => f.Question)
+                    .IsRequired()
+                    .HasMaxLength(500);
+
+        _ = modelBuilder.Entity<FAQ>()
+                    .Property(f => f.Answer)
+                    .IsRequired();
+
+        _ = modelBuilder.Entity<FAQCategory>()
+                    .Property(c => c.Name)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
         OnModelCreatingPartial(modelBuilder);
     }

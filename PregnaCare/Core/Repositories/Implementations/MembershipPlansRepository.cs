@@ -4,7 +4,6 @@ using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.Data;
-using PregnaCare.Common.Enums;
 
 namespace PregnaCare.Core.Repositories.Implementations
 {
@@ -221,12 +220,12 @@ namespace PregnaCare.Core.Repositories.Implementations
                 if (userRole.RoleId == guestRole.Id)
                 {
                     userRole.RoleId = memberRole.Id;
-                    _context.UserRoles.Update(userRole);
+                    _ = _context.UserRoles.Update(userRole);
                 }
-                if(userRole.RoleId == roleUser.Id)
+                if (userRole.RoleId == roleUser.Id)
                 {
                     userRole.RoleId = memberRole.Id;
-                    _context.UserRoles.Update(userRole);
+                    _ = _context.UserRoles.Update(userRole);
                 }
             }
 
@@ -249,10 +248,10 @@ namespace PregnaCare.Core.Repositories.Implementations
                     IsActive = true,
                     Status = StatusEnum.Completed.ToString()
                 };
-                await _context.UserMembershipPlans.AddAsync(userMembership);
+                _ = await _context.UserMembershipPlans.AddAsync(userMembership);
             }
 
-            await _context.SaveChangesAsync();
+            _ = await _context.SaveChangesAsync();
         }
     }
 }
