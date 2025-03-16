@@ -1,6 +1,8 @@
 ﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
 using PregnaCare.Api.Models.Responses.BlogResponseModel;
+using PregnaCare.Common.Constants;
 using PregnaCare.Common.Mappers;
+using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
@@ -30,14 +32,18 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
-        public async Task<BlogResponse> GetBlogById(Guid id)
+        public async Task<SelectDetailBlogResponse> GetBlogById(Guid id)
         {
-            var blog = await _blogRepository.GetByIdAsync(id);
-            return new BlogResponse
-            {
-                Success = true,
-                Response = blog
-            };
+            var response = new SelectDetailBlogResponse() { Success = false };
+            var blogs = await _blogRepository.GetAllActiveBlogAsync();
+
+            var responseEntity = blogs.FirstOrDefault(x => x.Id == id);
+
+            response.Success = true;
+            response.MessageId = Messages.I00001;
+            response.Message = Messages.GetMessageById(Messages.I00001);
+            response.Response = responseEntity;
+            return response;
         }
 
         public async Task<BlogResponse> CreateBlog(BlogRequest request, List<Guid> tagIds)

@@ -16,11 +16,12 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogAsync()
         {
-            var blogList = await _context.Blogs.Where(b => b.IsDeleted == false && b.IsVisible == true)
+            var blogList = await _context.Blogs.Where(b => b.IsDeleted == false && b.IsVisible == true).Include(x => x.User)
                 .Select(blog => new BlogDTO
                 {
-                    id = blog.Id,
+                    Id = blog.Id,
                     UserId = blog.UserId,
+                    FullName = blog.User.FullName,
                     PageTitle = blog.PageTitle,
                     Heading = blog.Heading,
                     Content = blog.Content,
@@ -47,10 +48,12 @@ namespace PregnaCare.Core.Repositories.Implementations
         {
             var blogList = await _context.Blogs
                 .Where(b => b.IsDeleted == false && b.UserId == userId)
+                .Include(x => x.User)
                 .Select(blog => new BlogDTO
                 {
-                    id = blog.Id,
+                    Id = blog.Id,
                     UserId = blog.UserId,
+                    FullName = blog.User.FullName,
                     PageTitle = blog.PageTitle,
                     Heading = blog.Heading,
                     Content = blog.Content,
