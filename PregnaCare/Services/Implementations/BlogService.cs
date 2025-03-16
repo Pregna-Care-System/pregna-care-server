@@ -106,7 +106,6 @@ namespace PregnaCare.Services.Implementations
             blog.PageTitle = request.PageTitle;
             blog.UpdatedAt = DateTime.Now;
             blog.Type = request.Type;
-            blog.Status = request.Status;
             blog.SharedChartData = request.SharedChartData;
             blog.IsVisible = request.IsVisible;
 
