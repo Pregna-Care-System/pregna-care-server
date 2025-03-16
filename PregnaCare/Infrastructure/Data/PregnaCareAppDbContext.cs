@@ -60,6 +60,8 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public DbSet<FAQCategory> FAQCategories { get; set; }
 
+    public DbSet<FeedBack> FeedBacks { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         _ = modelBuilder.Entity<Blog>(entity =>
@@ -637,6 +639,34 @@ public partial class PregnaCareAppDbContext : DbContext
                     .Property(c => c.Name)
                     .IsRequired()
                     .HasMaxLength(100);
+
+        _ = modelBuilder.Entity<FeedBack>(entity =>
+        {
+            _ = entity.HasKey(e => e.Id);
+
+            _ = entity.Property(e => e.UserId)
+                  .IsRequired();
+
+            _ = entity.Property(e => e.Rating)
+                  .IsRequired();
+
+            _ = entity.Property(e => e.Content);
+
+            _ = entity.Property(e => e.CreatedAt)
+                  .IsRequired()
+                  .HasDefaultValueSql("GETDATE()");
+
+            _ = entity.Property(e => e.UpdatedAt);
+
+            _ = entity.Property(e => e.IsDeleted)
+                  .IsRequired()
+                  .HasDefaultValue(false);
+
+            entity.HasOne(e => e.User)
+                  .WithMany(u => u.Feedbacks)
+                  .HasForeignKey(e => e.UserId)
+                  .OnDelete(DeleteBehavior.Restrict);
+        });
 
         OnModelCreatingPartial(modelBuilder);
     }
