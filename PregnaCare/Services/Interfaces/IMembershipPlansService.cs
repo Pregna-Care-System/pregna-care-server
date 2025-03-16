@@ -13,5 +13,6 @@ namespace PregnaCare.Services.Interfaces
         Task<MembershipPlanResponse> DeletePlanAsync(Guid id);
         Task<string> GetMostUsedPlanNameAsync();
         Task UpgradeGuestToMemberWithFreePlanAsync(Guid userId);
+        Task<bool> HasFreePlanAsync(Guid userId);
     }
 }

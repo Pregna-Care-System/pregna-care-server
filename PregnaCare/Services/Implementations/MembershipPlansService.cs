@@ -125,6 +125,11 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
+        public async Task<bool> HasFreePlanAsync(Guid userId)
+        {
+            return await _repo.HasFreePlanAsync(userId);
+        }
+
         public async Task<MembershipPlanResponse> UpdatePlanAsync(Guid id, MembershipPlanRequest request, List<Guid> featureIds)
         {
             var existingPlan = await _repo.GetByIdAsync(id);
