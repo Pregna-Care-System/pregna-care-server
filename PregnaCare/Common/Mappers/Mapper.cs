@@ -75,7 +75,7 @@ namespace PregnaCare.Common.Mappers
                 CommentText = request.CommentText,
                 UserId = request.UserId,
                 BlogId = request.BlogId,
-                ParentCommentId = request.ParentCommentId,
+                ParentCommentId = string.IsNullOrEmpty(request.ParentCommentId.ToString()) ? null : request.ParentCommentId,
             };
         }
         public static MembershipPlanFeatureDTO MapToMembershipPlanDTO(MembershipPlan plan)

@@ -2,9 +2,9 @@
 {
     public class BlogDTO
     {
-        public Guid id { get; set; }
+        public Guid Id { get; set; }
         public Guid UserId { get; set; }
-
+        public string FullName { get; set; }
         public List<TagDTO> Tags { get; set; } = new List<TagDTO>();
         public string PageTitle { get; set; } = string.Empty;
 
