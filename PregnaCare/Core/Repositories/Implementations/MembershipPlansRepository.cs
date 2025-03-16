@@ -254,5 +254,17 @@ namespace PregnaCare.Core.Repositories.Implementations
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> HasFreePlanAsync(Guid userId)
+        {
+            var freePlan = await _context.MembershipPlans.FirstOrDefaultAsync(mp => mp.PlanName == PlanEnum.FreePlan.ToString());
+            if(freePlan == null)
+            {
+                throw new Exception("Free Plan is not found");
+            }
+            var hasFreePlan = await _context.UserMembershipPlans.AnyAsync(ump => ump.MembershipPlanId == freePlan.Id && ump.UserId == userId && ump.IsActive == false);
+
+            return hasFreePlan;
+        }
     }
 }
