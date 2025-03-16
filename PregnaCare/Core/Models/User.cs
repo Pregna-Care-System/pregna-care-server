@@ -38,4 +38,6 @@ public partial class User
     public virtual ICollection<UserReminder> UserReminders { get; set; } = new List<UserReminder>();
 
     public virtual ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
+
+    public virtual ICollection<FeedBack> Feedbacks { get; set; } = new List<FeedBack>();
 }
