@@ -1,9 +1,14 @@
-﻿using PregnaCare.Api.Models.Requests.CommentBlogRequestModel;
+﻿using Azure;
+using Microsoft.AspNetCore.Mvc;
+using PregnaCare.Api.Models.Requests.CommentBlogRequestModel;
 using PregnaCare.Api.Models.Responses.CommentResponseModel;
+using PregnaCare.Common.Constants;
 using PregnaCare.Common.Mappers;
+using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
+using PregnaCare.Utils;
 
 namespace PregnaCare.Services.Implementations
 {
@@ -18,7 +23,7 @@ namespace PregnaCare.Services.Implementations
             _unit = unitOfWork;
         }
 
-        public async Task<CommentResponse> CreateComment(CreateCommentRequest request)
+        public async Task<CommentResponse> CreateComment([FromBody] CreateCommentRequest request)
         {
             var comment = Mapper.MapToComment(request);
             comment.IsDeleted = false;
@@ -42,24 +47,35 @@ namespace PregnaCare.Services.Implementations
             await _unit.SaveChangesAsync();
         }
 
-        public async Task<CommentListResponse> GetAllBlogComment(Guid blogId)
+        public async Task<SelectCommentResponse> GetAllBlogComment(Guid blogId)
         {
-            var comment = await _repo.GetAllActiveCommentAsync(blogId);
-            return new CommentListResponse
-            {
-                Success = true,
-                Response = comment
-            };
+            var response = new SelectCommentResponse() { Success = false };
+
+            var allComments = await _repo.GetAllActiveCommentAsync(blogId);
+            var parentComments = allComments.Where(c => c.ParentCommentId == null).ToList();
+            var commentDictionary = allComments.ToDictionary(c => c.Id);
+            var responseEntities = parentComments.Select(x => MapCommentWithReplies(x, commentDictionary, 0, 2)).ToList();
+
+            response.Success = true;
+            response.MessageId = Messages.I00001;
+            response.Message = Messages.GetMessageById(Messages.I00001);
+            response.Response = responseEntities;
+            return response;
         }
 
-        public async Task<CommentResponse> GetCommentById(Guid id)
+        public async Task<SelectCommentResponse> GetCommentById(Guid id)
         {
-            var comment = await _repo.GetByIdAsync(id);
-            return new CommentResponse
-            {
-                Response = comment,
-                Success = true
-            };
+            var response = new SelectCommentResponse() { Success = false };
+
+            var comments = (await _repo.FindWithIncludesAsync(x => x.Id == id && x.IsDeleted == false, x => x.User)).ToList();
+            var commentDictionary = comments.ToDictionary(c => c.Id);
+            var responseEntities = comments.Select(x => MapCommentWithReplies(x, commentDictionary, 0, 2)).ToList();
+
+            response.Success = true;
+            response.MessageId = Messages.I00001;
+            response.Message = Messages.GetMessageById(Messages.I00001);
+            response.Response = responseEntities;
+            return response;
         }
 
         public async Task<CommentResponse> UpdateComment(UpdateCommentRequest request, Guid id)
@@ -76,6 +92,41 @@ namespace PregnaCare.Services.Implementations
                 Success = true,
                 Response = comment
             };
+        }
+
+        private SelectCommentEntity MapCommentWithReplies(Comment comment, Dictionary<Guid, Comment> allComments, int currentDepth, int maxDepth)
+        {
+            var commentEntity = new SelectCommentEntity
+            {
+                Id = comment.Id,
+                CommentText = comment.CommentText,
+                User = new UserBriefInfo
+                {
+                    Id = comment.User.Id,
+                    FullName = comment.User.FullName,
+                    AvatarUrl = comment.User.ImageUrl,
+                },
+                CreatedAt = comment?.CreatedAt ?? DateTime.Now,
+                UpdatedAt = comment?.UpdatedAt ?? DateTime.Now,
+                BlogId = comment.BlogId,
+                TimeAgo = CommonUtils.GetTimeAgo(comment.UpdatedAt.Value),
+                Replies = new List<SelectCommentEntity>()
+            };
+
+            if (currentDepth < maxDepth)
+            {
+                var childComments = comment.InverseParentComment
+                    .Where(c => c.IsDeleted != true)
+                    .ToList();
+
+                foreach (var childComment in childComments)
+                {
+                    var childEntity = MapCommentWithReplies(childComment, allComments, currentDepth + 1, maxDepth);
+                    commentEntity.Replies.Add(childEntity);
+                }
+            }
+
+            return commentEntity;
         }
     }
 }

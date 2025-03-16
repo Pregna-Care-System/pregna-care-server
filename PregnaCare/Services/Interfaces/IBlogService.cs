@@ -8,7 +8,7 @@ namespace PregnaCare.Services.Interfaces
     {
         Task<BlogListResponse> GetAllBlogs();
         Task<BlogListResponse> GetAllByUserIdBlogs(Guid id);
-        Task<BlogResponse> GetBlogById(Guid id);
+        Task<SelectDetailBlogResponse> GetBlogById(Guid id);
         Task<BlogResponse> CreateBlog(BlogRequest request, List<Guid> tagIds);
         Task<BlogResponse> UpdateBlog(BlogRequest request, Guid id);
         Task DeleteBlog(Guid id);

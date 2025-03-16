@@ -17,6 +17,8 @@ namespace PregnaCare.Core.Repositories.Implementations
         {
             var commentList = await _appDbContext.Comments
                 .Where(b => b.IsDeleted == false && b.BlogId == blogId)
+                .Include(x => x.InverseParentComment).ThenInclude(x => x.InverseParentComment)
+                .Include(x => x.User)
                 .ToListAsync();
             return commentList;
         }
