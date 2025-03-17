@@ -43,7 +43,7 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<ITagRepository, TagRepository>();
             _ = builder.Services.AddScoped<ICommentRepository, CommentRepository>();
             _ = builder.Services.AddScoped<IBlogTagRepository, BlogTagRepository>();
-            builder.Services.AddScoped<IFeedBackRepository, FeedBackRepository>();
+            _ = builder.Services.AddScoped<IFeedBackRepository, FeedBackRepository>();
             _ = builder.Services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
             _ = builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -67,7 +67,9 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<IStatisticsService, StatisticsService>();
             _ = builder.Services.AddScoped<IFAQCategoryService, FAQCategoryService>();
             _ = builder.Services.AddScoped<IFAQService, FAQService>();
-            builder.Services.AddScoped<IFeedBackService, FeedBackService>();
+            _ = builder.Services.AddScoped<IFeedBackService, FeedBackService>();
+            _ = builder.Services.AddScoped<IReactionService, ReactionService>();
+
             _ = builder.Services.AddHttpClient<IChatGPTService, ChatGPTService>();
             _ = builder.Services.AddHttpClient<IChatGeminiService, ChatGeminiService>();
 
