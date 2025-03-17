@@ -2,7 +2,6 @@
 using PregnaCare.Api.Models.Responses.BlogResponseModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Common.Mappers;
-using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
@@ -36,7 +35,6 @@ namespace PregnaCare.Services.Implementations
         {
             var response = new SelectDetailBlogResponse() { Success = false };
             var blogs = await _blogRepository.GetAllActiveBlogAsync();
-
             var responseEntity = blogs.FirstOrDefault(x => x.Id == id);
 
             response.Success = true;
@@ -174,6 +172,17 @@ namespace PregnaCare.Services.Implementations
                 Success = true,
                 Response = blogs
             };
+        }
+
+        public async Task<bool> IncreaseViewCount(Guid blogId)
+        {
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+            if (blog == null) return false;
+
+            blog.ViewCount++;
+            _blogRepository.Update(blog);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
     }
 }
