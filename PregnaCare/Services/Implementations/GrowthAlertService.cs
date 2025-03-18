@@ -106,6 +106,11 @@ namespace PregnaCare.Services.Implementations
             return await growthAlerts.ToListAsync();
         }
 
+        public async Task<List<GrowthAlert>> GetGrowthAlertsByPregnancyRecordId(Guid PregnancyRecordId)
+        {
+            return await _context.GrowthAlerts.AsNoTracking().Include(x => x.FetalGrowthRecord).Where(x => x.FetalGrowthRecord.PregnancyRecordId == PregnancyRecordId && x.IsDeleted == false).OrderBy(x => x.Week).ThenBy(x => x.IsResolved).ToListAsync();
+        }
+
         public async Task<bool> UpdateStatusGrowthAlert(Guid growthAlertId, string status)
         {
             var growthAlert = await _context.GrowthAlerts.FirstOrDefaultAsync(x => x.Id == growthAlertId && x.IsDeleted == false);

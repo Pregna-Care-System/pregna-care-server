@@ -9,10 +9,12 @@ namespace PregnaCare.Api.Controllers.Account
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
+
         public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetAllMember([FromQuery] string filterType = null, [FromQuery] string name = null)
         {
@@ -25,6 +27,7 @@ namespace PregnaCare.Api.Controllers.Account
 
             return Ok(result);
         }
+
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetMemberWithPLanDetail(Guid userId)
         {
@@ -37,6 +40,19 @@ namespace PregnaCare.Api.Controllers.Account
 
             return Ok(result);
         }
+
+        [HttpGet("CurrentUser/{userId}")]
+        public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
+        { 
+            var result = await _accountService.GetUserById(userId);
+            if (!result.Success)
+            {
+                return NotFound(new { message = result.Message });
+            }
+            return Ok(result);
+        }
+
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUserInformation(Guid id, [FromBody] UpdateAccountRequest request)
         {
