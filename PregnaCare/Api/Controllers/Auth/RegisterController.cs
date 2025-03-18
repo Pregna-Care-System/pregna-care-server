@@ -78,7 +78,7 @@ namespace PregnaCare.Api.Controllers.Auth
             {
                 user.EmailConfirmed = true;
                 await _authService.RemoveTokenAsync(user.Id, TokenTypeEnum.OTP.ToString());
-                return Redirect("http://localhost:3000/email-success-confirm");
+                return Redirect("http://14.225.205.143:3000/email-success-confirm");
             }
 
             return BadRequest("OTP has expired.");
