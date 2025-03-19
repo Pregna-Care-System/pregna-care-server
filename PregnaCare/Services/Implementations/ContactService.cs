@@ -127,7 +127,8 @@ namespace PregnaCare.Services.Implementations
                 Id = x.Id,
                 FullName = x.FullName,
                 Email = x.Email,
-                Message = x.Message
+                Message = x.Message,
+                CreatedAt = x.CreatedAt
             }).OrderByDescending(x => x.CreatedAt).ToList();
 
             response.Success = true;
