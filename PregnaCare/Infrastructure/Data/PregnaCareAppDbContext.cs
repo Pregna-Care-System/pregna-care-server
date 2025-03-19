@@ -62,6 +62,8 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public DbSet<FeedBack> FeedBacks { get; set; }
 
+    public DbSet<ContactSubscriber> ContactSubscribers { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         _ = modelBuilder.Entity<Blog>(entity =>

@@ -7,6 +7,8 @@ public partial class Feature
 
     public string Description { get; set; } = string.Empty;
 
+    public string Route { get; set; } = string.Empty;
+
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }

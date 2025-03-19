@@ -35,6 +35,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     SharedChartData = blog.SharedChartData,
                     Status = blog.Status,
                     Type = blog.Type,
+                    ViewCount = blog.ViewCount ?? 0,
                     TimeAgo = CommonUtils.GetTimeAgo(blog.UpdatedAt.Value),
                     Tags = _context.BlogTags
                                 .Where(bt => bt.BlogId == blog.Id && bt.IsDeleted == false)
@@ -71,6 +72,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     Status = blog.Status,
                     Type = blog.Type,
                     TimeAgo = CommonUtils.GetTimeAgo(blog.UpdatedAt.Value),
+                    ViewCount = blog.ViewCount ?? 0,
                     Tags = _context.BlogTags
                                 .Where(bt => bt.BlogId == blog.Id && bt.IsDeleted == false)
                                 .Join(_context.Tags, bt => bt.TagId, t => t.Id, (bt, t) => new TagDTO

@@ -9,7 +9,6 @@ namespace PregnaCare.Services.Interfaces
         Task<AccountListResponse> GetAllMemberAsync(string filterType = null, string name = null);
         Task<AccountResponse> GetUserById(Guid id);
         Task<AccountResponse> UpdateAccount(Guid id, UpdateAccountRequest request);
-
         Task<AccountResponse> GetMemberInforWithPlanDetail(Guid userId);
     }
 }

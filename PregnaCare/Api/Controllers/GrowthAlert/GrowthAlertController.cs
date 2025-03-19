@@ -52,6 +52,43 @@ namespace PregnaCare.Api.Controllers.GrowthAlert
 
         }
 
+        [HttpGet("/api/v1/PregnancyRecord/{pregnancyRecordId}/GrowthAlert")]
+        public async Task<IActionResult> GetGrowthAlertsByPregnancyRecordId([FromRoute] Guid pregnancyRecordId)
+        {
+            var growthAlerts = await _growthAlertService.GetGrowthAlertsByPregnancyRecordId(pregnancyRecordId);
+
+            if (growthAlerts.Any())
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    MessageId = Messages.I00001,
+                    Message = Messages.GetMessageById(Messages.I00001),
+                    Response = growthAlerts.Select(x => new
+                    {
+                        x.Id,
+                        x.FetalGrowthRecordId,
+                        x.Week,
+                        x.AlertDate,
+                        x.AlertFor,
+                        x.Issue,
+                        x.Severity,
+                        x.Recommendation,
+                        x.IsResolved,
+                        x.Status,
+                    })
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                MessageId = Messages.E00013,
+                Message = Messages.GetMessageById(Messages.E00013),
+            });
+
+        }
+
         [HttpPost("{id}")]
         public async Task<IActionResult> UpdateStatus([FromRoute] Guid id, [FromQuery] string status)
         {

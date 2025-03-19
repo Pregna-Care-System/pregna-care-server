@@ -40,7 +40,7 @@ namespace PregnaCare.Services.Implementations
 
             return new GestationalAgeResponse
             {
-                Weeks = weeks,
+                Weeks = weeks == 0 ? 1 : weeks,
                 Days = days,
                 EstimatedDueDate = estimatedDueDate,
                 CalculationMethod = "LMP"

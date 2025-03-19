@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PregnaCare.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using PregnaCare.Infrastructure.Data;
 namespace PregnaCare.Migrations
 {
     [DbContext(typeof(PregnaCareAppDbContext))]
-    partial class PregnaCareAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250316162831_AddFieldRoute")]
+    partial class AddFieldRoute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -200,35 +203,6 @@ namespace PregnaCare.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Comment", (string)null);
-                });
-
-            modelBuilder.Entity("PregnaCare.Core.Models.ContactSubscriber", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ContactSubscribers");
                 });
 
             modelBuilder.Entity("PregnaCare.Core.Models.FAQ", b =>

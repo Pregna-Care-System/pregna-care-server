@@ -1,0 +1,168 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Confirmation - PregnaCare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        .logo {
+            max-width: 180px;
+            height: auto;
+        }
+
+        .email-header {
+            background-color: #E76A6A;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+            .email-header h1 {
+                margin: 0;
+                font-size: 24px;
+            }
+
+        .email-content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .confirmation-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #555555;
+        }
+
+        .subscriber-info {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+            .subscriber-info p {
+                margin: 10px 0;
+                font-size: 16px;
+            }
+
+            .subscriber-info strong {
+                color: #E76A6A;
+            }
+
+        .upcoming-events {
+            text-align: left;
+            margin: 30px 0;
+        }
+
+            .upcoming-events h3 {
+                color: #E76A6A;
+                margin-bottom: 15px;
+            }
+
+            .upcoming-events ul {
+                padding-left: 20px;
+            }
+
+            .upcoming-events li {
+                margin-bottom: 10px;
+                color: #555555;
+            }
+
+        .email-footer {
+            background-color: #f2f2f2;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #777777;
+        }
+
+        .social-links {
+            margin: 15px 0;
+        }
+
+            .social-links a {
+                display: inline-block;
+                margin: 0 10px;
+                text-decoration: none;
+                color: #E76A6A;
+            }
+
+        .unsubscribe {
+            margin-top: 15px;
+            font-size: 12px;
+            color: #999999;
+        }
+
+            .unsubscribe a {
+                color: #E76A6A;
+                text-decoration: none;
+            }
+
+                .unsubscribe a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <h1>Thank You for Subscribing!</h1>
+        </div>
+
+        <div class="email-content">
+            <p class="confirmation-text">Hello <strong>{FullName}</strong>,</p>
+
+            <p>Thank you for subscribing to receive notifications about upcoming events from PregnaCare. We're delighted to connect with you!</p>
+
+            <div class="subscriber-info">
+                <p><strong>Name:</strong> {FullName}</p>
+                <p><strong>Email:</strong> {Email}</p>
+                <p><strong>Subscription Date:</strong> {SubscriptionDate}</p>
+            </div>
+
+            <p>Keep an eye on your inbox so you don't miss information about our upcoming events!</p>
+        </div>
+
+        <div class="email-footer">
+            <p>If you have any questions, please contact us at: events@pregnacare.com</p>
+
+            <div class="social-links">
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">Twitter</a>
+            </div>
+
+            <div class="unsubscribe">
+                If you no longer wish to receive notifications about our events, please
+                <a _blank="" href="{UnsubscribeUrl}">click here to unsubscribe</a>.
+            </div>
+
+            <p>© 2025 PregnaCare. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

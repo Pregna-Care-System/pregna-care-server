@@ -70,8 +70,10 @@ namespace PregnaCare.Core.Repositories.Implementations
                     remainingDate = u.UserMembershipPlans
                         .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.ExpiryDate.HasValue
-                            ? (ump.ExpiryDate.Value - DateTime.UtcNow).Days
-                            : (int?)null)
+                        ? ((ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays > 1
+                        ? (int)(ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays
+                        : 1) // Nếu còn bất kỳ thời gian nào, hiển thị ít nhất là 1 ngày
+                        : (int?)null)
                         .FirstOrDefault() ?? 0
                 })
                 .ToListAsync();
@@ -111,9 +113,12 @@ namespace PregnaCare.Core.Repositories.Implementations
                     remainingDate = u.UserMembershipPlans
                         .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.ExpiryDate.HasValue
-                            ? (ump.ExpiryDate.Value - DateTime.UtcNow).Days
-                            : (int?)null)
+                        ? ((ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays > 1
+                        ? (int)(ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays
+                        : 1)
+                        : (int?)null)
                         .FirstOrDefault() ?? 0
+
                 })
                 .FirstOrDefaultAsync();
 

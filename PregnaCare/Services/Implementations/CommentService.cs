@@ -5,6 +5,7 @@ using PregnaCare.Api.Models.Responses.CommentResponseModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Models;
+using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -15,12 +16,14 @@ namespace PregnaCare.Services.Implementations
     public class CommentService : ICommentService
     {
         private readonly ICommentRepository _repo;
+        private readonly IGenericRepository<Comment, Guid> _genericRepository;
         private readonly IUnitOfWork _unit;
 
         public CommentService(ICommentRepository commentRepository, IUnitOfWork unitOfWork)
         {
             _repo = commentRepository;
             _unit = unitOfWork;
+            _genericRepository = _unit.GetRepository<Comment, Guid>();
         }
 
         public async Task<CommentResponse> CreateComment([FromBody] CreateCommentRequest request)
@@ -30,7 +33,7 @@ namespace PregnaCare.Services.Implementations
             comment.UpdatedAt = DateTime.UtcNow;
             comment.CreatedAt = DateTime.UtcNow;
 
-            await _repo.AddAsync(comment);
+            await _genericRepository.AddAsync(comment);
             _ = _unit.SaveChangesAsync();
 
             return new CommentResponse
@@ -43,7 +46,7 @@ namespace PregnaCare.Services.Implementations
         public async Task DeleteComment(Guid id)
         {
             var comment = await _repo.GetByIdAsync(id);
-            _repo.Remove(comment);
+            _genericRepository.Remove(comment);
             await _unit.SaveChangesAsync();
         }
 
@@ -84,7 +87,7 @@ namespace PregnaCare.Services.Implementations
             comment.CommentText = request.CommentText;
             comment.UpdatedAt = DateTime.UtcNow;
 
-            _repo.Update(comment);
+            _genericRepository.Update(comment);
             await _unit.SaveChangesAsync();
 
             return new CommentResponse

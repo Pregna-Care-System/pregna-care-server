@@ -60,5 +60,13 @@ namespace PregnaCare.Api.Controllers.Blog
             await _service.DeleteBlog(id);
             return NoContent();
         }
+
+        [HttpPost("{id}/View")]
+        public async Task<IActionResult> IncreaseViewCount([FromRoute] Guid id)
+        {
+            var response = await _service.IncreaseViewCount(id);
+            if (!response) return BadRequest(Messages.GetMessageById(Messages.E00013));
+            return Ok();
+        }
     }
 }
