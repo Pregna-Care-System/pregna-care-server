@@ -22,6 +22,14 @@ namespace PregnaCare.Api.Controllers.ContactUs
             _emailService = emailService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetContactsAsync()
+        {
+            var response = await _contactService.SelectContactAsync();
+            if (!response.Success) return BadRequest(response);
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateContactAsync([FromBody] CreateContactRequest request)
         {
