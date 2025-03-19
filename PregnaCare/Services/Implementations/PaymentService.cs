@@ -97,7 +97,7 @@ namespace PregnaCare.Services.Implementations
                         MembershipPlanId = membershipPlan.Id,
                         IsActive = true,
                         Status = StatusEnum.Completed.ToString(),
-                        ExpiryDate = DateTime.UtcNow.AddDays(30),
+                        ExpiryDate = DateTime.Now.AddDays(30),
                         Price = membershipPlan.Price
                     };
 
