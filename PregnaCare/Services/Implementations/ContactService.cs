@@ -109,6 +109,33 @@ namespace PregnaCare.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
+
+        public async Task<SelectContactResponse> SelectContactAsync()
+        {
+            var response = new SelectContactResponse { Success = false };
+
+            var contacts = await _contactRepository.GetAllAsync();
+            if (contacts == null || contacts.Count() == 0)
+            {
+                response.MessageId = Messages.E00013;
+                response.Message = Messages.GetMessageById(Messages.E00013);
+                return response;
+            }
+
+            var responseEntities = contacts.Select(x => new SelectContactEntity
+            {
+                Id = x.Id,
+                FullName = x.FullName,
+                Email = x.Email,
+                Message = x.Message
+            }).OrderByDescending(x => x.CreatedAt).ToList();
+
+            response.Success = true;
+            response.MessageId = Messages.I00001;
+            response.Message = Messages.GetMessageById(Messages.I00001);
+            response.Response = responseEntities;
+            return response;
+        }
     }
 
 }
