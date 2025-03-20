@@ -13,5 +13,7 @@ namespace PregnaCare.Services.Interfaces
         Task<List<RevenueStatsResponse>> GetTotalRevenueAsync();
         Task<List<NewMemberResponse>> GetNewMembersAsync(int? year, int? month, int? week);
         Task<FetalGrowthStatsResponse> GetFetalGrowthStatsResponse(Guid pregnancyRecordId);
+        Task<List<NewMembersDataPointResponse>> GetMonthlyNewMembersAsync();
+        Task<List<NewMembersDataPointResponse>> GetWeeklyNewMembersAsync();
     }
 }

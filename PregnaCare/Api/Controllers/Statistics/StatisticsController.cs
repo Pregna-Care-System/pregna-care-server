@@ -229,6 +229,44 @@ namespace PregnaCare.Api.Controllers.Statistics
             });
         }
 
+        [HttpGet("TotalNewMembers")]
+        public async Task<IActionResult> GetTotalNewMembers([FromQuery] string timeFrame = "month")
+        {
+            if (timeFrame != "month" && timeFrame != "week")
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    MessageId = Messages.E00013,
+                    Message = Messages.GetMessageById(Messages.E00013),
+                });
+            }
+
+            List<NewMembersDataPointResponse> dataPoints;
+
+            if (timeFrame == "month")
+            {
+                dataPoints = await _statisticsService.GetMonthlyNewMembersAsync();
+            }
+            else
+            {
+                dataPoints = await _statisticsService.GetWeeklyNewMembersAsync();
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                MessageId = Messages.I00001,
+                Message = Messages.GetMessageById(Messages.I00001),
+                Response = new
+                {
+                    timeFrame,
+                    data = dataPoints
+                }
+            });
+        }
+
+
         [HttpGet("/api/v1/PregnancyRecord/{pregnancyRecordId}/FetalGrowthStats")]
         public async Task<IActionResult> GetFetalGrowthStats([FromRoute] Guid pregnancyRecordId)
         {
