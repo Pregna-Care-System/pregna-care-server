@@ -7,6 +7,7 @@ namespace PregnaCare.Core.Repositories.Interfaces
     {
         Task<IEnumerable<BlogDTO>> GetAllActiveBlogAsync(string type = "Blog");
         Task<IEnumerable<BlogDTO>> GetAllActiveBlogByUserIdAsync(Guid id, string type = "Blog");
+        Task<BlogDTO> GetDetailById(Guid id);
 
     }
 }

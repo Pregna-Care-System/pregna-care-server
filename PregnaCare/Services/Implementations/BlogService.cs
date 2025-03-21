@@ -35,13 +35,10 @@ namespace PregnaCare.Services.Implementations
         public async Task<SelectDetailBlogResponse> GetBlogById(Guid id)
         {
             var response = new SelectDetailBlogResponse() { Success = false };
-            var blogs = await _blogRepository.GetAllActiveBlogAsync();
-            var responseEntity = blogs.FirstOrDefault(x => x.Id == id);
-
             response.Success = true;
             response.MessageId = Messages.I00001;
             response.Message = Messages.GetMessageById(Messages.I00001);
-            response.Response = responseEntity;
+            response.Response = await _blogRepository.GetDetailById(id);
             return response;
         }
 

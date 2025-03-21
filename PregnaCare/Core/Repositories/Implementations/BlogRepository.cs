@@ -87,5 +87,36 @@ namespace PregnaCare.Core.Repositories.Implementations
             return blogList;
         }
 
+        public async Task<BlogDTO> GetDetailById(Guid id)
+        {
+            return await _context.Blogs
+                .Where(b => b.IsDeleted == false && b.Id == id)
+                .Include(x => x.User)
+                .Select(blog => new BlogDTO
+                {
+                    Id = blog.Id,
+                    UserId = blog.UserId,
+                    FullName = blog.User.FullName,
+                    PageTitle = blog.PageTitle,
+                    Heading = blog.Heading,
+                    Content = blog.Content,
+                    ShortDescription = blog.ShortDescription,
+                    FeaturedImageUrl = blog.FeaturedImageUrl,
+                    IsVisible = blog.IsVisible,
+                    SharedChartData = blog.SharedChartData,
+                    Status = blog.Status,
+                    Type = blog.Type,
+                    TimeAgo = CommonUtils.GetTimeAgo(blog.UpdatedAt.Value),
+                    ViewCount = blog.ViewCount ?? 0,
+                    Tags = _context.BlogTags
+                                .Where(bt => bt.BlogId == blog.Id && bt.IsDeleted == false)
+                                .Join(_context.Tags, bt => bt.TagId, t => t.Id, (bt, t) => new TagDTO
+                                {
+                                    Id = t.Id,
+                                    Name = t.Name
+                                })
+                                .ToList()
+                }).FirstOrDefaultAsync() ?? new();
+        }
     }
 }
