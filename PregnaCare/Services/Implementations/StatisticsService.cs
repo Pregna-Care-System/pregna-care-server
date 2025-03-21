@@ -134,7 +134,7 @@ namespace PregnaCare.Services.Implementations
             var transactions = await (from userPlan in _context.UserMembershipPlans
                                       join plan in _context.MembershipPlans on userPlan.MembershipPlanId equals plan.Id
                                       join user in _context.Users on userPlan.UserId equals user.Id
-                                      where !userPlan.IsDeleted.Value && userPlan.IsActive.Value
+                                      where !userPlan.IsDeleted.Value
                                       orderby userPlan.CreatedAt descending, plan.PlanName ascending
                                       select new TransactionStatsResponse
                                       {
