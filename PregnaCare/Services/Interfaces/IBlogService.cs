@@ -13,5 +13,6 @@ namespace PregnaCare.Services.Interfaces
         Task<BlogResponse> UpdateBlog(BlogRequest request, Guid id);
         Task DeleteBlog(Guid id);
         Task<bool> IncreaseViewCount(Guid blogId);
+        Task<bool> ApproveBlog(Guid blogId, string status);
     }
 }

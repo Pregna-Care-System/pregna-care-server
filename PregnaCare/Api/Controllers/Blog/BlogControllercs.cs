@@ -68,5 +68,24 @@ namespace PregnaCare.Api.Controllers.Blog
             if (!response) return BadRequest(Messages.GetMessageById(Messages.E00013));
             return Ok();
         }
+
+        [HttpPut("{blogId}/Approve")]
+        public async Task<IActionResult> IncreaseViewCount([FromRoute] Guid blogId, [FromQuery] string status)
+        {
+            var response = await _service.ApproveBlog(blogId, status);
+            if (!response) return BadRequest(new
+            {
+                Success = false,
+                MessageId = Messages.E00013,
+                Message = Messages.GetMessageById(Messages.E00013)
+            });
+
+            return Ok(new
+            {
+                Success = true,
+                MessageId = Messages.I00001,
+                Message = Messages.GetMessageById(Messages.I00001)
+            });
+        }
     }
 }

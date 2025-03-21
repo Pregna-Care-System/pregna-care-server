@@ -1,6 +1,7 @@
 ﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
 using PregnaCare.Api.Models.Responses.BlogResponseModel;
 using PregnaCare.Common.Constants;
+using PregnaCare.Common.Enums;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
@@ -51,7 +52,6 @@ namespace PregnaCare.Services.Implementations
             var blog = Mapper.MapToBlog(request);
             blog.Id = Guid.NewGuid();
             blog.Type = request.Type;
-            blog.Status = request.Status;
             blog.SharedChartData = request.SharedChartData;
             blog.CreatedAt = DateTime.Now;
             blog.UpdatedAt = DateTime.Now;
@@ -180,6 +180,28 @@ namespace PregnaCare.Services.Implementations
             if (blog == null) return false;
 
             blog.ViewCount++;
+            blog.UpdatedAt = DateTime.Now;
+            _blogRepository.Update(blog);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ApproveBlog(Guid blogId, string status)
+        {
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+            if (blog == null) return false;
+
+            var matchedStatus = Enum.GetValues<StatusEnum>()
+                             .FirstOrDefault(s => s.ToString().Equals(status, StringComparison.OrdinalIgnoreCase));
+
+            if (!Enum.IsDefined(typeof(StatusEnum), matchedStatus))
+            {
+                return false;
+            }
+
+            blog.Status = matchedStatus.ToString();
+            blog.UpdatedAt = DateTime.Now;
+
             _blogRepository.Update(blog);
             await _unitOfWork.SaveChangesAsync();
             return true;
