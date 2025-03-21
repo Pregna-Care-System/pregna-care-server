@@ -8,6 +8,8 @@
         Cancelled,
         Expired,
         InProgress,
-        Active
+        Active,
+        Approved,
+        Rejected
     }
 }
