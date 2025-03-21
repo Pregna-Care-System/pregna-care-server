@@ -54,7 +54,7 @@ namespace PregnaCare.Services.Implementations
             blog.UpdatedAt = DateTime.Now;
             blog.IsDeleted = false;
 
-            await _blogRepository.AddAsync(blog);
+            await _unitOfWork.GetRepository<Blog, Guid>().AddAsync(blog);
 
             var blogTagRepo = _unitOfWork.GetRepository<BlogTag, Guid>();
             if (tagIds != null && tagIds.Any())
@@ -104,7 +104,7 @@ namespace PregnaCare.Services.Implementations
             blog.SharedChartData = request.SharedChartData;
             blog.IsVisible = request.IsVisible;
 
-            _blogRepository.Update(blog);
+            _unitOfWork.GetRepository<Blog, Guid>().Update(blog);
 
             if (request.TagIds != null && request.TagIds.Any())
             {
@@ -116,7 +116,7 @@ namespace PregnaCare.Services.Implementations
                 {
                     if (!newTagIds.Contains(extingTag.TagId))
                     {
-                        _blogTagRepository.Remove(extingTag);
+                        _unitOfWork.GetRepository<BlogTag, Guid>().Remove(extingTag);
                     }
                 }
                 //add new blog tags
@@ -133,7 +133,7 @@ namespace PregnaCare.Services.Implementations
                             UpdatedAt = DateTime.Now,
                             IsDeleted = false
                         };
-                        await _blogTagRepository.AddAsync(blogTag);
+                        await _unitOfWork.GetRepository<BlogTag, Guid>().AddAsync(blogTag);
                     }
                 }
             }
@@ -150,14 +150,16 @@ namespace PregnaCare.Services.Implementations
         {
             var blogTags = await _blogTagRepository.GetAllAsync();
             var blog = await _blogRepository.GetByIdAsync(id);
+            var blogTagRepository = _unitOfWork.GetRepository<BlogTag, Guid>();
             foreach (var blogTag in blogTags)
             {
                 if (blogTag.BlogId == id)
                 {
-                    _blogTagRepository.Remove(blogTag);
+                    _unitOfWork.GetRepository<BlogTag, Guid>().Remove(blogTag);
                 }
             }
-            _blogRepository.Remove(blog);
+
+            _unitOfWork.GetRepository<Blog, Guid>().Remove(blog);
             await _unitOfWork.SaveChangesAsync();
         }
 
@@ -177,8 +179,7 @@ namespace PregnaCare.Services.Implementations
             if (blog == null) return false;
 
             blog.ViewCount++;
-            blog.UpdatedAt = DateTime.Now;
-            _blogRepository.Update(blog);
+            _unitOfWork.GetRepository<Blog, Guid>().Update(blog);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
@@ -199,7 +200,7 @@ namespace PregnaCare.Services.Implementations
             blog.Status = matchedStatus.ToString();
             blog.UpdatedAt = DateTime.Now;
 
-            _blogRepository.Update(blog);
+            _unitOfWork.GetRepository<Blog, Guid>().Update(blog);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }

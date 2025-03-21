@@ -34,7 +34,7 @@ namespace PregnaCare.Services.Implementations
             comment.CreatedAt = DateTime.UtcNow;
 
             await _genericRepository.AddAsync(comment);
-            _ = _unit.SaveChangesAsync();
+            await _unit.SaveChangesAsync();
 
             return new CommentResponse
             {
