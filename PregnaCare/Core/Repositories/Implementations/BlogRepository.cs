@@ -15,10 +15,10 @@ namespace PregnaCare.Core.Repositories.Implementations
             _context = pregnaCareAppDbContext;
         }
 
-        public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogAsync()
+        public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogAsync(string type)
         {
             var blogList = await _context.Blogs
-                .Where(b => b.IsDeleted == false && b.IsVisible == true).Include(x => x.User)
+                .Where(b => b.IsDeleted == false && b.IsVisible == true && b.Type.ToLower() == type.ToLower()).Include(x => x.User)
                 .OrderByDescending(b => b.UpdatedAt)
                 .ThenByDescending(b => b.CreatedAt)
                 .Select(blog => new BlogDTO
@@ -50,10 +50,10 @@ namespace PregnaCare.Core.Repositories.Implementations
             return blogList;
         }
 
-        public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogByUserIdAsync(Guid userId, string type)
         {
             var blogList = await _context.Blogs
-                .Where(b => b.IsDeleted == false && b.UserId == userId)
+                .Where(b => b.IsDeleted == false && b.UserId == userId && b.Type.ToLower() == type.ToLower())
                 .OrderByDescending(b => b.UpdatedAt)
                 .ThenByDescending(b => b.CreatedAt)
                 .Include(x => x.User)

@@ -22,9 +22,9 @@ namespace PregnaCare.Services.Implementations
             _blogTagRepository = blogTagRepository;
         }
 
-        public async Task<BlogListResponse> GetAllBlogs()
+        public async Task<BlogListResponse> GetAllBlogs(string type)
         {
-            var blogs = await _blogRepository.GetAllActiveBlogAsync();
+            var blogs = await _blogRepository.GetAllActiveBlogAsync(type);
             return new BlogListResponse
             {
                 Success = true,
@@ -164,9 +164,9 @@ namespace PregnaCare.Services.Implementations
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<BlogListResponse> GetAllByUserIdBlogs(Guid id)
+        public async Task<BlogListResponse> GetAllByUserIdBlogs(Guid id, string type)
         {
-            var blogs = await _blogRepository.GetAllActiveBlogByUserIdAsync(id);
+            var blogs = await _blogRepository.GetAllActiveBlogByUserIdAsync(id, type);
             return new BlogListResponse
             {
                 Success = true,

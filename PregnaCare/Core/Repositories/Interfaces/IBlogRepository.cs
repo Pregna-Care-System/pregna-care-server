@@ -5,8 +5,8 @@ namespace PregnaCare.Core.Repositories.Interfaces
 {
     public interface IBlogRepository : IGenericRepository<Blog, Guid>
     {
-        Task<IEnumerable<BlogDTO>> GetAllActiveBlogAsync();
-        Task<IEnumerable<BlogDTO>> GetAllActiveBlogByUserIdAsync(Guid id);
+        Task<IEnumerable<BlogDTO>> GetAllActiveBlogAsync(string type = "Blog");
+        Task<IEnumerable<BlogDTO>> GetAllActiveBlogByUserIdAsync(Guid id, string type = "Blog");
 
     }
 }

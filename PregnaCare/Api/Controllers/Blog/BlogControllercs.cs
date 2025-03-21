@@ -17,16 +17,16 @@ namespace PregnaCare.Api.Controllers.Blog
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllActive()
+        public async Task<IActionResult> GetAllActive([FromQuery] string? type = "Blog")
         {
-            var response = await _service.GetAllBlogs();
+            var response = await _service.GetAllBlogs(type);
             return Ok(response);
         }
 
         [HttpGet("User/{id}")]
-        public async Task<IActionResult> GetAllBlogByUser(Guid id)
+        public async Task<IActionResult> GetAllBlogByUser(Guid id, [FromQuery] string? type = "Blog")
         {
-            var response = await _service.GetAllByUserIdBlogs(id);
+            var response = await _service.GetAllByUserIdBlogs(id, type);
             return Ok(response);
         }
 
