@@ -41,6 +41,10 @@ namespace PregnaCare.Services.Implementations
         public async Task DeleteReminderType(Guid id)
         {
             var type = (await _repository.FindAsync(x => x.Id == id && x.IsDeleted == false)).FirstOrDefault();
+            if (type == null)
+            {
+                throw new KeyNotFoundException("Reminder Type not found.");
+            }
 
             type.IsDeleted = true;
             _repository.Update(type);
@@ -50,12 +54,12 @@ namespace PregnaCare.Services.Implementations
 
         public async Task<ReminderTypeListResponse> GetAllReminderType()
         {
-            var typeList = await _repository.GetAllAsync();
+            var typeList = await _repository.FindAsync(x => x.IsDeleted == false);
 
             return new ReminderTypeListResponse
             {
-                Success = true,
-                Response = typeList
+                Success = typeList.Any(),
+                Response = typeList.Any() ? typeList : new List<ReminderType>()
             };
         }
 
