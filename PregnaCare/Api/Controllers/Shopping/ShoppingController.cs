@@ -15,10 +15,17 @@ namespace PregnaCare.Api.Controllers.Shopping
             _shoppingService = shoppingService;
         }
 
-        [HttpGet("products")]
-        public async Task<IActionResult> GetProducts()
+        [HttpGet("milk-products")]
+        public async Task<IActionResult> GetMilkProducts()
         {
-            var products = await _shoppingService.GetProductsAsync();
+            var products = await _shoppingService.GetMilkProductsAsync();
+            return Ok(products);
+        }
+
+        [HttpGet("baby-products")]
+        public async Task<IActionResult> GetBabyProducts()
+        {
+            var products = await _shoppingService.GetBabyProductsAsync();
             return Ok(products);
         }
     }

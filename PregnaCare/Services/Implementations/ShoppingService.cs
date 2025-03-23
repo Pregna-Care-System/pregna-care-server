@@ -16,61 +16,58 @@ namespace PregnaCare.Services.Implementations
         {
             _httpClient = httpClient;
         }
-
-        public async Task<List<ProductDTO>> GetProductsAsync()
+        public async Task<List<ProductDTO>> GetMilkProductsAsync()
         {
-            var url = "https://concung.com/sua-bot-101586.html";
-
-            // Lấy nội dung HTML từ trang web
-            var response = await _httpClient.GetStringAsync(url);
-
-            var htmlDoc = new HtmlDocument();
-            htmlDoc.LoadHtml(response);
-
+            return await GetProductsFromCategory("https://concung.com/sua-bot-101586.html");
+        }
+        public async Task<List<ProductDTO>> GetBabyProductsAsync()
+        {
+            return await GetProductsFromCategory("https://concung.com/do-dung-me-va-be-1011020.html");
+        }
+        private async Task<List<ProductDTO>> GetProductsFromCategory(string url)
+        {
             var products = new List<ProductDTO>();
-
-            // XPath: Lấy danh sách sản phẩm
-            var productNodes = htmlDoc.DocumentNode.SelectNodes("//div[contains(@class, 'product-item mb-10 ')]");
-
-            if (productNodes == null)
+            try
             {
-                Console.WriteLine("❌ Không tìm thấy sản phẩm! Kiểm tra lại XPath.");
-                return products;
-            }
+                string response = await _httpClient.GetStringAsync(url);
+                var htmlDoc = new HtmlDocument();
+                htmlDoc.LoadHtml(response);
 
-            foreach (var node in productNodes)
-            {
-                // 📌 Lấy tên sản phẩm
-                var nameNode = node.SelectSingleNode(".//a[contains(@class, 'line-clamp-2 font-14 product-name pointer')]");
-                string name = nameNode?.InnerText.Trim() ?? "Không có tên";
+                var productNodes = htmlDoc.DocumentNode.SelectNodes("//div[contains(@class, 'product-item mb-10 ')]");
 
-                // 📌 Lấy giá sản phẩm
-                var priceNode = node.SelectSingleNode(".//span[contains(@class, 'product-price  d-block')]");
-                string price = priceNode?.InnerText.Trim() ?? "Không có giá";
+                    foreach (var node in productNodes)
+                    {
+                        var nameNode = node.SelectSingleNode(".//a[contains(@class, 'line-clamp-2 font-14 product-name pointer')]");
+                        string name = nameNode?.InnerText.Trim() ?? "Không có tên";
 
-                // 📌 Lấy URL sản phẩm
-                string productUrl = nameNode?.GetAttributeValue("href", "#") ?? "#";
-                if (!productUrl.StartsWith("http")) productUrl = "https://concung.com" + productUrl;
+                        var priceNode = node.SelectSingleNode(".//span[contains(@class, 'product-price')]");
+                        string price = priceNode?.InnerText.Trim() ?? "Không có giá";
 
-                // 📌 Lấy ảnh sản phẩm
-                var imgNode = node.SelectSingleNode(".//img[contains(@class, 'img-fluid')]");
-                string imageUrl = imgNode?.GetAttributeValue("data-src", "")
-                                 ?? imgNode?.GetAttributeValue("src", "Không có ảnh")
-                                 ?? "Không có ảnh";
+                        string productUrl = nameNode?.GetAttributeValue("href", "#") ?? "#";
+                        if (!productUrl.StartsWith("http")) productUrl = "https://concung.com" + productUrl;
 
+                        var imgNode = node.SelectSingleNode(".//img[contains(@class, 'img-fluid')]");
+                        string imageUrl = imgNode?.GetAttributeValue("data-src", "")
+                                         ?? imgNode?.GetAttributeValue("src", "Không có ảnh")
+                                         ?? "Không có ảnh";
 
-                products.Add(new ProductDTO
+                        products.Add(new ProductDTO
+                        {
+                            Name = name,
+                            Price = price,
+                            ImageUrl = imageUrl,
+                            ProductUrl = productUrl
+                        });
+
+                        Console.WriteLine($"🛍 {name} - 💲 {price} - 🖼 {imageUrl} - 🔗 {productUrl}");
+                    }
+                }
+                catch (Exception ex)
                 {
-                    Name = name,
-                    Price = price,
-                    ImageUrl = imageUrl,
-                    ProductUrl = productUrl
-                });
-
-                Console.WriteLine($"🛒 {name} - 💰 {price} - 🖼 {imageUrl} - 🔗 {productUrl}");
-            }
-
+                    Console.WriteLine($"Lỗi khi lấy dữ liệu từ {url}: {ex.Message}");
+                }
             return products;
         }
+
     }
 }

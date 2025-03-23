@@ -4,7 +4,8 @@ namespace PregnaCare.Services.Interfaces
 {
     public interface IShoppingService
     {
-        Task<List<ProductDTO>> GetProductsAsync();
+        Task<List<ProductDTO>> GetMilkProductsAsync();  
+        Task<List<ProductDTO>> GetBabyProductsAsync();
     }
 }
     
