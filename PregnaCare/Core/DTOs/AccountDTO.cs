@@ -14,7 +14,7 @@
 
         public string Gender { get; set; } = string.Empty;
         public string PlanName { get; set; } = string.Empty;
-
+        public DateTime? PlanCreated { get; set; } 
         public int remainingDate { get; set; }
 
         public DateOnly? DateOfBirth { get; set; }

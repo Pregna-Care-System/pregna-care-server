@@ -7,6 +7,8 @@ namespace PregnaCare.Services.Interfaces
     public interface IBlogService
     {
         Task<BlogListResponse> GetAllBlogs(string type = "Blog");
+        Task<BlogListResponse> GetAllBlogsAdmin(string type = "Blog");
+
         Task<BlogListResponse> GetAllByUserIdBlogs(Guid id, string type = "Blog");
         Task<SelectDetailBlogResponse> GetBlogById(Guid id);
         Task<BlogResponse> CreateBlog(BlogRequest request, List<Guid> tagIds);

@@ -22,7 +22,12 @@ namespace PregnaCare.Api.Controllers.Blog
             var response = await _service.GetAllBlogs(type);
             return Ok(response);
         }
-
+        [HttpGet("Admin")]
+        public async Task<IActionResult> GetAllActiveAdmin([FromQuery] string? type = "Blog")
+        {
+            var response = await _service.GetAllBlogsAdmin(type);
+            return Ok(response);
+        }
         [HttpGet("User/{id}")]
         public async Task<IActionResult> GetAllBlogByUser(Guid id, [FromQuery] string? type = "Blog")
         {
