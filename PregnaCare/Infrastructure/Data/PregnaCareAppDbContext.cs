@@ -664,7 +664,7 @@ public partial class PregnaCareAppDbContext : DbContext
                   .IsRequired()
                   .HasDefaultValue(false);
 
-            entity.HasOne(e => e.User)
+            _ = entity.HasOne(e => e.User)
                   .WithMany(u => u.Feedbacks)
                   .HasForeignKey(e => e.UserId)
                   .OnDelete(DeleteBehavior.Restrict);

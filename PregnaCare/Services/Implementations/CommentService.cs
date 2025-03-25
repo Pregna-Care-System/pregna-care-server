@@ -1,11 +1,9 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Api.Models.Requests.CommentBlogRequestModel;
 using PregnaCare.Api.Models.Responses.CommentResponseModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Models;
-using PregnaCare.Core.Repositories.Implementations;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;

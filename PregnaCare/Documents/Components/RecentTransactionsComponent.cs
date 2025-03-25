@@ -28,20 +28,20 @@ namespace PregnaCare.Documents.Components
 
                 table.Header(header =>
                 {
-                    header.Cell().Text("Full Name").Bold();
-                    header.Cell().Text("Membership Plan").Bold();
-                    header.Cell().Text("Price").Bold();
-                    header.Cell().Text("Buy Date").Bold();
-                    header.Cell().Text("Status").Bold();
+                    _ = header.Cell().Text("Full Name").Bold();
+                    _ = header.Cell().Text("Membership Plan").Bold();
+                    _ = header.Cell().Text("Price").Bold();
+                    _ = header.Cell().Text("Buy Date").Bold();
+                    _ = header.Cell().Text("Status").Bold();
                 });
 
                 foreach (var transaction in _transactions)
                 {
-                    table.Cell().Text(transaction.FullName);
-                    table.Cell().Text(transaction.MembershipPlan);
-                    table.Cell().Text(transaction.Price);
-                    table.Cell().Text(transaction.BuyDate.ToString("yyyy-MM-dd"));
-                    table.Cell().Text(transaction.Status);
+                    _ = table.Cell().Text(transaction.FullName);
+                    _ = table.Cell().Text(transaction.MembershipPlan);
+                    _ = table.Cell().Text(transaction.Price);
+                    _ = table.Cell().Text(transaction.BuyDate.ToString("yyyy-MM-dd"));
+                    _ = table.Cell().Text(transaction.Status);
                 }
             });
         }

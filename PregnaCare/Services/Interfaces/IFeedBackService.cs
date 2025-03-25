@@ -1,6 +1,4 @@
-﻿using PregnaCare.Api.Models.Requests.FeatureRequestModel;
-using PregnaCare.Api.Models.Requests.FeedBackRequestModel;
-using PregnaCare.Api.Models.Responses.FeatureResponseModel;
+﻿using PregnaCare.Api.Models.Requests.FeedBackRequestModel;
 using PregnaCare.Api.Models.Responses.FeedbackResponseModel;
 
 namespace PregnaCare.Services.Interfaces
