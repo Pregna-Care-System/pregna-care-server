@@ -31,7 +31,15 @@ namespace PregnaCare.Services.Implementations
                 Response = blogs
             };
         }
-
+        public async Task<BlogListResponse> GetAllBlogsAdmin(string type)
+        {
+            var blogs = await _blogRepository.GetAllActiveBlogAdminAsync(type);
+            return new BlogListResponse
+            {
+                Success = true,
+                Response = blogs
+            };
+        }
         public async Task<SelectDetailBlogResponse> GetBlogById(Guid id)
         {
             var response = new SelectDetailBlogResponse() { Success = false };

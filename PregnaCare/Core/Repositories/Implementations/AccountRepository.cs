@@ -61,6 +61,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     UpdatedAt = u.UpdatedAt,
                     IsDeleted = u.IsDeleted,
                     IsActive = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.IsActive)
                          .FirstOrDefault(),
                     PlanName = u.UserMembershipPlans
@@ -74,7 +75,10 @@ namespace PregnaCare.Core.Repositories.Implementations
                         ? (int)(ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays
                         : 1) // Nếu còn bất kỳ thời gian nào, hiển thị ít nhất là 1 ngày
                         : (int?)null)
-                        .FirstOrDefault() ?? 0
+                        .FirstOrDefault() ?? 0,
+                    PlanCreated = u.UserMembershipPlans
+                        .Select(ump => ump.CreatedAt)
+                        .FirstOrDefault()
                 })
                 .ToListAsync();
 
