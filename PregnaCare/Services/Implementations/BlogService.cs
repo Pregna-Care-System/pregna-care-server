@@ -158,7 +158,7 @@ namespace PregnaCare.Services.Implementations
         {
             var blogTags = await _blogTagRepository.GetAllAsync();
             var blog = await _blogRepository.GetByIdAsync(id);
-            var blogTagRepository = _unitOfWork.GetRepository<BlogTag, Guid>();
+            _ = _unitOfWork.GetRepository<BlogTag, Guid>();
             foreach (var blogTag in blogTags)
             {
                 if (blogTag.BlogId == id)

@@ -10,7 +10,7 @@ namespace PregnaCare.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
+            _ = migrationBuilder.AddColumn<string>(
                 name: "Route",
                 table: "Feature",
                 type: "nvarchar(max)",
@@ -21,7 +21,7 @@ namespace PregnaCare.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "Route",
                 table: "Feature");
         }

@@ -1,10 +1,7 @@
-﻿using PregnaCare.Api.Models.Requests.FeatureRequestModel;
-using PregnaCare.Api.Models.Requests.FeedBackRequestModel;
+﻿using PregnaCare.Api.Models.Requests.FeedBackRequestModel;
 using PregnaCare.Api.Models.Responses.FeatureResponseModel;
 using PregnaCare.Api.Models.Responses.FeedbackResponseModel;
-using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
-using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -25,7 +22,7 @@ namespace PregnaCare.Services.Implementations
         public async Task<FeedbackResponse> AddFeedbackAsync(FeedbackRequest request, Guid userId)
         {
             var response = new FeedbackResponse();
-           
+
             var feedback = Mapper.MapToFeedBack(request);
             feedback.Id = Guid.NewGuid();
             feedback.UserId = userId;

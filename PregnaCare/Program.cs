@@ -22,7 +22,7 @@ namespace PregnaCare
         public static async Task Main(string[] args)
         {
             _ = Env.Load();
-            
+
             QuestPDF.Settings.License = LicenseType.Community;
 
             var builder = WebApplication.CreateBuilder(args);

@@ -80,7 +80,7 @@ namespace PregnaCare.Api.Controllers.MembershipPlan
         public async Task<IActionResult> HasFreePlan(Guid userId)
         {
             var hasFreePlan = await _planService.HasFreePlanAsync(userId);
-            return Ok(new {hasFreePlan});
+            return Ok(new { hasFreePlan });
         }
     }
 }
