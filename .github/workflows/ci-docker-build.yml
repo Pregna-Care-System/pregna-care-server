@@ -2,36 +2,36 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: ["develop"]
   pull_request:
-    branches: [ "develop" ]
+    branches: ["develop"]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Login to GitHub Container Registry
-      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-    - name: Build Docker image
-      run: docker build . --file Dockerfile --tag ghcr.io/21anhn/swp-backend:latest
+      - name: Build Docker image
+        run: docker build ../PregnaCare --file ../PregnaCare/Dockerfile --tag ghcr.io/21anhn/swp-backend:latest
 
-    - name: Push Docker image
-      run: docker push ghcr.io/21anhn/swp-backend:latest
+      - name: Push Docker image
+        run: docker push ghcr.io/21anhn/swp-backend:latest
 
-    - name: Deploy to VPS
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.VPS_HOST }}
-        username: ${{ secrets.VPS_USERNAME }}
-        key: ${{ secrets.VPS_SSH_KEY }}
-        script: |
-          cd /var/swp391
-          docker-compose down
-          docker-compose pull
-          docker-compose up -d
-          docker system prune -a -f
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /var/swp391
+            docker-compose down
+            docker-compose pull
+            docker-compose up -d
+            docker system prune -a -f
