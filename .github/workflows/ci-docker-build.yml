@@ -1,28 +1,27 @@
 name: Docker Image CI
-
 on:
   push:
     branches: ["develop"]
   pull_request:
     branches: ["develop"]
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Login to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
+      
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      
       - name: Build Docker image
-        run: docker build ./PregnaCare --file ./PregnaCare/Dockerfile --tag ghcr.io/21anhn/swp-backend:latest
-
-      - name: Push Docker image
-        run: docker push ghcr.io/21anhn/swp-backend:latest
-
+        run: |
+          cd pregna-care-server
+          docker build ./PregnaCare --file ./PregnaCare/Dockerfile --tag 21anhn/swp-backend:latest
+      
+      - name: Push Docker image to Docker Hub
+        run: docker push 21anhn/swp-backend:latest
+      
       - name: Deploy to VPS
         uses: appleboy/ssh-action@master
         with:
