@@ -98,7 +98,8 @@ namespace PregnaCare
                 options.AddPolicy("AllowFrontend",
                     policy =>
                     {
-                        _ = policy.AllowAnyOrigin()
+                        _ = policy.SetIsOriginAllowed(_ => true)
+                              .AllowAnyOrigin()
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });

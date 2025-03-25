@@ -1,0 +1,28 @@
+version: '3.2'
+
+services:
+  backend:
+    image: 21anhn/swp-backend:latest
+    container_name: pregna-care-backend
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    ports:
+      - "5167:5167"
+    networks:
+      - pregna-care-network
+
+  frontend:
+    image: 21anhn/swp-frontend:latest
+    container_name: pregna-care-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - pregna-care-network
+    depends_on:
+      - backend
+    environment:
+      - VITE_BASE_URL=http://14.225.205.143:5167/api/v1
+
+networks:
+  pregna-care-network:
+    driver: bridge
