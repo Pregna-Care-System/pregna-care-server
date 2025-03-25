@@ -7,5 +7,6 @@ namespace PregnaCare.Services.Interfaces
     {
         Task<CreateContactResponse> CreateContactAsync(CreateContactRequest request);
         Task<bool> DeleteContactAsync(string email);
+        Task<SelectContactResponse> SelectContactAsync();
     }
 }

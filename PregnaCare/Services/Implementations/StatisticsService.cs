@@ -134,8 +134,8 @@ namespace PregnaCare.Services.Implementations
             var transactions = await (from userPlan in _context.UserMembershipPlans
                                       join plan in _context.MembershipPlans on userPlan.MembershipPlanId equals plan.Id
                                       join user in _context.Users on userPlan.UserId equals user.Id
-                                      where !userPlan.IsDeleted.Value && userPlan.IsActive.Value
-                                      orderby plan.PlanName ascending, userPlan.CreatedAt descending
+                                      where !userPlan.IsDeleted.Value
+                                      orderby userPlan.CreatedAt descending, plan.PlanName ascending
                                       select new TransactionStatsResponse
                                       {
                                           ImageUrl = user.ImageUrl,
@@ -258,6 +258,70 @@ namespace PregnaCare.Services.Implementations
             response.Message = Messages.GetMessageById(Messages.I00001);
             response.Response = responseList;
             return response;
+        }
+
+        public async Task<List<NewMembersDataPointResponse>> GetMonthlyNewMembersAsync()
+        {
+            var result = new List<NewMembersDataPointResponse>();
+            var currentYear = DateTime.Today.Year;
+            string[] monthNames = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+
+            var allMembersThisYear = await _context.Users
+                .Where(m => m.CreatedAt.Value.Year == currentYear)
+                .Select(m => new { m.CreatedAt.Value.Month })
+                .ToListAsync();
+
+            for (int month = 1; month <= 12; month++)
+            {
+                var membersCount = allMembersThisYear.Count(m => m.Month == month);
+
+                result.Add(new NewMembersDataPointResponse
+                {
+                    Period = monthNames[month - 1],
+                    Count = membersCount
+                });
+            }
+
+            return result;
+        }
+
+        public async Task<List<NewMembersDataPointResponse>> GetWeeklyNewMembersAsync()
+        {
+            var result = new List<NewMembersDataPointResponse>();
+            var today = DateTime.Today;
+
+            var startOfMonth = new DateTime(today.Year, today.Month, 1);
+
+            var daysInMonth = DateTime.DaysInMonth(today.Year, today.Month);
+            var numberOfWeeks = (int)Math.Ceiling(daysInMonth / 7.0);
+
+            for (int week = 0; week < numberOfWeeks; week++)
+            {
+                var weekStartDate = startOfMonth.AddDays(week * 7);
+                var weekEndDate = weekStartDate.AddDays(6);
+
+                if (weekEndDate.Month > startOfMonth.Month)
+                {
+                    weekEndDate = new DateTime(weekStartDate.Year, weekStartDate.Month, daysInMonth);
+                }
+
+                if (weekStartDate > today)
+                {
+                    break;
+                }
+
+                var membersCount = await _context.Users
+                    .CountAsync(m => m.CreatedAt >= weekStartDate &&
+                                  m.CreatedAt <= weekEndDate);
+
+                result.Add(new NewMembersDataPointResponse
+                {
+                    Period = $"Week {week + 1}",
+                    Count = membersCount
+                });
+            }
+
+            return result;
         }
     }
 }

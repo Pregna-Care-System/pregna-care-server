@@ -17,16 +17,16 @@ namespace PregnaCare.Api.Controllers.Blog
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllActive()
+        public async Task<IActionResult> GetAllActive([FromQuery] string? type = "Blog")
         {
-            var response = await _service.GetAllBlogs();
+            var response = await _service.GetAllBlogs(type);
             return Ok(response);
         }
 
         [HttpGet("User/{id}")]
-        public async Task<IActionResult> GetAllBlogByUser(Guid id)
+        public async Task<IActionResult> GetAllBlogByUser(Guid id, [FromQuery] string? type = "Blog")
         {
-            var response = await _service.GetAllByUserIdBlogs(id);
+            var response = await _service.GetAllByUserIdBlogs(id, type);
             return Ok(response);
         }
 
@@ -67,6 +67,25 @@ namespace PregnaCare.Api.Controllers.Blog
             var response = await _service.IncreaseViewCount(id);
             if (!response) return BadRequest(Messages.GetMessageById(Messages.E00013));
             return Ok();
+        }
+
+        [HttpPut("{blogId}/Approve")]
+        public async Task<IActionResult> IncreaseViewCount([FromRoute] Guid blogId, [FromQuery] string status)
+        {
+            var response = await _service.ApproveBlog(blogId, status);
+            if (!response) return BadRequest(new
+            {
+                Success = false,
+                MessageId = Messages.E00013,
+                Message = Messages.GetMessageById(Messages.E00013)
+            });
+
+            return Ok(new
+            {
+                Success = true,
+                MessageId = Messages.I00001,
+                Message = Messages.GetMessageById(Messages.I00001)
+            });
         }
     }
 }

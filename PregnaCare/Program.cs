@@ -13,6 +13,7 @@ using PregnaCare.Middlewares;
 using PregnaCare.Services.BackgroundServices;
 using PregnaCare.Services.Implementations;
 using PregnaCare.Services.Interfaces;
+using QuestPDF.Infrastructure;
 
 namespace PregnaCare
 {
@@ -21,6 +22,8 @@ namespace PregnaCare
         public static async Task Main(string[] args)
         {
             _ = Env.Load();
+            
+            QuestPDF.Settings.License = LicenseType.Community;
 
             var builder = WebApplication.CreateBuilder(args);
 

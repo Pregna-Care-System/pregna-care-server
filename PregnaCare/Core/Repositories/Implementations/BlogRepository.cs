@@ -15,10 +15,10 @@ namespace PregnaCare.Core.Repositories.Implementations
             _context = pregnaCareAppDbContext;
         }
 
-        public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogAsync()
+        public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogAsync(string type)
         {
             var blogList = await _context.Blogs
-                .Where(b => b.IsDeleted == false && b.IsVisible == true).Include(x => x.User)
+                .Where(b => b.IsDeleted == false && b.IsVisible == true && b.Type.ToLower() == type.ToLower()).Include(x => x.User)
                 .OrderByDescending(b => b.UpdatedAt)
                 .ThenByDescending(b => b.CreatedAt)
                 .Select(blog => new BlogDTO
@@ -50,10 +50,10 @@ namespace PregnaCare.Core.Repositories.Implementations
             return blogList;
         }
 
-        public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<BlogDTO>> GetAllActiveBlogByUserIdAsync(Guid userId, string type)
         {
             var blogList = await _context.Blogs
-                .Where(b => b.IsDeleted == false && b.UserId == userId)
+                .Where(b => b.IsDeleted == false && b.UserId == userId && b.Type.ToLower() == type.ToLower())
                 .OrderByDescending(b => b.UpdatedAt)
                 .ThenByDescending(b => b.CreatedAt)
                 .Include(x => x.User)
@@ -87,5 +87,36 @@ namespace PregnaCare.Core.Repositories.Implementations
             return blogList;
         }
 
+        public async Task<BlogDTO> GetDetailById(Guid id)
+        {
+            return await _context.Blogs
+                .Where(b => b.IsDeleted == false && b.Id == id)
+                .Include(x => x.User)
+                .Select(blog => new BlogDTO
+                {
+                    Id = blog.Id,
+                    UserId = blog.UserId,
+                    FullName = blog.User.FullName,
+                    PageTitle = blog.PageTitle,
+                    Heading = blog.Heading,
+                    Content = blog.Content,
+                    ShortDescription = blog.ShortDescription,
+                    FeaturedImageUrl = blog.FeaturedImageUrl,
+                    IsVisible = blog.IsVisible,
+                    SharedChartData = blog.SharedChartData,
+                    Status = blog.Status,
+                    Type = blog.Type,
+                    TimeAgo = CommonUtils.GetTimeAgo(blog.UpdatedAt.Value),
+                    ViewCount = blog.ViewCount ?? 0,
+                    Tags = _context.BlogTags
+                                .Where(bt => bt.BlogId == blog.Id && bt.IsDeleted == false)
+                                .Join(_context.Tags, bt => bt.TagId, t => t.Id, (bt, t) => new TagDTO
+                                {
+                                    Id = t.Id,
+                                    Name = t.Name
+                                })
+                                .ToList()
+                }).FirstOrDefaultAsync() ?? new();
+        }
     }
 }

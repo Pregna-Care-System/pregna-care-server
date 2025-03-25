@@ -1,6 +1,7 @@
 ﻿using PregnaCare.Api.Models.Requests.BlogRequestModel;
 using PregnaCare.Api.Models.Responses.BlogResponseModel;
 using PregnaCare.Common.Constants;
+using PregnaCare.Common.Enums;
 using PregnaCare.Common.Mappers;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
@@ -21,9 +22,9 @@ namespace PregnaCare.Services.Implementations
             _blogTagRepository = blogTagRepository;
         }
 
-        public async Task<BlogListResponse> GetAllBlogs()
+        public async Task<BlogListResponse> GetAllBlogs(string type)
         {
-            var blogs = await _blogRepository.GetAllActiveBlogAsync();
+            var blogs = await _blogRepository.GetAllActiveBlogAsync(type);
             return new BlogListResponse
             {
                 Success = true,
@@ -34,13 +35,10 @@ namespace PregnaCare.Services.Implementations
         public async Task<SelectDetailBlogResponse> GetBlogById(Guid id)
         {
             var response = new SelectDetailBlogResponse() { Success = false };
-            var blogs = await _blogRepository.GetAllActiveBlogAsync();
-            var responseEntity = blogs.FirstOrDefault(x => x.Id == id);
-
             response.Success = true;
             response.MessageId = Messages.I00001;
             response.Message = Messages.GetMessageById(Messages.I00001);
-            response.Response = responseEntity;
+            response.Response = await _blogRepository.GetDetailById(id);
             return response;
         }
 
@@ -51,13 +49,12 @@ namespace PregnaCare.Services.Implementations
             var blog = Mapper.MapToBlog(request);
             blog.Id = Guid.NewGuid();
             blog.Type = request.Type;
-            blog.Status = request.Status;
             blog.SharedChartData = request.SharedChartData;
             blog.CreatedAt = DateTime.Now;
             blog.UpdatedAt = DateTime.Now;
             blog.IsDeleted = false;
 
-            await _blogRepository.AddAsync(blog);
+            await _unitOfWork.GetRepository<Blog, Guid>().AddAsync(blog);
 
             var blogTagRepo = _unitOfWork.GetRepository<BlogTag, Guid>();
             if (tagIds != null && tagIds.Any())
@@ -107,7 +104,7 @@ namespace PregnaCare.Services.Implementations
             blog.SharedChartData = request.SharedChartData;
             blog.IsVisible = request.IsVisible;
 
-            _blogRepository.Update(blog);
+            _unitOfWork.GetRepository<Blog, Guid>().Update(blog);
 
             if (request.TagIds != null && request.TagIds.Any())
             {
@@ -119,7 +116,7 @@ namespace PregnaCare.Services.Implementations
                 {
                     if (!newTagIds.Contains(extingTag.TagId))
                     {
-                        _blogTagRepository.Remove(extingTag);
+                        _unitOfWork.GetRepository<BlogTag, Guid>().Remove(extingTag);
                     }
                 }
                 //add new blog tags
@@ -136,7 +133,7 @@ namespace PregnaCare.Services.Implementations
                             UpdatedAt = DateTime.Now,
                             IsDeleted = false
                         };
-                        await _blogTagRepository.AddAsync(blogTag);
+                        await _unitOfWork.GetRepository<BlogTag, Guid>().AddAsync(blogTag);
                     }
                 }
             }
@@ -153,20 +150,22 @@ namespace PregnaCare.Services.Implementations
         {
             var blogTags = await _blogTagRepository.GetAllAsync();
             var blog = await _blogRepository.GetByIdAsync(id);
+            var blogTagRepository = _unitOfWork.GetRepository<BlogTag, Guid>();
             foreach (var blogTag in blogTags)
             {
                 if (blogTag.BlogId == id)
                 {
-                    _blogTagRepository.Remove(blogTag);
+                    _unitOfWork.GetRepository<BlogTag, Guid>().Remove(blogTag);
                 }
             }
-            _blogRepository.Remove(blog);
+
+            _unitOfWork.GetRepository<Blog, Guid>().Remove(blog);
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<BlogListResponse> GetAllByUserIdBlogs(Guid id)
+        public async Task<BlogListResponse> GetAllByUserIdBlogs(Guid id, string type)
         {
-            var blogs = await _blogRepository.GetAllActiveBlogByUserIdAsync(id);
+            var blogs = await _blogRepository.GetAllActiveBlogByUserIdAsync(id, type);
             return new BlogListResponse
             {
                 Success = true,
@@ -180,7 +179,28 @@ namespace PregnaCare.Services.Implementations
             if (blog == null) return false;
 
             blog.ViewCount++;
-            _blogRepository.Update(blog);
+            _unitOfWork.GetRepository<Blog, Guid>().Update(blog);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> ApproveBlog(Guid blogId, string status)
+        {
+            var blog = await _blogRepository.GetByIdAsync(blogId);
+            if (blog == null) return false;
+
+            var matchedStatus = Enum.GetValues<StatusEnum>()
+                             .FirstOrDefault(s => s.ToString().Equals(status, StringComparison.OrdinalIgnoreCase));
+
+            if (!Enum.IsDefined(typeof(StatusEnum), matchedStatus))
+            {
+                return false;
+            }
+
+            blog.Status = matchedStatus.ToString();
+            blog.UpdatedAt = DateTime.Now;
+
+            _unitOfWork.GetRepository<Blog, Guid>().Update(blog);
             await _unitOfWork.SaveChangesAsync();
             return true;
         }

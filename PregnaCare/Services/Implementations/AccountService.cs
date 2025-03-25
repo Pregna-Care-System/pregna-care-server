@@ -2,6 +2,7 @@
 using PregnaCare.Api.Models.Responses.AccountResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
+using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -166,7 +167,8 @@ namespace PregnaCare.Services.Implementations
             existingAccount.Gender = request.Gender;
             existingAccount.ImageUrl = request.ImageUrl;
 
-            _repo.Update(existingAccount);
+            
+            _unit.GetRepository<User, Guid>().Update(existingAccount);
             await _unit.SaveChangesAsync();
 
             var accountDTO = Mapper.MapToAccountDTO(existingAccount);
