@@ -28,8 +28,8 @@ namespace PregnaCare.Services.Implementations
         {
             var comment = Mapper.MapToComment(request);
             comment.IsDeleted = false;
-            comment.UpdatedAt = DateTime.UtcNow;
-            comment.CreatedAt = DateTime.UtcNow;
+            comment.UpdatedAt = DateTime.Now;
+            comment.CreatedAt = DateTime.Now;
 
             await _genericRepository.AddAsync(comment);
             await _unit.SaveChangesAsync();
@@ -43,9 +43,19 @@ namespace PregnaCare.Services.Implementations
 
         public async Task DeleteComment(Guid id)
         {
+            var childComments = await _genericRepository.FindAsync(x => x.ParentCommentId == id);
+
+            foreach (var childComment in childComments)
+            {
+                await DeleteComment(childComment.Id);
+            }
+
             var comment = await _repo.GetByIdAsync(id);
-            _genericRepository.Remove(comment);
-            await _unit.SaveChangesAsync();
+            if (comment != null)
+            {
+                _genericRepository.Remove(comment);
+                await _unit.SaveChangesAsync();
+            }
         }
 
         public async Task<SelectCommentResponse> GetAllBlogComment(Guid blogId)
@@ -83,7 +93,7 @@ namespace PregnaCare.Services.Implementations
         {
             var comment = await _repo.GetByIdAsync(id);
             comment.CommentText = request.CommentText;
-            comment.UpdatedAt = DateTime.UtcNow;
+            comment.UpdatedAt = DateTime.Now;
 
             _genericRepository.Update(comment);
             await _unit.SaveChangesAsync();

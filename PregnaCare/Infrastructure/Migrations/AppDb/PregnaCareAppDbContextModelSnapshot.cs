@@ -228,7 +228,7 @@ namespace PregnaCare.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ContactSubscribers");
+                    b.ToTable("ContactSubscribers", (string)null);
                 });
 
             modelBuilder.Entity("PregnaCare.Core.Models.FAQ", b =>
@@ -265,7 +265,7 @@ namespace PregnaCare.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("FAQs");
+                    b.ToTable("FAQs", (string)null);
                 });
 
             modelBuilder.Entity("PregnaCare.Core.Models.FAQCategory", b =>
@@ -297,7 +297,7 @@ namespace PregnaCare.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("FAQCategories");
+                    b.ToTable("FAQCategories", (string)null);
                 });
 
             modelBuilder.Entity("PregnaCare.Core.Models.Feature", b =>
@@ -381,7 +381,7 @@ namespace PregnaCare.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("FeedBacks");
+                    b.ToTable("FeedBacks", (string)null);
                 });
 
             modelBuilder.Entity("PregnaCare.Core.Models.FetalGrowthRecord", b =>
@@ -887,7 +887,7 @@ namespace PregnaCare.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reactions");
+                    b.ToTable("Reactions", (string)null);
                 });
 
             modelBuilder.Entity("PregnaCare.Core.Models.Reminder", b =>
