@@ -74,12 +74,10 @@ namespace PregnaCare.Services.Implementations
             var motherInfo = new MotherInfo
             {
                 Id = Guid.NewGuid(),
-                MotherName = request.MotherName,
                 BloodType = request.BloodType,
                 HealthStatus = request.HealhStatus,
                 Notes = request.Notes,
                 UserId = request.UserId,
-                DateOfBirth = request.MotherDateOfBirth
             };
 
             _ = await _context.MotherInfos.AddAsync(motherInfo);
