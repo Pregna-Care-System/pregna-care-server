@@ -28,17 +28,6 @@ namespace PregnaCare.Services.Implementations
             var response = new CreateMotherInfoResponse() { Success = false };
             var detailErrorList = new List<DetailError>();
 
-            if (string.IsNullOrEmpty(request.MotherName))
-            {
-                detailErrorList.Add(new DetailError
-                {
-                    FieldName = nameof(request.MotherName),
-                    Value = request.MotherName,
-                    MessageId = Messages.E00002,
-                    Message = Messages.GetMessageById(Messages.E00002)
-                });
-            }
-
             if (string.IsNullOrEmpty(request.BloodType))
             {
                 detailErrorList.Add(new DetailError
