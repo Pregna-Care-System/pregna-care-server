@@ -62,6 +62,15 @@ namespace PregnaCare.Services.Implementations
             blog.UpdatedAt = DateTime.Now;
             blog.IsDeleted = false;
 
+            if(blog.Type.ToLower() == BlogTypeEnum.Community.ToString().ToLower())
+            {
+                blog.Status = StatusEnum.Approved.ToString();
+            }
+            else
+            {
+                blog.Status = StatusEnum.Pending.ToString();
+            }
+
             await _unitOfWork.GetRepository<Blog, Guid>().AddAsync(blog);
 
             var blogTagRepo = _unitOfWork.GetRepository<BlogTag, Guid>();

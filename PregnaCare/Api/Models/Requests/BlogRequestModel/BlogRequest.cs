@@ -19,7 +19,7 @@ namespace PregnaCare.Api.Models.Requests.BlogRequestModel
         public string FeaturedImageUrl { get; set; } = string.Empty;
         public bool IsVisible { get; set; }
         public string Type { get; set; } = BlogTypeEnum.Blog.ToString();
-        public string Status { get; set; } = string.Empty;
+        public string Status { get; set; } = StatusEnum.Pending.ToString();
         public string? SharedChartData { get; set; } = string.Empty;
     }
 }
