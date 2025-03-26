@@ -88,16 +88,6 @@ namespace PregnaCare.Services.Implementations
             var response = new UpdateMotherInfoResponse() { Success = false };
             var detailErrorList = new List<DetailError>();
 
-            if (string.IsNullOrEmpty(request.MotherName))
-            {
-                detailErrorList.Add(new DetailError
-                {
-                    FieldName = nameof(request.MotherName),
-                    Value = request.MotherName,
-                    MessageId = Messages.E00002,
-                    Message = Messages.GetMessageById(Messages.E00002)
-                });
-            }
 
             if (string.IsNullOrEmpty(request.BloodType))
             {
@@ -131,8 +121,6 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            motherInfo.MotherName = request.MotherName;
-            motherInfo.DateOfBirth = request.MotherDateOfBirth;
             motherInfo.BloodType = request.BloodType;
             motherInfo.HealthStatus = request.HealhStatus;
             motherInfo.Notes = request.Notes;
