@@ -77,7 +77,12 @@ namespace PregnaCare.Core.Repositories.Implementations
                         : (int?)null)
                         .FirstOrDefault() ?? 0,
                     PlanCreated = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.CreatedAt)
+                        .FirstOrDefault(),
+                    PlanPrice = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
+                        .Select(ump => ump.Price)
                         .FirstOrDefault()
                 })
                 .ToListAsync();
@@ -121,7 +126,15 @@ namespace PregnaCare.Core.Repositories.Implementations
                         ? (int)(ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays
                         : 1)
                         : (int?)null)
-                        .FirstOrDefault() ?? 0
+                        .FirstOrDefault() ?? 0,
+                    PlanCreated = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
+                        .Select(ump => ump.CreatedAt)
+                        .FirstOrDefault(),
+                    PlanPrice = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
+                        .Select(ump => ump.Price)
+                        .FirstOrDefault()
 
                 })
                 .FirstOrDefaultAsync();
