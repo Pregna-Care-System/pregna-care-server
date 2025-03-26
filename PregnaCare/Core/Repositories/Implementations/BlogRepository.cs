@@ -63,6 +63,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     Id = blog.Id,
                     UserId = blog.UserId,
                     FullName = blog.User.FullName,
+                    AvatarUrl = blog.User.ImageUrl,
                     PageTitle = blog.PageTitle,
                     Heading = blog.Heading,
                     Content = blog.Content,
