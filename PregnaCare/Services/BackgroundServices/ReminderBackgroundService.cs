@@ -20,8 +20,16 @@ namespace PregnaCare.Services.BackgroundServices
                 {
                     var reminderRepository = scope.ServiceProvider.GetRequiredService<IReminderRepository>();
                     var notificationService = scope.ServiceProvider.GetRequiredService<IReminderNotificationService>();
+                    var growthAlertService = scope.ServiceProvider.GetRequiredService<IGrowthAlertService>();
+
                     var now = DateTime.Now;
                     var reminders = await reminderRepository.GetRemindersToNotifyAsync(now);
+                    var growthAlerts = await growthAlertService.GetFetalGrowthRecordsToSendNotification();
+
+                    foreach (var growthAlert in growthAlerts)
+                    {
+                        await notificationService.SendReminderNotificationAsync(growthAlert.Id, growthAlert.UserId, "New Fetal Growth Update", "There's an important update regarding " + growthAlert.FetalGrowthRecord.Name + ". Please review the details to monitor your baby's health.");
+                    }
 
                     foreach (var reminder in reminders)
                     {
