@@ -1,6 +1,6 @@
 ﻿using PregnaCare.Common.Api;
 
-namespace PregnaCare.Api.Models.Requests.MotherInfoModel
+namespace PregnaCare.Api.Models.Requests.MotherInfoRequestModel
 {
     public class CreateMotherInfoRequest : AbstractApiRequest
     {

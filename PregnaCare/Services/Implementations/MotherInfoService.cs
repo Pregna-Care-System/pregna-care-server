@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PregnaCare.Api.Models.Requests.MotherInfoModel;
 using PregnaCare.Api.Models.Requests.MotherInfoRequestModel;
 using PregnaCare.Api.Models.Responses.MotherInfoResponseModel;
 using PregnaCare.Common.Api;

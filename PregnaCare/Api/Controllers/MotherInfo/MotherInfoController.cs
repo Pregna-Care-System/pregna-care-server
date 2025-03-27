@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests.MotherInfoModel;
 using PregnaCare.Api.Models.Requests.MotherInfoRequestModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
