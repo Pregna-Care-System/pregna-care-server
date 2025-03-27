@@ -16,7 +16,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<IEnumerable<Reminder>> GetActiveRemindersAsync()
         {
-            var currentDateTime = DateTime.UtcNow.Date;
+            var currentDateTime = DateTime.Now.Date;
             return await _appDbContext.Reminders.Where(f => (bool)!f.IsDeleted)
                 .Where(f => f.ReminderDate >= currentDateTime)
                 .OrderBy(f => f.ReminderDate)
@@ -34,11 +34,10 @@ namespace PregnaCare.Core.Repositories.Implementations
 
             return (await _appDbContext.Reminders
                         .ToListAsync())
-                        .Where(r => r.ReminderDate != null
+                        .Where(r =>     r.ReminderDate != null
                                     && r.ReminderDate.Value.Date == dateTime.Date
-                                    && notifyTimes.Any(nt => r.ReminderDate.Value - nt <= dateTime
-                                    && r.ReminderDate > dateTime)
-                                    && r.Status == StatusEnum.Active.ToString());
+                                    && notifyTimes.Any(nt => Math.Abs((r.ReminderDate.Value - nt - dateTime).TotalMinutes) < 1)
+                                    && r.Status == StatusEnum.Active.ToString()).ToList();
         }
 
 

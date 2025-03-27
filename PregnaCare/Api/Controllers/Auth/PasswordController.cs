@@ -79,7 +79,7 @@ namespace PregnaCare.Api.Controllers.Auth
             if (!response.Success) return BadRequest(response);
 
             var userToken = await _authContext.Set<IdentityUserToken<Guid>>().FirstOrDefaultAsync(x => x.Value == request.Token && x.Name == TokenTypeEnum.ResetPasswordToken.ToString());
-            if (userToken == null || (DateTime?)_authContext.Entry(userToken).Property("ExpirationTime").OriginalValue < DateTime.UtcNow)
+            if (userToken == null || (DateTime?)_authContext.Entry(userToken).Property("ExpirationTime").OriginalValue < DateTime.Now)
             {
                 response.Success = false;
                 response.MessageId = Messages.E99999;

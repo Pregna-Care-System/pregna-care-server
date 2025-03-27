@@ -12,9 +12,9 @@
 
         public string Type { get; set; } = string.Empty; // Like, Love, Dislike, etc.
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
 
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         public virtual Blog? Blog { get; set; }
         public virtual Comment? Comment { get; set; }

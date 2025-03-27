@@ -244,7 +244,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                 {
                     UserId = userId,
                     MembershipPlanId = freePlan.Id,
-                    ExpiryDate = DateTime.UtcNow.AddDays(3),
+                    ExpiryDate = DateTime.Now.AddDays(3),
                     IsActive = true,
                     Status = StatusEnum.Completed.ToString()
                 };

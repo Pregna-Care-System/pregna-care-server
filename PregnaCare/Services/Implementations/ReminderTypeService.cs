@@ -27,8 +27,8 @@ namespace PregnaCare.Services.Implementations
             {
                 Id = Guid.NewGuid(),
                 Description = request.Description,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
                 IsDeleted = false,
                 TypeName = request.TypeName,
 
@@ -69,7 +69,7 @@ namespace PregnaCare.Services.Implementations
 
             type.TypeName = request.TypeName;
             type.Description = request.Description;
-            type.UpdatedAt = DateTime.UtcNow;
+            type.UpdatedAt = DateTime.Now;
 
             _repository.Update(type);
             await _unitOfWork.SaveChangesAsync();

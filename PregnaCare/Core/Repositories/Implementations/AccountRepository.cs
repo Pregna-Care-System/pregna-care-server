@@ -16,7 +16,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<IEnumerable<AccountDTO>?> GetMembers(string filterType = null, string name = null)
         {
-            DateTime currentDate = DateTime.UtcNow;
+            DateTime currentDate = DateTime.Now;
 
             IQueryable<User> query = _appDbContext.Users
                 .Where(u => u.IsDeleted == false && u.UserRoles.Any(ur => ur.Role.RoleName == "Member"));
@@ -72,8 +72,8 @@ namespace PregnaCare.Core.Repositories.Implementations
                     remainingDate = u.UserMembershipPlans
                         .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.ExpiryDate.HasValue
-                        ? ((ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays > 1
-                        ? (int)(ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays
+                        ? ((ump.ExpiryDate.Value - DateTime.Now).TotalDays > 1
+                        ? (int)(ump.ExpiryDate.Value - DateTime.Now).TotalDays
                         : 1) // Nếu còn bất kỳ thời gian nào, hiển thị ít nhất là 1 ngày
                         : (int?)null)
                         .FirstOrDefault() ?? 0,
@@ -94,7 +94,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<AccountDTO> GetMemberInforWithPlanDetail(Guid userId)
         {
-            DateTime currentDate = DateTime.UtcNow;
+            DateTime currentDate = DateTime.Now;
 
             var member = await _appDbContext.Users
                 .Where(u => u.IsDeleted == false && u.UserRoles.Any(ur => ur.Role.RoleName == "Member") && u.Id == userId)
@@ -124,8 +124,8 @@ namespace PregnaCare.Core.Repositories.Implementations
                     remainingDate = u.UserMembershipPlans
                         .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.ExpiryDate.HasValue
-                        ? ((ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays > 1
-                        ? (int)(ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays
+                        ? ((ump.ExpiryDate.Value - DateTime.Now).TotalDays > 1
+                        ? (int)(ump.ExpiryDate.Value - DateTime.Now).TotalDays
                         : 1)
                         : (int?)null)
                         .FirstOrDefault() ?? 0,
