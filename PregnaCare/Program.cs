@@ -83,7 +83,7 @@ namespace PregnaCare
             _ = builder.Services.AddScoped<IBlogService, BlogService>();
             _ = builder.Services.AddScoped<ITagService, TagService>();
             _ = builder.Services.AddScoped<ICommentService, CommentService>();
-            builder.Services.AddHttpClient<IShoppingService, ShoppingService>();
+            _ = builder.Services.AddHttpClient<IShoppingService, ShoppingService>();
 
             _ = builder.Services.AddSignalR();
 

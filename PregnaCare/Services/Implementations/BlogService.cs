@@ -67,7 +67,7 @@ namespace PregnaCare.Services.Implementations
             blog.UpdatedAt = DateTime.Now;
             blog.IsDeleted = false;
 
-            if(blog.Type.ToLower() == BlogTypeEnum.Community.ToString().ToLower())
+            if (blog.Type.ToLower() == BlogTypeEnum.Community.ToString().ToLower())
             {
                 blog.Status = StatusEnum.Approved.ToString();
             }

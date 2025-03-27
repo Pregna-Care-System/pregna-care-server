@@ -39,8 +39,8 @@ namespace PregnaCare.Services.Implementations
                 ReminderDate = reminderDateTime,
                 StartTime = request.StartTime,
                 EndTime = request.EndTime,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
                 IsDeleted = false,
 
             };
@@ -52,8 +52,8 @@ namespace PregnaCare.Services.Implementations
                 Id = Guid.NewGuid(),
                 UserId = id,
                 ReminderId = type.Id,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
                 IsDeleted = false,
             };
             await _userReminderRepo.AddAsync(userReminder);
@@ -115,7 +115,7 @@ namespace PregnaCare.Services.Implementations
             type.ReminderDate = request.ReminderDate;
             type.StartTime = request.StartTime;
             type.EndTime = request.EndTime;
-            type.UpdatedAt = DateTime.UtcNow;
+            type.UpdatedAt = DateTime.Now;
 
             _repository.Update(type);
             await _unitOfWork.SaveChangesAsync();
