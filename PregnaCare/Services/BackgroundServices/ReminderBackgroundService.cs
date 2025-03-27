@@ -28,7 +28,7 @@ namespace PregnaCare.Services.BackgroundServices
 
                     foreach (var growthAlert in growthAlerts)
                     {
-                        await notificationService.SendReminderNotificationAsync(growthAlert.Id, growthAlert.UserId, "New Fetal Growth Update", "There's an important update regarding " + growthAlert.FetalGrowthRecord.Name + ". Please review the details to monitor your baby's health.");
+                        await notificationService.SendReminderNotificationAsync(growthAlert.Id, growthAlert.UserId, "New Fetal Growth Update", $"There's an important update regarding {growthAlert.FetalGrowthRecord.Name}. Please review the details to monitor your baby's health.");
                     }
 
                     foreach (var reminder in reminders)
