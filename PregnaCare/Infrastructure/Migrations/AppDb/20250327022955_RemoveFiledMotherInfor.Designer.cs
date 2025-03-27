@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PregnaCare.Infrastructure.Data;
 
 #nullable disable
 
-namespace PregnaCare.Migrations
+namespace PregnaCare.Infrastructure.Migrations.AppDb
 {
     [DbContext(typeof(PregnaCareAppDbContext))]
-    partial class PregnaCareAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250327022955_RemoveFiledMotherInfor")]
+    partial class RemoveFiledMotherInfor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

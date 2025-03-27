@@ -5,10 +5,6 @@ public partial class MotherInfo
 
     public Guid? UserId { get; set; }
 
-    public string MotherName { get; set; } = string.Empty;
-
-    public DateOnly? DateOfBirth { get; set; }
-
     public string BloodType { get; set; } = string.Empty;
 
     public string HealthStatus { get; set; } = string.Empty;

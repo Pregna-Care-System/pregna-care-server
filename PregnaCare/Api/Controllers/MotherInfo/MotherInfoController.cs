@@ -23,8 +23,6 @@ namespace PregnaCare.Api.Controllers.MotherInfo
             var responseList = _motherInfoService.GetAllMotherInfosByUserId(userId).Select(x => new
             {
                 Id = x.Id,
-                MotherName = x.MotherName,
-                DateOfBirth = x.DateOfBirth,
                 BloodType = x.BloodType,
                 HealthStatus = x.HealthStatus,
                 Notes = x.Notes,
