@@ -60,6 +60,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     CreatedAt = u.CreatedAt,
                     UpdatedAt = u.UpdatedAt,
                     IsDeleted = u.IsDeleted,
+                    IsFeedback = u.IsFeedback,
                     IsActive = u.UserMembershipPlans
                         .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.IsActive)
@@ -112,6 +113,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     CreatedAt = u.CreatedAt,
                     UpdatedAt = u.UpdatedAt,
                     IsDeleted = u.IsDeleted,
+                    IsFeedback = u.IsFeedback,
                     IsActive = u.UserMembershipPlans
                         .Select(ump => ump.IsActive)
                         .FirstOrDefault(),

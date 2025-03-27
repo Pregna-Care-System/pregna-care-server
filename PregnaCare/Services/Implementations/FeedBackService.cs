@@ -12,12 +12,14 @@ namespace PregnaCare.Services.Implementations
     {
 
         private readonly IFeedBackRepository _feedbackRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IUnitOfWork _unit;
 
-        public FeedBackService(IUnitOfWork unitOfWork, IFeedBackRepository feedBackRepository)
+        public FeedBackService(IUnitOfWork unitOfWork, IFeedBackRepository feedBackRepository, IAccountRepository accountRepository)
         {
             _unit = unitOfWork;
             _feedbackRepository = feedBackRepository;
+            _accountRepository = accountRepository;
         }
         public async Task<FeedbackResponse> AddFeedbackAsync(FeedbackRequest request, Guid userId)
         {
@@ -33,6 +35,13 @@ namespace PregnaCare.Services.Implementations
             feedback.IsDeleted = false;
 
             await _feedbackRepository.AddAsync(feedback);
+            // Update User.isFeedback = true
+            var user = await _accountRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+                user.IsFeedback = true;
+                _accountRepository.Update(user);
+            }
             await _unit.SaveChangesAsync();
 
             response.Success = true;
