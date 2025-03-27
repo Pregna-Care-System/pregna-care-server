@@ -9,8 +9,8 @@ namespace PregnaCare.Utils
 {
     public class VnpayUtils
     {
-        private readonly SortedList<string, string> _requestData = new SortedList<string, string>(new VnpayCompare());
-        private readonly SortedList<string, string> _responseData = new SortedList<string, string>(new VnpayCompare());
+        private readonly SortedList<string, string> _requestData = new(new VnpayCompare());
+        private readonly SortedList<string, string> _responseData = new(new VnpayCompare());
 
         public PaymentResponse GetFullResponseData(IQueryCollection collections, string hashSecret)
         {

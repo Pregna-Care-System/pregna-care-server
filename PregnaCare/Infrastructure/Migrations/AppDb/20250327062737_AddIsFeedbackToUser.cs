@@ -10,7 +10,7 @@ namespace PregnaCare.Infrastructure.Migrations.AppDb
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<bool>(
+            _ = migrationBuilder.AddColumn<bool>(
                 name: "IsFeedback",
                 table: "User",
                 nullable: false,
@@ -20,7 +20,7 @@ namespace PregnaCare.Infrastructure.Migrations.AppDb
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            _ = migrationBuilder.DropColumn(
                 name: "IsFeedback",
                 table: "User");
         }

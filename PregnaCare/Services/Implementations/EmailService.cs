@@ -6,8 +6,8 @@ namespace PregnaCare.Services.Implementations
 {
     public class EmailService : IEmailService
     {
-        private string address = string.Empty;
-        private string key = string.Empty;
+        private readonly string address = string.Empty;
+        private readonly string key = string.Empty;
         public EmailService(IConfiguration configuration)
         {
             this.address = configuration.GetValue<string>("Email:Address")!;
@@ -18,12 +18,12 @@ namespace PregnaCare.Services.Implementations
         {
             try
             {
-                using (SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587))
+                using (SmtpClient smtpClient = new("smtp.gmail.com", 587))
                 {
                     smtpClient.EnableSsl = true;
                     smtpClient.Credentials = new NetworkCredential(this.address, this.key);
 
-                    using (MailMessage mailMessage = new MailMessage())
+                    using (MailMessage mailMessage = new())
                     {
                         mailMessage.From = new MailAddress(this.address, "PregnaCare System");
                         mailMessage.To.Add(new MailAddress(target));
