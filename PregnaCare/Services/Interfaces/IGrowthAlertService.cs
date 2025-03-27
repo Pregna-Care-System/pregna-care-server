@@ -8,5 +8,6 @@ namespace PregnaCare.Services.Interfaces
         Task<List<GrowthAlert>> GetGrowthAlerts(Guid userId);
         Task<List<GrowthAlert>> GetGrowthAlertsByPregnancyRecordId(Guid PregnancyRecordId);
         Task<bool> UpdateStatusGrowthAlert(Guid growthAlertId, string status);
+        Task<List<GrowthAlert>> GetFetalGrowthRecordsToSendNotification();
     }
 }

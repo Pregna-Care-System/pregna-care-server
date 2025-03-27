@@ -51,5 +51,37 @@ namespace PregnaCare.Services.Implementations
             await _notificationRepo.AddAsync(notification);
             await _unitOfWork.SaveChangesAsync();
         }
+
+        public async Task SendReminderNotificationAsync(Guid senderId, Guid receiverId, string title, string message)
+        {
+            await _hubContext.Clients.User(receiverId.ToString()).SendAsync("ReceiveReminder", message);
+
+            var notificationEntity = (await _notificationRepo.FindAsync(x => x.ReceiverId == receiverId &&
+                                                                            x.Title == title &&
+                                                                            x.Message == message &&
+                                                                            x.IsRead == false &&
+                                                                            x.IsDeleted == false &&
+                                                                            x.Status == StatusEnum.Pending.ToString()))
+                                                             .FirstOrDefault();
+            if (notificationEntity != null)
+            {
+                return;
+            }
+
+            var notification = new Notification
+            {
+                SenderId = senderId,
+                ReceiverId = receiverId,
+                Title = title,
+                Message = message,
+                IsRead = false,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+                Status = StatusEnum.Pending.ToString(),
+            };
+
+            await _notificationRepo.AddAsync(notification);
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }
