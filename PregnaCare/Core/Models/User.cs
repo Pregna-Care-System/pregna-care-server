@@ -25,6 +25,8 @@ public partial class User
 
     public bool? IsDeleted { get; set; }
 
+    public bool? IsFeedback { get; set; } = false;
+
     public virtual MotherInfo? MotherInfo { get; set; }
 
     public virtual ICollection<Blog> Blogs { get; set; } = new List<Blog>();
