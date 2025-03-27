@@ -34,7 +34,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
             return (await _appDbContext.Reminders
                         .ToListAsync())
-                        .Where(r =>     r.ReminderDate != null
+                        .Where(r => r.ReminderDate != null
                                     && r.ReminderDate.Value.Date == dateTime.Date
                                     && notifyTimes.Any(nt => Math.Abs((r.ReminderDate.Value - nt - dateTime).TotalMinutes) < 1)
                                     && r.Status == StatusEnum.Active.ToString()).ToList();
