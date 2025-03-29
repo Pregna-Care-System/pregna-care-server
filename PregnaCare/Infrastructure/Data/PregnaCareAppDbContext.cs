@@ -340,9 +340,6 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             _ = entity.Property(e => e.HealthStatus).HasDefaultValue("");
-            _ = entity.Property(e => e.MotherName)
-                .HasMaxLength(50)
-                .HasDefaultValue("");
             _ = entity.Property(e => e.Notes).HasDefaultValue("");
             _ = entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -664,7 +661,7 @@ public partial class PregnaCareAppDbContext : DbContext
                   .IsRequired()
                   .HasDefaultValue(false);
 
-            entity.HasOne(e => e.User)
+            _ = entity.HasOne(e => e.User)
                   .WithMany(u => u.Feedbacks)
                   .HasForeignKey(e => e.UserId)
                   .OnDelete(DeleteBehavior.Restrict);

@@ -15,6 +15,14 @@ namespace PregnaCare.Api.Controllers.Reminder
             _reminderService = reminderService;
         }
 
+        [HttpGet("/api/v1/User/{userId}/Reminder")]
+        public async Task<IActionResult> GetRemindersByUserId([FromRoute] Guid userId)
+        {
+            var response = await _reminderService.GetAllRemindersByUserId(userId);
+            if (response.Success) return Ok(response);
+            return NotFound(response);
+        }
+
         [HttpPost("{userId}")]
         public async Task<IActionResult> CreateReminder([FromBody] ReminderRequest request, Guid userId)
         {

@@ -11,6 +11,6 @@ namespace PregnaCare.Services.Interfaces
         Task UpdateReminder(Guid id, ReminderRequest request);
         Task DeleteReminder(Guid id);
         Task<ReminderResponse> GetReminderById(Guid id);
-
+        Task<ReminderListResponse> GetAllRemindersByUserId(Guid userId);
     }
 }

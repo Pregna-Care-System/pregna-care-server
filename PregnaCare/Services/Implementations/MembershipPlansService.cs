@@ -52,8 +52,8 @@ namespace PregnaCare.Services.Implementations
 
             plan.Id = Guid.NewGuid();
             plan.IsDeleted = false;
-            plan.CreatedAt = DateTime.UtcNow;
-            plan.UpdatedAt = DateTime.UtcNow;
+            plan.CreatedAt = DateTime.Now;
+            plan.UpdatedAt = DateTime.Now;
 
             await _repo.AddPlanAsync(plan, featureIds);
 

@@ -195,7 +195,7 @@ namespace PregnaCare.Services.Implementations
 
             if (week.HasValue)
             {
-                DateTime firstDayOfYear = new DateTime(year ?? DateTime.Now.Year, 1, 1);
+                DateTime firstDayOfYear = new(year ?? DateTime.Now.Year, 1, 1);
                 DateTime startOfWeek = firstDayOfYear.AddDays((week.Value - 1) * 7);
 
                 query = query.Where(plan =>

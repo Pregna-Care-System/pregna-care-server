@@ -103,7 +103,7 @@ namespace PregnaCare.Common.Mappers
                 Content = request.Content,
                 Rating = request.Rating,
             };
-         
+
         }
     }
 }

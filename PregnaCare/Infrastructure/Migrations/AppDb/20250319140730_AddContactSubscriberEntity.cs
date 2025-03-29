@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,7 +10,7 @@ namespace PregnaCare.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "ContactSubscribers",
                 columns: table => new
                 {
@@ -23,14 +22,14 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContactSubscribers", x => x.Id);
+                    _ = table.PrimaryKey("PK_ContactSubscribers", x => x.Id);
                 });
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "ContactSubscribers");
         }
     }

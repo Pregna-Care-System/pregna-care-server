@@ -19,9 +19,9 @@ namespace PregnaCare.Documents.Components
         {
             container.Column(column =>
             {
-                column.Item().Text(_title).Bold();
-                column.Item().Text($"Total: {_stats.Total}");
-                column.Item().Text($"Change: {_stats.PercentageChange}%");
+                _ = column.Item().Text(_title).Bold();
+                _ = column.Item().Text($"Total: {_stats.Total}");
+                _ = column.Item().Text($"Change: {_stats.PercentageChange}%");
             });
         }
     }

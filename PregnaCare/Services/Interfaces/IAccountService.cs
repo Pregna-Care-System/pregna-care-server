@@ -1,6 +1,5 @@
 ﻿using PregnaCare.Api.Models.Requests.AccountRequestModel;
 using PregnaCare.Api.Models.Responses.AccountResponseModel;
-using PregnaCare.Core.DTOs;
 
 namespace PregnaCare.Services.Interfaces
 {

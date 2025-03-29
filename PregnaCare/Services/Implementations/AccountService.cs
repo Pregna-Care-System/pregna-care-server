@@ -167,7 +167,7 @@ namespace PregnaCare.Services.Implementations
             existingAccount.Gender = request.Gender;
             existingAccount.ImageUrl = request.ImageUrl;
 
-            
+
             _unit.GetRepository<User, Guid>().Update(existingAccount);
             await _unit.SaveChangesAsync();
 

@@ -40,7 +40,7 @@ namespace PregnaCare.Documents
 
         public void Compose(IDocumentContainer container)
         {
-            container.Page(page =>
+            _ = container.Page(page =>
             {
                 page.Size(PageSizes.A4);
                 page.Margin(2, Unit.Centimetre);

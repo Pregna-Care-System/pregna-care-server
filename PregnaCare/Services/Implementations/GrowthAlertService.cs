@@ -165,5 +165,18 @@ namespace PregnaCare.Services.Implementations
             return ("Unknown issue", "UNKNOWN", 0.0, 0.0, "No valid recommendation found.");
         }
 
+        public async Task<List<GrowthAlert>> GetFetalGrowthRecordsToSendNotification()
+        {
+            var notifications = _context.Notifications.AsNoTracking();
+            var responseList = _context.GrowthAlerts
+                .Include(x => x.FetalGrowthRecord)
+                .ThenInclude(x => x.PregnancyRecord)
+                .ThenInclude(p => p.MotherInfo)
+                .ThenInclude(m => m.User)
+                .AsNoTracking()
+                .Where(x => !notifications.Any(y => y.SenderId == x.Id && y.ReceiverId == x.FetalGrowthRecord.PregnancyRecord.MotherInfo.UserId));
+
+            return await responseList.ToListAsync();
+        }
     }
 }

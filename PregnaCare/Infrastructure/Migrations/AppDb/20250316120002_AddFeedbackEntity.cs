@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -11,7 +10,7 @@ namespace PregnaCare.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
+            _ = migrationBuilder.CreateTable(
                 name: "FeedBacks",
                 columns: table => new
                 {
@@ -25,8 +24,8 @@ namespace PregnaCare.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FeedBacks", x => x.Id);
-                    table.ForeignKey(
+                    _ = table.PrimaryKey("PK_FeedBacks", x => x.Id);
+                    _ = table.ForeignKey(
                         name: "FK_FeedBacks_User_UserId",
                         column: x => x.UserId,
                         principalTable: "User",
@@ -34,7 +33,7 @@ namespace PregnaCare.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateIndex(
+            _ = migrationBuilder.CreateIndex(
                 name: "IX_FeedBacks_UserId",
                 table: "FeedBacks",
                 column: "UserId");
@@ -43,7 +42,7 @@ namespace PregnaCare.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
+            _ = migrationBuilder.DropTable(
                 name: "FeedBacks");
         }
     }

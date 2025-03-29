@@ -2,28 +2,27 @@
 
 #nullable disable
 
-namespace PregnaCare.Migrations
+namespace PregnaCare.Infrastructure.Migrations.AppDb
 {
     /// <inheritdoc />
-    public partial class AddFieldRoute : Migration
+    public partial class AddIsFeedbackToUser : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            _ = migrationBuilder.AddColumn<string>(
-                name: "Route",
-                table: "Feature",
-                type: "nvarchar(max)",
+            _ = migrationBuilder.AddColumn<bool>(
+                name: "IsFeedback",
+                table: "User",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: false);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             _ = migrationBuilder.DropColumn(
-                name: "Route",
-                table: "Feature");
+                name: "IsFeedback",
+                table: "User");
         }
     }
 }

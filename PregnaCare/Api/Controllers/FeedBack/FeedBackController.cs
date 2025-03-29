@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests.BlogRequestModel;
-using PregnaCare.Api.Models.Requests.FeatureRequestModel;
+﻿using Microsoft.AspNetCore.Mvc;
 using PregnaCare.Api.Models.Requests.FeedBackRequestModel;
-using PregnaCare.Api.Models.Responses.FeatureResponseModel;
-using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Api.Controllers.FeedBack

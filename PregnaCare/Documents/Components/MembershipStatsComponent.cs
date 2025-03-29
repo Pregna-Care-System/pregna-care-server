@@ -25,14 +25,14 @@ namespace PregnaCare.Documents.Components
 
                 table.Header(header =>
                 {
-                    header.Cell().Text("Plan Name").Bold();
-                    header.Cell().Text("Users").Bold();
+                    _ = header.Cell().Text("Plan Name").Bold();
+                    _ = header.Cell().Text("Users").Bold();
                 });
 
                 foreach (var stat in _stats)
                 {
-                    table.Cell().Text(stat.Name);
-                    table.Cell().Text(stat.Users.ToString());
+                    _ = table.Cell().Text(stat.Name);
+                    _ = table.Cell().Text(stat.Users.ToString());
                 }
             });
         }

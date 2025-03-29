@@ -45,15 +45,15 @@ namespace PregnaCare.Services.Implementations
 
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("id", user.Id.ToString() ?? string.Empty),
-                new Claim("email", user.Email ?? string.Empty),
-                new Claim("role", roleName ?? string.Empty),
-                new Claim("name", user.FullName ?? string.Empty),
-                new Claim("picture", user.ImageUrl ?? string.Empty),
-                new Claim("address", user.Address ?? string.Empty),
-                new Claim("phone", user.PhoneNumber ?? string.Empty),
-                new Claim("gender", user.Gender ?? string.Empty)
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new("id", user.Id.ToString() ?? string.Empty),
+                new("email", user.Email ?? string.Empty),
+                new("role", roleName ?? string.Empty),
+                new("name", user.FullName ?? string.Empty),
+                new("picture", user.ImageUrl ?? string.Empty),
+                new("address", user.Address ?? string.Empty),
+                new("phone", user.PhoneNumber ?? string.Empty),
+                new("gender", user.Gender ?? string.Empty)
             };
             if (user.DateOfBirth.HasValue)
             {
