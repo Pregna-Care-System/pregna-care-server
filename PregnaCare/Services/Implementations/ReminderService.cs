@@ -98,6 +98,15 @@ namespace PregnaCare.Services.Implementations
         {
             var reminders = await _reminderRepo.FindWithIncludesAsync(x => x.IsDeleted == false && x.UserReminders.Any(y => y.IsDeleted == false && y.UserId == userId), x => x.UserReminders);
 
+            if(reminders.Count() == 0)
+            {
+                return new ReminderListResponse
+                {
+                    Success = false,
+                    Response = []
+                };
+            }
+
             var responseList = reminders.Select(x => new Reminder
             {
                 Id = x.Id,
