@@ -14,6 +14,7 @@ namespace PregnaCare.Services.BackgroundServices
     {
         private readonly IServiceScopeFactory _serviceScopeFactory;
         private DateTime _lastRunTime = DateTime.Now;
+
         public BlogNotificationService(IServiceScopeFactory serviceScopeFactory)
         {
             _serviceScopeFactory = serviceScopeFactory;
@@ -32,14 +33,16 @@ namespace PregnaCare.Services.BackgroundServices
                     var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
                     var currentTime = DateTime.Now;
-                    var rejectedBlogs = await blogRepository.FindAsync(b => b.Status == "Rejected"
-                        && b.UpdatedAt > _lastRunTime
-                        && b.UpdatedAt <= currentTime);
 
+                    // Lấy danh sách blog bị từ chối hoặc được duyệt
+                    var blogs = await blogRepository.FindAsync(b =>
+                        (b.Status == "Rejected" || b.Status == "Approved") &&
+                        b.UpdatedAt > _lastRunTime &&
+                        b.UpdatedAt <= currentTime);
 
-                    if (rejectedBlogs.Any())
+                    if (blogs.Any())
                     {
-                        foreach (var blog in rejectedBlogs)
+                        foreach (var blog in blogs)
                         {
                             var user = await userRepository.GetByIdAsync(blog.UserId);
                             if (user != null)
@@ -48,8 +51,10 @@ namespace PregnaCare.Services.BackgroundServices
                                 {
                                     Id = Guid.NewGuid(),
                                     ReceiverId = user.Id,
-                                    Title = "Reject your blog",
-                                    Message = $"Your blog '{blog.Heading}' was rejected by Admin.",
+                                    Title = blog.Status == "Rejected" ? "Your blog was rejected" : "Your blog was approved",
+                                    Message = blog.Status == "Rejected"
+                                        ? $"Your blog '{blog.Heading}' was rejected by Admin."
+                                        : $"Your blog '{blog.Heading}' was approved and is now visible to users.",
                                     CreatedAt = currentTime,
                                     IsRead = false
                                 };

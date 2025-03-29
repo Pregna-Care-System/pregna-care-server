@@ -62,6 +62,7 @@ namespace PregnaCare.Services.Implementations
             var blog = Mapper.MapToBlog(request);
             blog.Id = Guid.NewGuid();
             blog.Type = request.Type;
+            blog.IsVisible = request.IsVisible;
             blog.SharedChartData = request.SharedChartData;
             blog.CreatedAt = DateTime.Now;
             blog.UpdatedAt = DateTime.Now;
