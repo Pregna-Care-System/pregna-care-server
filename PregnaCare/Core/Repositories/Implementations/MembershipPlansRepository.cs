@@ -115,6 +115,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                                         .Where(mp => mp.IsDeleted == false)
                                         .Include(mp => mp.MembershipPlanFeatures)
                                             .ThenInclude(mpf => mpf.Feature)
+                                        .OrderBy(mp => mp.Price)
                                         .ToListAsync();
 
             var plansWithFeatures = plans.Select(mp => new MembershipPlanFeatureDTO

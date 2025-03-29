@@ -79,6 +79,7 @@ namespace PregnaCare
 
             _ = builder.Services.AddScoped<IReminderNotificationService, ReminderNotificationService>();
             _ = builder.Services.AddHostedService<ReminderBackgroundService>();
+            builder.Services.AddHostedService<BlogNotificationService>();
             _ = builder.Services.AddScoped<INotificationService, NotificationService>();
             _ = builder.Services.AddScoped<IBlogService, BlogService>();
             _ = builder.Services.AddScoped<ITagService, TagService>();
