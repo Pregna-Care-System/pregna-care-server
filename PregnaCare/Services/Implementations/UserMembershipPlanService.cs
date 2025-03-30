@@ -119,6 +119,18 @@ namespace PregnaCare.Services.Implementations
                 Response = response
             };
         }
+
+        public async Task<UserMembershipPlanListResponse> GetUserTransaction(Guid userId)
+        {
+            var transactions = await _userMembershipPlanRepository.GetUserTransactions(userId);
+
+            return new UserMembershipPlanListResponse
+            {
+                Success = true,
+                Response = transactions
+            };
+        }
+
     }
 
 }

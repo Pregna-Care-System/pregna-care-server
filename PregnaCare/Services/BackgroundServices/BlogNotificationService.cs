@@ -34,7 +34,6 @@ namespace PregnaCare.Services.BackgroundServices
 
                     var currentTime = DateTime.Now;
 
-                    // Lấy danh sách blog bị từ chối hoặc được duyệt
                     var blogs = await blogRepository.FindAsync(b =>
                         (b.Status == "Rejected" || b.Status == "Approved") &&
                         b.UpdatedAt > _lastRunTime &&

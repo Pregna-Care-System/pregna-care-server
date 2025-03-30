@@ -7,5 +7,6 @@ namespace PregnaCare.Services.Interfaces
     {
         Task<CreateUserMembershipPlanResponse> ActivateUserMembershipPlan(CreateUserMembershipPlanRequest request);
         Task<UserMembershipPlanListResponse> GetUserMembershipPlanList();
+        Task<UserMembershipPlanListResponse> GetUserTransaction(Guid userId);
     }
 }
