@@ -33,8 +33,8 @@ namespace PregnaCare.Services.Implementations
             if (user == null || membershipPlan == null) return string.Empty;
 
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById(_configuration["Vnpay:TimeZoneId"]);
-            var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.Now, timeZoneById);
-            var tick = DateTime.Now.Ticks.ToString();
+            var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
+            var tick = DateTime.UtcNow.Ticks.ToString();
             var pay = new VnpayUtils();
             var urlCallBack = _configuration["Vnpay:ReturnUrl"];
 
