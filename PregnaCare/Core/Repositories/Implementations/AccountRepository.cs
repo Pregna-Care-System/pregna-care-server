@@ -100,6 +100,8 @@ namespace PregnaCare.Core.Repositories.Implementations
                 .Where(u => u.IsDeleted == false && u.UserRoles.Any(ur => ur.Role.RoleName == "Member") && u.Id == userId)
                 .Include(u => u.UserMembershipPlans)
                     .ThenInclude(ump => ump.MembershipPlan)
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
                 .Select(u => new AccountDTO
                 {
                     Id = u.Id,
@@ -114,6 +116,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     UpdatedAt = u.UpdatedAt,
                     IsDeleted = u.IsDeleted,
                     IsFeedback = u.IsFeedback,
+                    Role = u.UserRoles.Select(ur => ur.Role.RoleName).FirstOrDefault(),
                     IsActive = u.UserMembershipPlans
                         .Select(ump => ump.IsActive)
                         .FirstOrDefault(),

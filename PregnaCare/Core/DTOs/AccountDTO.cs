@@ -13,6 +13,7 @@
         public string PhoneNumber { get; set; } = string.Empty;
 
         public string Gender { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
         public string PlanName { get; set; } = string.Empty;
         public decimal? PlanPrice { get; set; }
         public DateTime? PlanCreated { get; set; }
