@@ -2,6 +2,7 @@
 using PregnaCare.Api.Models.Responses.UserMembershipPlanResponseModel;
 using PregnaCare.Common.Api;
 using PregnaCare.Common.Constants;
+using PregnaCare.Core.DTOs;
 using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
@@ -130,6 +131,33 @@ namespace PregnaCare.Services.Implementations
                 Response = transactions
             };
         }
+
+        public async Task<UserMembershipPlanListResponse> GetExpiringUserMembershipPlans()
+        {
+            var tomorrow = DateTime.Now.AddDays(1).Date;
+            var expiringPlans = await _userMembershipRepository.FindAsync(p =>
+                p.ExpiryDate.HasValue && p.ExpiryDate.Value.Date == tomorrow);
+
+
+            var expiringPlanDTOs = expiringPlans.Select(p => new UserMembershipPlanDTO
+            {
+                Id = p.Id,
+                UserId = p.UserId,
+                MembershipPlanId = p.MembershipPlanId,
+                ActivatedAt = p.ActivatedAt,
+                ExpiryDate = p.ExpiryDate,
+                Price = p.Price,
+                IsActive = p.IsActive
+            }).ToList();
+
+            return new UserMembershipPlanListResponse
+            {
+                Success = true,
+                Response = expiringPlanDTOs
+            };
+        }
+
+
 
     }
 
