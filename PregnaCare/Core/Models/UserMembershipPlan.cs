@@ -17,6 +17,14 @@ public partial class UserMembershipPlan
 
     public string Status { get; set; } = StatusEnum.InProgress.ToString();
 
+    public DateTime StatusChangedAt { get; set; } = DateTime.Now;
+
+    public string StatusNotes { get; set; } = string.Empty;
+    
+    public string PaymentErrorCode { get; set; } = string.Empty;
+    
+    public string PaymentReference { get; set; } = string.Empty;
+
     public bool? IsActive { get; set; }
 
     public DateTime? CreatedAt { get; set; }

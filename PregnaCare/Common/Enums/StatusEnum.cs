@@ -10,6 +10,7 @@
         InProgress,
         Active,
         Approved,
-        Rejected
+        Rejected,
+        Superseded,
     }
 }

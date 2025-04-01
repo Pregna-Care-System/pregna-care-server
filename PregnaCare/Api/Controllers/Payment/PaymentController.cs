@@ -23,6 +23,28 @@ namespace PregnaCare.Api.Controllers.Payment
             _configuration = configuration;
         }
 
+        [HttpPost("Initiate")]
+        public async Task<IActionResult> InitiatePayment(PaymentInitiationRequest request)
+        {
+            var result = await _service.InitiatePayment(request, HttpContext);
+            if (!result.Success) return BadRequest(result);
+            return Ok(result);
+        }
+
+        [HttpGet("Callback")]
+        public async Task<IActionResult> PaymentCallback()
+        {
+            var result = (await _service.ProcessCallback(Request.Query)).Response;
+
+            // Always redirect to frontend regardless of payment result
+            // The frontend will display appropriate message based on status
+            var frontendBaseUrl = _configuration["FrontEndBaseUrl"];
+            var redirectUrl = $"{frontendBaseUrl}/payment/result?status={result.Status}&paymentId={result.PaymentId}&responseCode={result.ResponseCode}";
+
+            return Redirect(redirectUrl);
+        }
+
+
         [HttpPost]
         public IActionResult CreatePaymentUrl([FromBody] PaymentRequest request)
         {
