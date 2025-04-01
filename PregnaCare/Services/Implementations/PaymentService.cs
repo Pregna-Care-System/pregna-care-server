@@ -86,7 +86,6 @@ namespace PregnaCare.Services.Implementations
                                          p.Status == StatusEnum.InProgress.ToString());
 
             UserMembershipPlan userMembershipPlan;
-
             if (pendingPayment != null)
             {
                 userMembershipPlan = pendingPayment;
@@ -182,8 +181,8 @@ namespace PregnaCare.Services.Implementations
         {
             var response = new PaymentCallbackResponse { Success = false };
             var vnpay = new VnpayUtils();
-            var vnpayResponse = vnpay.GetFullResponseData(queryParams, _configuration["Vnpay:HashSecret"]);
-            if (!queryParams.TryGetValue("vnp_TxnRef", out var txnRefValues) || !Guid.TryParse(txnRefValues.FirstOrDefault(), out var paymentId))
+            var vnpayResponse = vnpay.GetFullResponseDataV2(queryParams, _configuration["Vnpay:HashSecret"]);
+            if (!queryParams.TryGetValue("vnp_TxnRef", out var txnRefValues))
             {
                 response.MessageId = Messages.E00000;
                 response.Message = Messages.GetMessageById(Messages.E00000);
@@ -192,9 +191,10 @@ namespace PregnaCare.Services.Implementations
 
             var responseCode = queryParams["vnp_ResponseCode"].ToString();
 
+            var txnRef = txnRefValues.FirstOrDefault();
             var userMembershipPlan = await _context.UserMembershipPlans
                 .Include(p => p.MembershipPlan)
-                .FirstOrDefaultAsync(p => p.Id == paymentId);
+                .FirstOrDefaultAsync(p => p.PaymentReference == txnRef);
 
             if (userMembershipPlan == null)
             {
@@ -264,7 +264,7 @@ namespace PregnaCare.Services.Implementations
             response.Response = new()
             {
                 Status = newStatus.ToString(),
-                PaymentId = paymentId,
+                PaymentId = txnRef,
                 ResponseCode = responseCode,
             };
 
@@ -275,9 +275,12 @@ namespace PregnaCare.Services.Implementations
         {
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById(_configuration["Vnpay:TimeZoneId"]);
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
-            _ = DateTime.UtcNow.Ticks.ToString();
+            var uniqueTxnRef = DateTime.UtcNow.Ticks.ToString();
             var pay = new VnpayUtils();
             var urlCallBack = _configuration["Vnpay:ReturnUrl"];
+
+            userMembershipPlan.PaymentReference = uniqueTxnRef;
+            _ = _context.SaveChanges();
 
             pay.AddRequestData("vnp_Version", _configuration["Vnpay:Version"]);
             pay.AddRequestData("vnp_Command", _configuration["Vnpay:Command"]);
@@ -290,7 +293,7 @@ namespace PregnaCare.Services.Implementations
             pay.AddRequestData("vnp_OrderInfo", $"{membershipPlan.PlanName}: Payment for plan - {email}");
             pay.AddRequestData("vnp_OrderType", "Upgrade MembershipPlan");
             pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
-            pay.AddRequestData("vnp_TxnRef", userMembershipPlan.Id.ToString());
+            pay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
 
             return pay.CreateRequestUrl(_configuration["Vnpay:BaseUrl"], _configuration["Vnpay:HashSecret"]);
         }

@@ -11,7 +11,7 @@ namespace PregnaCare.Api.Models.Responses.PaymentResponseModel
     public class PaymentCallbackResult
     {
         public string Status { get; set; }
-        public Guid PaymentId { get; set; }
+        public string PaymentId { get; set; }
         public string ResponseCode { get; set; }
     }
 }
