@@ -242,6 +242,7 @@ namespace PregnaCare.Services.Implementations
                                 CurrentValue = x.f.Value ?? 0,
                                 MinValue = x.g.MinValue ?? 0,
                                 MaxValue = x.g.MaxValue ?? 0,
+                                Unit = x.g.Unit
                             }).ToList()
                         };
 

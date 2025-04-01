@@ -78,7 +78,7 @@ namespace PregnaCare.Services.Implementations
                 ParseChatbotResponse(await _chatGPTService.GenerateRecommendation(_geminiService, issuePrompt));
 
             var fullRecommendation = $"Severity: {returnSeverity}\n" +
-                                     $"Expected Range in Week {record.Week}: {min} - {max} ({record.Unit})\n" +
+                                     $"Expected Range in Week {record.Week}: {min} - {max} ({growthMetric.Unit})\n" +
                                      $"Recommendation: {recommendation}";
 
             var alert = new GrowthAlert
