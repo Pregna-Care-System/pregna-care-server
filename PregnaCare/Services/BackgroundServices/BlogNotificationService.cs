@@ -30,6 +30,7 @@ namespace PregnaCare.Services.BackgroundServices
 
                     var blogs = await blogRepository.FindAsync(b =>
                         (b.Status == "Rejected" || b.Status == "Approved") &&
+                        b.Type == "Blog" &&
                         b.UpdatedAt > _lastRunTime &&
                         b.UpdatedAt <= currentTime);
 
