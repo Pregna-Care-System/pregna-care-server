@@ -152,7 +152,7 @@ namespace PregnaCare.Services.Implementations
         public async Task<List<RevenueStatsResponse>> GetTotalRevenueAsync()
         {
             var revenueData = await _context.UserMembershipPlans
-           .Where(plan => plan.IsDeleted == false && plan.IsActive == true)
+           .Where(plan => plan.IsDeleted == false && plan.IsActive == true && plan.Status == StatusEnum.Completed.ToString())
            .GroupBy(plan => new { Year = plan.ActivatedAt.Value.Year, Month = plan.ActivatedAt.Value.Month })
            .Select(group => new
            {
