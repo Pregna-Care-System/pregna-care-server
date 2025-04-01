@@ -35,6 +35,7 @@ namespace PregnaCare.Services.Implementations
 
             var weeks = totalDays / 7;
             var days = totalDays % 7;
+            var maxEditableWeek = weeks + (days > 0 ? 1 : 0);
 
             var estimatedDueDate = lmp.AddDays(280); // 40 weeks
 
@@ -42,6 +43,7 @@ namespace PregnaCare.Services.Implementations
             {
                 Weeks = weeks == 0 ? 1 : weeks,
                 Days = days,
+                MaxEditableWeek = maxEditableWeek,
                 EstimatedDueDate = estimatedDueDate,
                 CalculationMethod = "LMP"
             };

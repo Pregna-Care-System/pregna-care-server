@@ -6,5 +6,6 @@
         public int Days { get; set; }
         public DateTime EstimatedDueDate { get; set; }
         public string CalculationMethod { get; set; }
+        public int MaxEditableWeek { get; set; }
     }
 }
