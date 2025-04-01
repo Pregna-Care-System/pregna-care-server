@@ -112,26 +112,6 @@ namespace PregnaCare.Services.Implementations
                 };
             }
 
-            if (string.IsNullOrWhiteSpace(request.FullName))
-            {
-                detailErrorList.Add(new DetailError
-                {
-                    FieldName = nameof(request.FullName),
-                    Value = request.FullName,
-                    Message = "Full name cannot be empty",
-                });
-            }
-
-            if (!ValidationUtils.IsValidPhone(request.PhoneNumber))
-            {
-                detailErrorList.Add(new DetailError
-                {
-                    FieldName = nameof(request.PhoneNumber),
-                    Value = request.PhoneNumber,
-                    Message = "Phone format is not correct",
-                });
-            }
-
             // Kiểm tra tuổi có nhỏ hơn 18 không
             if (request.DateOfBirth.HasValue)
             {
