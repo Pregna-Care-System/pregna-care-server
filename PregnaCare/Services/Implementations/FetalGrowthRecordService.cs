@@ -58,6 +58,8 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
+            var createdRecords = new List<FetalGrowthRecord>();
+
             var fetalRecords = _context.FetalGrowthRecords.AsNoTracking().AsQueryable();
             foreach (var createEntity in request.CreateFetalGrowthRecordEntities)
             {
@@ -84,19 +86,11 @@ namespace PregnaCare.Services.Implementations
                 };
 
                 await _fetalGrowthRecordRepository.AddAsync(fetalGrowthRecord);
-
-                var result = await _growthAlertService.CheckGrowthAndCreateAlert(request.UserId, fetalGrowthRecord);
-
-                if (string.IsNullOrEmpty(result))
-                {
-                    response.Success = false;
-                    response.MessageId = Messages.E00000;
-                    response.Message = Messages.GetMessageById(Messages.E00000);
-                    return response;
-                }
+                createdRecords.Add(fetalGrowthRecord);
             }
 
             await _unitOfWork.SaveChangesAsync();
+            await _growthAlertService.ProcessBatchFetalGrowthRecords(request.UserId, createdRecords);
 
             response.Success = true;
             response.MessageId = Messages.I00001;
