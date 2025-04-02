@@ -75,13 +75,13 @@ namespace PregnaCare.Services.Implementations
         {
             var currentRevenue = await _context.UserMembershipPlans
                                              .AsNoTracking()
-                                             .Where(x => x.IsDeleted == false)
+                                             .Where(x => x.IsDeleted == false && x.Status == StatusEnum.Completed.ToString())
                                              .SumAsync(x => x.Price);
 
             var thirtyDaysAgo = DateTime.Now.AddDays(-30);
             var pastRevenue = await _context.UserMembershipPlans
                                             .AsNoTracking()
-                                            .Where(x => x.IsDeleted == false && x.CreatedAt <= thirtyDaysAgo)
+                                            .Where(x => x.IsDeleted == false && x.CreatedAt <= thirtyDaysAgo && x.Status == StatusEnum.Completed.ToString())
                                             .SumAsync(x => x.Price);
             var percentageChange = pastRevenue == 0
                 ? 0
@@ -152,7 +152,7 @@ namespace PregnaCare.Services.Implementations
         public async Task<List<RevenueStatsResponse>> GetTotalRevenueAsync()
         {
             var revenueData = await _context.UserMembershipPlans
-           .Where(plan => plan.IsDeleted == false && plan.IsActive == true)
+           .Where(plan => plan.IsDeleted == false && plan.IsActive == true && plan.Status == StatusEnum.Completed.ToString())
            .GroupBy(plan => new { Year = plan.ActivatedAt.Value.Year, Month = plan.ActivatedAt.Value.Month })
            .Select(group => new
            {
