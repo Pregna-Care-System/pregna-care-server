@@ -280,6 +280,7 @@ namespace PregnaCare.Services.Implementations
             var urlCallBack = _configuration["Vnpay:ReturnUrl"];
 
             userMembershipPlan.PaymentReference = uniqueTxnRef;
+            _ = _context.Update(userMembershipPlan);
             _ = _context.SaveChanges();
 
             pay.AddRequestData("vnp_Version", _configuration["Vnpay:Version"]);
@@ -292,7 +293,7 @@ namespace PregnaCare.Services.Implementations
             pay.AddRequestData("vnp_Locale", _configuration["Vnpay:Locale"]);
             pay.AddRequestData("vnp_OrderInfo", $"{membershipPlan.PlanName}: Payment for plan - {email}");
             pay.AddRequestData("vnp_OrderType", "Upgrade MembershipPlan");
-            pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
+            pay.AddRequestData("vnp_ReturnUrl", urlCallBack + $"/Callback");
             pay.AddRequestData("vnp_TxnRef", uniqueTxnRef);
 
             return pay.CreateRequestUrl(_configuration["Vnpay:BaseUrl"], _configuration["Vnpay:HashSecret"]);

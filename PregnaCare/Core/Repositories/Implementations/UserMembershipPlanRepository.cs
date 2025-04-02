@@ -33,6 +33,9 @@ namespace PregnaCare.Core.Repositories.Implementations
                    IsActive = ump.IsActive,
                    IsDeleted = ump.IsDeleted
                })
+               .OrderByDescending(ump => ump.ActivatedAt)
+               .ThenByDescending(ump => ump.ExpiryDate)
+               .ThenByDescending (ump => ump.Price)
                .ToListAsync();
 
         }

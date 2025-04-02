@@ -103,7 +103,7 @@ namespace PregnaCare.Services.Implementations
                                join userPlan in _context.UserMembershipPlans on plan.Id equals userPlan.MembershipPlanId
                                where !plan.IsDeleted.Value &&
                                      !userPlan.IsDeleted.Value &&
-                                     userPlan.IsActive.Value
+                                     userPlan.Status == StatusEnum.Completed.ToString()
                                group userPlan by plan.PlanName into g
                                select new
                                {
