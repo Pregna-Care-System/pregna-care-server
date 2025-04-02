@@ -20,5 +20,4 @@ ENV ASPNETCORE_ENVIRONMENT=Development
 EXPOSE 5167
 
 COPY --from=publish /app/publish .
-COPY --from=build /app/Utils Utils
 ENTRYPOINT ["dotnet", "PregnaCare.dll"]
