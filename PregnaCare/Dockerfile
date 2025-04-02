@@ -2,6 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app/swp391
 
 COPY ["PregnaCare.csproj", "./"]
+COPY Utils Utils
 RUN dotnet restore "./PregnaCare.csproj"
 
 COPY . .
@@ -19,4 +20,5 @@ ENV ASPNETCORE_ENVIRONMENT=Development
 EXPOSE 5167
 
 COPY --from=publish /app/publish .
+COPY --from=build /app/Utils Utils
 ENTRYPOINT ["dotnet", "PregnaCare.dll"]
