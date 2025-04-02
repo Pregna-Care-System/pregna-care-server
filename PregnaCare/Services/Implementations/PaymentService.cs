@@ -236,7 +236,7 @@ namespace PregnaCare.Services.Implementations
             userMembershipPlan.Status = newStatus.ToString();
             userMembershipPlan.StatusChangedAt = DateTime.Now;
             userMembershipPlan.StatusNotes = statusNotes;
-            userMembershipPlan.PaymentErrorCode = responseCode != "00" ? responseCode : null;
+            userMembershipPlan.PaymentErrorCode = responseCode != "00" ? responseCode : string.Empty;
             userMembershipPlan.PaymentReference = queryParams["vnp_TransactionNo"].ToString();
 
             if (isActive)
