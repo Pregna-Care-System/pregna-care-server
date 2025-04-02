@@ -43,7 +43,8 @@ namespace PregnaCare.Api.Controllers.ContactUs
 
             var unsubscribeUrl = Url.Action("Unsubscribe", "Contact", new { email = request.Email }, HttpContext.Request.Scheme);
 
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "Utils", "Html", "EventSubscriptionConfirmation.html");
+            var projectRoot = Directory.GetParent(AppContext.BaseDirectory).Parent.Parent.Parent.FullName;
+            var path = Path.Combine(projectRoot, "Utils", "Html", "EventSubscriptionConfirmation.html");
             var emailContent = await System.IO.File.ReadAllTextAsync(path);
 
             emailContent = emailContent
