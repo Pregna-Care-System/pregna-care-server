@@ -134,7 +134,7 @@ namespace PregnaCare.Services.Implementations
             var transactions = await (from userPlan in _context.UserMembershipPlans
                                       join plan in _context.MembershipPlans on userPlan.MembershipPlanId equals plan.Id
                                       join user in _context.Users on userPlan.UserId equals user.Id
-                                      where !userPlan.IsDeleted.GetValueOrDefault() && plan.PlanName == PlanEnum.FreePlan.ToString()
+                                      where !userPlan.IsDeleted.Value && plan.PlanName != PlanEnum.FreePlan.ToString()
                                       orderby userPlan.CreatedAt descending, plan.PlanName ascending
                                       select new TransactionStatsResponse
                                       {
@@ -143,7 +143,7 @@ namespace PregnaCare.Services.Implementations
                                           MembershipPlan = plan.PlanName,
                                           Price = userPlan.Price.ToString(),
                                           Status = userPlan.Status,
-                                          BuyDate = userPlan.CreatedAt.GetValueOrDefault()
+                                          BuyDate = (DateTime)userPlan.CreatedAt
                                       }).Skip(offset).Take(limit).ToListAsync();
 
             return (totalTransactions, offset, limit, transactions);
