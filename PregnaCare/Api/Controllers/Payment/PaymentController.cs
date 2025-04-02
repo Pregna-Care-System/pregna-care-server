@@ -39,7 +39,7 @@ namespace PregnaCare.Api.Controllers.Payment
             // Always redirect to frontend regardless of payment result
             // The frontend will display appropriate message based on status
             var frontendBaseUrl = _configuration["FrontEndBaseUrl"];
-            var redirectUrl = $"{frontendBaseUrl}/checkout/result?status={result.Status}&paymentId={result.PaymentId}&responseCode={result.ResponseCode}";
+            var redirectUrl = $"{frontendBaseUrl}checkout/result?status={result.Status}&paymentId={result.PaymentId}&responseCode={result.ResponseCode}";
 
             return Redirect(redirectUrl);
         }
