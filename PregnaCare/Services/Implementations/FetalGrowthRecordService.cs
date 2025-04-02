@@ -72,11 +72,17 @@ namespace PregnaCare.Services.Implementations
                     return response;
                 }
 
+                var growthMetric = await _context.GrowthMetrics
+                                                 .AsNoTracking()
+                                                 .FirstOrDefaultAsync(g => g.Name == createEntity.Name &&
+                                                                           g.Week == request.Week &&
+                                                                           g.IsDeleted == false);
+
                 var fetalGrowthRecord = new FetalGrowthRecord
                 {
                     Id = Guid.NewGuid(),
                     Name = createEntity.Name,
-                    Unit = createEntity.Unit ?? string.Empty,
+                    Unit = growthMetric?.Name ?? createEntity.Unit,
                     Description = createEntity.Description ?? string.Empty,
                     Week = request.Week ?? 0,
                     Value = createEntity.Value ?? 0,
@@ -90,7 +96,7 @@ namespace PregnaCare.Services.Implementations
             }
 
             await _unitOfWork.SaveChangesAsync();
-            await _growthAlertService.ProcessBatchFetalGrowthRecords(request.UserId, createdRecords);
+            _ = await _growthAlertService.ProcessBatchFetalGrowthRecords(request.UserId, createdRecords);
 
             response.Success = true;
             response.MessageId = Messages.I00001;
@@ -155,15 +161,67 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
+            var growthMetric = await _context.GrowthMetrics
+                                 .AsNoTracking()
+                                 .FirstOrDefaultAsync(g => g.Name == request.Name &&
+                                                           g.Week == request.Week &&
+                                                           g.IsDeleted == false);
+
+            var originalValue = fetalGrowthRecord.Value;
+            var originalWeek = fetalGrowthRecord.Week;
+            var originalName = fetalGrowthRecord.Name;
+
+            // Update record with new values
             fetalGrowthRecord.Name = request.Name;
-            fetalGrowthRecord.Unit = request.Unit ?? string.Empty;
+            fetalGrowthRecord.Unit = growthMetric?.Unit ?? request.Unit;
             fetalGrowthRecord.Description = request.Description ?? string.Empty;
             fetalGrowthRecord.Week = request.Week ?? 0;
             fetalGrowthRecord.Value = request.Value ?? 0;
             fetalGrowthRecord.Note = request.Note ?? string.Empty;
+            fetalGrowthRecord.UpdatedAt = DateTime.Now;
+
+            var criticalDataChanged = originalValue != fetalGrowthRecord.Value ||
+                          originalWeek != fetalGrowthRecord.Week ||
+                          originalName != fetalGrowthRecord.Name;
 
             _fetalGrowthRecordRepository.Update(fetalGrowthRecord);
             await _unitOfWork.SaveChangesAsync();
+
+            if (criticalDataChanged)
+            {
+                // Get the user ID from the pregnancy record
+                var pregnancyRecord = await _context.PregnancyRecords
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.Id == fetalGrowthRecord.PregnancyRecordId);
+
+                if (pregnancyRecord?.MotherInfoId != null)
+                {
+                    var motherInfo = await _context.MotherInfos
+                        .AsNoTracking()
+                        .FirstOrDefaultAsync(m => m.Id == pregnancyRecord.MotherInfoId);
+
+                    if (motherInfo?.UserId != null)
+                    {
+                        // Resolve old alerts for this record
+                        var oldAlerts = await _context.GrowthAlerts
+                            .Where(a => a.FetalGrowthRecordId == fetalGrowthRecord.Id &&
+                                       !a.IsResolved.Value && !a.IsDeleted.Value)
+                            .ToListAsync();
+
+                        foreach (var alert in oldAlerts)
+                        {
+                            alert.IsResolved = true;
+                            alert.Status = "Resolved due to record update";
+                            alert.UpdatedAt = DateTime.Now;
+                        }
+
+                        _ = await _context.SaveChangesAsync();
+
+                        // Generate new alerts based on updated values
+                        _ = await _growthAlertService.CheckGrowthAndCreateAlert(motherInfo.UserId.Value, fetalGrowthRecord);
+                    }
+                }
+            }
 
             response.Success = true;
             response.MessageId = Messages.I00001;
