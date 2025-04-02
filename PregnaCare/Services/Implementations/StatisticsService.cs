@@ -56,9 +56,9 @@ namespace PregnaCare.Services.Implementations
 
         public async Task<StatsResponse> GetTotalTransactionStatisticsAsync()
         {
-            var currentCount = await _context.UserMembershipPlans.CountAsync(x => x.IsDeleted == false);
+            var currentCount = await _context.UserMembershipPlans.Include(x => x.MembershipPlan).CountAsync(x => x.IsDeleted == false && x.MembershipPlan.PlanName != PlanEnum.FreePlan.ToString());
             var thirtyDaysAgo = DateTime.Now.AddDays(-30);
-            var pastCount = await _context.UserMembershipPlans.CountAsync(x => x.CreatedAt <= thirtyDaysAgo && x.IsDeleted == false);
+            var pastCount = await _context.UserMembershipPlans.Include(x => x.MembershipPlan).CountAsync(x => x.CreatedAt <= thirtyDaysAgo && x.IsDeleted == false && x.MembershipPlan.PlanName != PlanEnum.FreePlan.ToString());
             var percentageChange = pastCount == 0 ? 0 : ((double)(currentCount - pastCount) / pastCount) * 100;
 
             return new StatsResponse
