@@ -34,18 +34,18 @@ namespace PregnaCare.Services.Implementations
                 foreach (var node in productNodes)
                 {
                     var nameNode = node.SelectSingleNode(".//a[contains(@class, 'line-clamp-2 font-14 product-name pointer')]");
-                    string name = nameNode?.InnerText.Trim() ?? "Không có tên";
+                    string name = nameNode?.InnerText.Trim() ?? "No name";
 
                     var priceNode = node.SelectSingleNode(".//span[contains(@class, 'product-price')]");
-                    string price = priceNode?.InnerText.Trim() ?? "Không có giá";
+                    string price = priceNode?.InnerText.Trim() ?? "No price";
 
                     string productUrl = nameNode?.GetAttributeValue("href", "#") ?? "#";
                     if (!productUrl.StartsWith("http")) productUrl = "https://concung.com" + productUrl;
 
                     var imgNode = node.SelectSingleNode(".//img[contains(@class, 'img-fluid')]");
                     string imageUrl = imgNode?.GetAttributeValue("data-src", "")
-                                     ?? imgNode?.GetAttributeValue("src", "Không có ảnh")
-                                     ?? "Không có ảnh";
+                                     ?? imgNode?.GetAttributeValue("src", "No image")
+                                     ?? "No image";
 
                     products.Add(new ProductDTO
                     {
@@ -55,12 +55,12 @@ namespace PregnaCare.Services.Implementations
                         ProductUrl = productUrl
                     });
 
-                    Console.WriteLine($"🛍 {name} - 💲 {price} - 🖼 {imageUrl} - 🔗 {productUrl}");
+                    Console.WriteLine($" {name} - ${price} - {imageUrl} -{productUrl}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Lỗi khi lấy dữ liệu từ {url}: {ex.Message}");
+                Console.WriteLine($"Error {url}: {ex.Message}");
             }
             return products;
         }
