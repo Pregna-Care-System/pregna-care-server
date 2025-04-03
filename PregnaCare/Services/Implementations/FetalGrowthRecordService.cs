@@ -218,7 +218,7 @@ namespace PregnaCare.Services.Implementations
                         _ = await _context.SaveChangesAsync();
 
                         // Generate new alerts based on updated values
-                        _ = await _growthAlertService.CheckGrowthAndCreateAlert(motherInfo.UserId.Value, fetalGrowthRecord);
+                        _ = await _growthAlertService.ProcessBatchFetalGrowthRecords(motherInfo.UserId.Value, new List<FetalGrowthRecord> { fetalGrowthRecord });
                     }
                 }
             }
