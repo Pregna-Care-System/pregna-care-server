@@ -114,14 +114,14 @@ namespace PregnaCare.Api.Controllers.PregnancyRecord
 
             if (response) return Ok(new
             {
-                Succeess = false,
+                Success = true,
                 MessageId = Messages.I00001,
                 Message = Messages.GetMessageById(Messages.I00001)
             });
 
             return BadRequest(new
             {
-                Succeess = false,
+                Success = false,
                 MessageId = Messages.E00000,
                 Message = Messages.GetMessageById(Messages.E00000)
             });

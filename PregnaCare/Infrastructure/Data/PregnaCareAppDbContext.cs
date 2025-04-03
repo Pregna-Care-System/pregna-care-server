@@ -64,6 +64,8 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public DbSet<ContactSubscriber> ContactSubscribers { get; set; }
 
+    public DbSet<WeeklyRecommendation> WeeklyRecommendations { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         _ = modelBuilder.Entity<Blog>(entity =>
@@ -665,6 +667,18 @@ public partial class PregnaCareAppDbContext : DbContext
                   .WithMany(u => u.Feedbacks)
                   .HasForeignKey(e => e.UserId)
                   .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        _ = modelBuilder.Entity<WeeklyRecommendation>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Title).HasMaxLength(200);
+
+            entity.HasOne(e => e.PregnancyRecord)
+                .WithMany()
+                .HasForeignKey(e => e.PregnancyRecordId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         OnModelCreatingPartial(modelBuilder);
