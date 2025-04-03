@@ -57,7 +57,7 @@ namespace PregnaCare.Services.BackgroundServices
                     Console.WriteLine($"Error in PlanNotificationService: {ex.Message}");
                 }
 
-                await Task.Delay(TimeSpan.FromHours(24), stoppingToken);
+                await Task.Delay(TimeSpan.FromDays(1), stoppingToken);
             }
         }
     }
