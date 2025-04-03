@@ -43,7 +43,7 @@ namespace PregnaCare.Services.Implementations
             {
                 Weeks = weeks == 0 ? 1 : weeks,
                 Days = days,
-                MaxEditableWeek = maxEditableWeek,
+                MaxEditableWeek = maxEditableWeek == 0 ? 1 : maxEditableWeek,
                 EstimatedDueDate = estimatedDueDate,
                 CalculationMethod = "LMP"
             };
