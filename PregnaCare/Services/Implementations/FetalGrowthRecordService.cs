@@ -82,7 +82,7 @@ namespace PregnaCare.Services.Implementations
                 {
                     Id = Guid.NewGuid(),
                     Name = createEntity.Name,
-                    Unit = growthMetric?.Name ?? createEntity.Unit,
+                    Unit = growthMetric?.Unit ?? createEntity.Unit,
                     Description = createEntity.Description ?? string.Empty,
                     Week = request.Week ?? 0,
                     Value = createEntity.Value ?? 0,
