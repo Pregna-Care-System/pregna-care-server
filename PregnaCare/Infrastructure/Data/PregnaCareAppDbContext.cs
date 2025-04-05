@@ -64,6 +64,8 @@ public partial class PregnaCareAppDbContext : DbContext
 
     public DbSet<ContactSubscriber> ContactSubscribers { get; set; }
 
+    public DbSet<WeeklyRecommendation> WeeklyRecommendations { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         _ = modelBuilder.Entity<Blog>(entity =>
@@ -340,9 +342,6 @@ public partial class PregnaCareAppDbContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             _ = entity.Property(e => e.HealthStatus).HasDefaultValue("");
-            _ = entity.Property(e => e.MotherName)
-                .HasMaxLength(50)
-                .HasDefaultValue("");
             _ = entity.Property(e => e.Notes).HasDefaultValue("");
             _ = entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("(getdate())")
@@ -664,10 +663,22 @@ public partial class PregnaCareAppDbContext : DbContext
                   .IsRequired()
                   .HasDefaultValue(false);
 
-            entity.HasOne(e => e.User)
+            _ = entity.HasOne(e => e.User)
                   .WithMany(u => u.Feedbacks)
                   .HasForeignKey(e => e.UserId)
                   .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        _ = modelBuilder.Entity<WeeklyRecommendation>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.Property(e => e.Title).HasMaxLength(200);
+
+            entity.HasOne(e => e.PregnancyRecord)
+                .WithMany()
+                .HasForeignKey(e => e.PregnancyRecordId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
         OnModelCreatingPartial(modelBuilder);

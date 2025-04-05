@@ -7,5 +7,7 @@ namespace PregnaCare.Services.Interfaces
     {
         string CreatePaymentUrl(PaymentRequest request, HttpContext context);
         PaymentResponse PaymentExecute(IQueryCollection collections);
+        Task<PaymentInitiationResponse> InitiatePayment(PaymentInitiationRequest request, HttpContext context);
+        Task<PaymentCallbackResponse> ProcessCallback(IQueryCollection queryParams);
     }
 }

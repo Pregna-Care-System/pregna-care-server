@@ -160,6 +160,7 @@ namespace PregnaCare.Services.Implementations
                                               Id = x.Id,
                                               UserId = x.UserId,
                                               FullName = x.User.FullName,
+                                              UserAvatarUrl = x.User.ImageUrl,
                                               Type = x.Type,
                                           }).ToList();
 
@@ -191,6 +192,7 @@ namespace PregnaCare.Services.Implementations
                                              Id = x.Id,
                                              UserId = x.UserId,
                                              FullName = x.User.FullName,
+                                             UserAvatarUrl = x.User.ImageUrl,
                                              Type = x.Type,
                                          }).ToList();
 

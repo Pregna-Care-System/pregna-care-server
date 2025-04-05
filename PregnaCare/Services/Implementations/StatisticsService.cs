@@ -56,9 +56,9 @@ namespace PregnaCare.Services.Implementations
 
         public async Task<StatsResponse> GetTotalTransactionStatisticsAsync()
         {
-            var currentCount = await _context.UserMembershipPlans.CountAsync(x => x.IsDeleted == false);
+            var currentCount = await _context.UserMembershipPlans.Include(x => x.MembershipPlan).CountAsync(x => x.IsDeleted == false && x.MembershipPlan.PlanName != PlanEnum.FreePlan.ToString());
             var thirtyDaysAgo = DateTime.Now.AddDays(-30);
-            var pastCount = await _context.UserMembershipPlans.CountAsync(x => x.CreatedAt <= thirtyDaysAgo && x.IsDeleted == false);
+            var pastCount = await _context.UserMembershipPlans.Include(x => x.MembershipPlan).CountAsync(x => x.CreatedAt <= thirtyDaysAgo && x.IsDeleted == false && x.MembershipPlan.PlanName != PlanEnum.FreePlan.ToString());
             var percentageChange = pastCount == 0 ? 0 : ((double)(currentCount - pastCount) / pastCount) * 100;
 
             return new StatsResponse
@@ -75,13 +75,13 @@ namespace PregnaCare.Services.Implementations
         {
             var currentRevenue = await _context.UserMembershipPlans
                                              .AsNoTracking()
-                                             .Where(x => x.IsDeleted == false)
+                                             .Where(x => x.IsDeleted == false && x.Status == StatusEnum.Completed.ToString())
                                              .SumAsync(x => x.Price);
 
             var thirtyDaysAgo = DateTime.Now.AddDays(-30);
             var pastRevenue = await _context.UserMembershipPlans
                                             .AsNoTracking()
-                                            .Where(x => x.IsDeleted == false && x.CreatedAt <= thirtyDaysAgo)
+                                            .Where(x => x.IsDeleted == false && x.CreatedAt <= thirtyDaysAgo && x.Status == StatusEnum.Completed.ToString())
                                             .SumAsync(x => x.Price);
             var percentageChange = pastRevenue == 0
                 ? 0
@@ -103,7 +103,7 @@ namespace PregnaCare.Services.Implementations
                                join userPlan in _context.UserMembershipPlans on plan.Id equals userPlan.MembershipPlanId
                                where !plan.IsDeleted.Value &&
                                      !userPlan.IsDeleted.Value &&
-                                     userPlan.IsActive.Value
+                                     userPlan.Status == StatusEnum.Completed.ToString()
                                group userPlan by plan.PlanName into g
                                select new
                                {
@@ -134,7 +134,7 @@ namespace PregnaCare.Services.Implementations
             var transactions = await (from userPlan in _context.UserMembershipPlans
                                       join plan in _context.MembershipPlans on userPlan.MembershipPlanId equals plan.Id
                                       join user in _context.Users on userPlan.UserId equals user.Id
-                                      where !userPlan.IsDeleted.Value
+                                      where !userPlan.IsDeleted.Value && plan.PlanName != PlanEnum.FreePlan.ToString()
                                       orderby userPlan.CreatedAt descending, plan.PlanName ascending
                                       select new TransactionStatsResponse
                                       {
@@ -152,7 +152,7 @@ namespace PregnaCare.Services.Implementations
         public async Task<List<RevenueStatsResponse>> GetTotalRevenueAsync()
         {
             var revenueData = await _context.UserMembershipPlans
-           .Where(plan => plan.IsDeleted == false && plan.IsActive == true)
+           .Where(plan => plan.IsDeleted == false && plan.IsActive == true && plan.Status == StatusEnum.Completed.ToString())
            .GroupBy(plan => new { Year = plan.ActivatedAt.Value.Year, Month = plan.ActivatedAt.Value.Month })
            .Select(group => new
            {
@@ -195,7 +195,7 @@ namespace PregnaCare.Services.Implementations
 
             if (week.HasValue)
             {
-                DateTime firstDayOfYear = new DateTime(year ?? DateTime.Now.Year, 1, 1);
+                DateTime firstDayOfYear = new(year ?? DateTime.Now.Year, 1, 1);
                 DateTime startOfWeek = firstDayOfYear.AddDays((week.Value - 1) * 7);
 
                 query = query.Where(plan =>
@@ -242,6 +242,7 @@ namespace PregnaCare.Services.Implementations
                                 CurrentValue = x.f.Value ?? 0,
                                 MinValue = x.g.MinValue ?? 0,
                                 MaxValue = x.g.MaxValue ?? 0,
+                                Unit = x.g.Unit
                             }).ToList()
                         };
 

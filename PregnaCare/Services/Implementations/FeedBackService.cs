@@ -1,10 +1,7 @@
-﻿using PregnaCare.Api.Models.Requests.FeatureRequestModel;
-using PregnaCare.Api.Models.Requests.FeedBackRequestModel;
+﻿using PregnaCare.Api.Models.Requests.FeedBackRequestModel;
 using PregnaCare.Api.Models.Responses.FeatureResponseModel;
 using PregnaCare.Api.Models.Responses.FeedbackResponseModel;
-using PregnaCare.Common.Api;
 using PregnaCare.Common.Mappers;
-using PregnaCare.Core.Models;
 using PregnaCare.Core.Repositories.Interfaces;
 using PregnaCare.Infrastructure.UnitOfWork;
 using PregnaCare.Services.Interfaces;
@@ -15,17 +12,19 @@ namespace PregnaCare.Services.Implementations
     {
 
         private readonly IFeedBackRepository _feedbackRepository;
+        private readonly IAccountRepository _accountRepository;
         private readonly IUnitOfWork _unit;
 
-        public FeedBackService(IUnitOfWork unitOfWork, IFeedBackRepository feedBackRepository)
+        public FeedBackService(IUnitOfWork unitOfWork, IFeedBackRepository feedBackRepository, IAccountRepository accountRepository)
         {
             _unit = unitOfWork;
             _feedbackRepository = feedBackRepository;
+            _accountRepository = accountRepository;
         }
         public async Task<FeedbackResponse> AddFeedbackAsync(FeedbackRequest request, Guid userId)
         {
             var response = new FeedbackResponse();
-           
+
             var feedback = Mapper.MapToFeedBack(request);
             feedback.Id = Guid.NewGuid();
             feedback.UserId = userId;
@@ -36,6 +35,13 @@ namespace PregnaCare.Services.Implementations
             feedback.IsDeleted = false;
 
             await _feedbackRepository.AddAsync(feedback);
+            // Update User.isFeedback = true
+            var user = await _accountRepository.GetByIdAsync(userId);
+            if (user != null)
+            {
+                user.IsFeedback = true;
+                _accountRepository.Update(user);
+            }
             await _unit.SaveChangesAsync();
 
             response.Success = true;

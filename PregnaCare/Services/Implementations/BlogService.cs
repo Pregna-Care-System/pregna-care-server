@@ -14,12 +14,17 @@ namespace PregnaCare.Services.Implementations
     {
         private readonly IBlogRepository _blogRepository;
         private readonly IBlogTagRepository _blogTagRepository;
+        private readonly ICommentRepository _commentRepository;
+        private readonly IGenericRepository<Reaction, Guid> _reactionRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public BlogService(IBlogRepository blogRepository, IUnitOfWork unitOfWork, IBlogTagRepository blogTagRepository)
+        public BlogService(IBlogRepository blogRepository, IUnitOfWork unitOfWork, IBlogTagRepository blogTagRepository, ICommentRepository commentRepository)
         {
             _blogRepository = blogRepository;
             _unitOfWork = unitOfWork;
             _blogTagRepository = blogTagRepository;
+            _commentRepository = commentRepository;
+            _reactionRepository = unitOfWork.GetRepository<Reaction, Guid>();
+
         }
 
         public async Task<BlogListResponse> GetAllBlogs(string type)
@@ -57,10 +62,20 @@ namespace PregnaCare.Services.Implementations
             var blog = Mapper.MapToBlog(request);
             blog.Id = Guid.NewGuid();
             blog.Type = request.Type;
+            blog.IsVisible = request.IsVisible;
             blog.SharedChartData = request.SharedChartData;
             blog.CreatedAt = DateTime.Now;
             blog.UpdatedAt = DateTime.Now;
             blog.IsDeleted = false;
+
+            if (blog.Type.ToLower() == BlogTypeEnum.Community.ToString().ToLower())
+            {
+                blog.Status = StatusEnum.Approved.ToString();
+            }
+            else
+            {
+                blog.Status = StatusEnum.Pending.ToString();
+            }
 
             await _unitOfWork.GetRepository<Blog, Guid>().AddAsync(blog);
 
@@ -157,13 +172,31 @@ namespace PregnaCare.Services.Implementations
         public async Task DeleteBlog(Guid id)
         {
             var blogTags = await _blogTagRepository.GetAllAsync();
+            var commentPost = await _commentRepository.GetAllAsync();
+            var reactionPost = await _reactionRepository.GetAllAsync();
+
             var blog = await _blogRepository.GetByIdAsync(id);
-            var blogTagRepository = _unitOfWork.GetRepository<BlogTag, Guid>();
+            _ = _unitOfWork.GetRepository<BlogTag, Guid>();
+
             foreach (var blogTag in blogTags)
             {
                 if (blogTag.BlogId == id)
                 {
                     _unitOfWork.GetRepository<BlogTag, Guid>().Remove(blogTag);
+                }
+            }
+            foreach (var comment in commentPost)
+            {
+                if (comment.BlogId == id)
+                {
+                    _unitOfWork.GetRepository<Comment, Guid>().Remove(comment);
+                }
+            }
+            foreach (var reaction in reactionPost)
+            {
+                if (reaction.BlogId == id)
+                {
+                    _unitOfWork.GetRepository<Reaction, Guid>().Remove(reaction);
                 }
             }
 

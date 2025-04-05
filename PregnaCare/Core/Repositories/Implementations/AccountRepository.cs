@@ -16,7 +16,7 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<IEnumerable<AccountDTO>?> GetMembers(string filterType = null, string name = null)
         {
-            DateTime currentDate = DateTime.UtcNow;
+            DateTime currentDate = DateTime.Now;
 
             IQueryable<User> query = _appDbContext.Users
                 .Where(u => u.IsDeleted == false && u.UserRoles.Any(ur => ur.Role.RoleName == "Member"));
@@ -60,6 +60,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                     CreatedAt = u.CreatedAt,
                     UpdatedAt = u.UpdatedAt,
                     IsDeleted = u.IsDeleted,
+                    IsFeedback = u.IsFeedback,
                     IsActive = u.UserMembershipPlans
                         .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.IsActive)
@@ -71,13 +72,18 @@ namespace PregnaCare.Core.Repositories.Implementations
                     remainingDate = u.UserMembershipPlans
                         .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.ExpiryDate.HasValue
-                        ? ((ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays > 1
-                        ? (int)(ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays
+                        ? ((ump.ExpiryDate.Value - DateTime.Now).TotalDays > 1
+                        ? (int)(ump.ExpiryDate.Value - DateTime.Now).TotalDays
                         : 1) // Nếu còn bất kỳ thời gian nào, hiển thị ít nhất là 1 ngày
                         : (int?)null)
                         .FirstOrDefault() ?? 0,
                     PlanCreated = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.CreatedAt)
+                        .FirstOrDefault(),
+                    PlanPrice = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
+                        .Select(ump => ump.Price)
                         .FirstOrDefault()
                 })
                 .ToListAsync();
@@ -88,12 +94,14 @@ namespace PregnaCare.Core.Repositories.Implementations
 
         public async Task<AccountDTO> GetMemberInforWithPlanDetail(Guid userId)
         {
-            DateTime currentDate = DateTime.UtcNow;
+            DateTime currentDate = DateTime.Now;
 
             var member = await _appDbContext.Users
                 .Where(u => u.IsDeleted == false && u.UserRoles.Any(ur => ur.Role.RoleName == "Member") && u.Id == userId)
                 .Include(u => u.UserMembershipPlans)
                     .ThenInclude(ump => ump.MembershipPlan)
+                .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
                 .Select(u => new AccountDTO
                 {
                     Id = u.Id,
@@ -107,6 +115,8 @@ namespace PregnaCare.Core.Repositories.Implementations
                     CreatedAt = u.CreatedAt,
                     UpdatedAt = u.UpdatedAt,
                     IsDeleted = u.IsDeleted,
+                    IsFeedback = u.IsFeedback,
+                    Role = u.UserRoles.Select(ur => ur.Role.RoleName).FirstOrDefault(),
                     IsActive = u.UserMembershipPlans
                         .Select(ump => ump.IsActive)
                         .FirstOrDefault(),
@@ -117,11 +127,19 @@ namespace PregnaCare.Core.Repositories.Implementations
                     remainingDate = u.UserMembershipPlans
                         .OrderByDescending(ump => ump.ExpiryDate)
                         .Select(ump => ump.ExpiryDate.HasValue
-                        ? ((ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays > 1
-                        ? (int)(ump.ExpiryDate.Value - DateTime.UtcNow).TotalDays
+                        ? ((ump.ExpiryDate.Value - DateTime.Now).TotalDays > 1
+                        ? (int)(ump.ExpiryDate.Value - DateTime.Now).TotalDays
                         : 1)
                         : (int?)null)
-                        .FirstOrDefault() ?? 0
+                        .FirstOrDefault() ?? 0,
+                    PlanCreated = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
+                        .Select(ump => ump.CreatedAt)
+                        .FirstOrDefault(),
+                    PlanPrice = u.UserMembershipPlans
+                        .OrderByDescending(ump => ump.ExpiryDate)
+                        .Select(ump => ump.Price)
+                        .FirstOrDefault()
 
                 })
                 .FirstOrDefaultAsync();

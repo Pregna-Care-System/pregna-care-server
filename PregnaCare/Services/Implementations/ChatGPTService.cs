@@ -1,7 +1,9 @@
 ﻿using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using PregnaCare.Api.Models.Responses.ChatBotResponseModel;
+using PregnaCare.Core.Models;
 using PregnaCare.Services.Interfaces;
 
 namespace PregnaCare.Services.Implementations

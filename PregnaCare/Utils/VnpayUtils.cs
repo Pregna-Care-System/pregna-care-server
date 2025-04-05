@@ -9,8 +9,46 @@ namespace PregnaCare.Utils
 {
     public class VnpayUtils
     {
-        private readonly SortedList<string, string> _requestData = new SortedList<string, string>(new VnpayCompare());
-        private readonly SortedList<string, string> _responseData = new SortedList<string, string>(new VnpayCompare());
+        private readonly SortedList<string, string> _requestData = new(new VnpayCompare());
+        private readonly SortedList<string, string> _responseData = new(new VnpayCompare());
+
+        public PaymentResponse GetFullResponseDataV2(IQueryCollection collections, string hashSecret)
+        {
+            foreach (var (key, value) in collections)
+            {
+                if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
+                {
+                    AddResponseData(key, value);
+                }
+            }
+
+            var orderId = GetResponseData("vnp_TxnRef");
+            var vnPayTranId = GetResponseData("vnp_TransactionNo");
+            var vnpResponseCode = GetResponseData("vnp_ResponseCode");
+            var vnpSecureHash = collections.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value;
+            var orderInfo = GetResponseData("vnp_OrderInfo");
+
+            var checkSignature = ValidateSignature(vnpSecureHash, hashSecret);
+
+            if (!checkSignature)
+                return new PaymentResponse()
+                {
+                    Success = false
+                };
+
+            return new PaymentResponse()
+            {
+                Success = vnpResponseCode.Equals("00"),
+                PaymentMethod = "VnPay",
+                OrderDescription = orderInfo,
+                OrderId = orderId,
+                PaymentId = vnPayTranId.ToString(),
+                TransactionId = vnPayTranId.ToString(),
+                Token = vnpSecureHash,
+                VnPayResponseCode = vnpResponseCode
+            };
+        }
+
 
         public PaymentResponse GetFullResponseData(IQueryCollection collections, string hashSecret)
         {

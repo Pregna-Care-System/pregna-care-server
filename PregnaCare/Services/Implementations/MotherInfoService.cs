@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PregnaCare.Api.Models.Requests.MotherInfoModel;
 using PregnaCare.Api.Models.Requests.MotherInfoRequestModel;
 using PregnaCare.Api.Models.Responses.MotherInfoResponseModel;
 using PregnaCare.Common.Api;
@@ -27,17 +26,6 @@ namespace PregnaCare.Services.Implementations
         {
             var response = new CreateMotherInfoResponse() { Success = false };
             var detailErrorList = new List<DetailError>();
-
-            if (string.IsNullOrEmpty(request.MotherName))
-            {
-                detailErrorList.Add(new DetailError
-                {
-                    FieldName = nameof(request.MotherName),
-                    Value = request.MotherName,
-                    MessageId = Messages.E00002,
-                    Message = Messages.GetMessageById(Messages.E00002)
-                });
-            }
 
             if (string.IsNullOrEmpty(request.BloodType))
             {
@@ -74,12 +62,10 @@ namespace PregnaCare.Services.Implementations
             var motherInfo = new MotherInfo
             {
                 Id = Guid.NewGuid(),
-                MotherName = request.MotherName,
                 BloodType = request.BloodType,
                 HealthStatus = request.HealhStatus,
                 Notes = request.Notes,
                 UserId = request.UserId,
-                DateOfBirth = request.MotherDateOfBirth
             };
 
             _ = await _context.MotherInfos.AddAsync(motherInfo);
@@ -101,16 +87,6 @@ namespace PregnaCare.Services.Implementations
             var response = new UpdateMotherInfoResponse() { Success = false };
             var detailErrorList = new List<DetailError>();
 
-            if (string.IsNullOrEmpty(request.MotherName))
-            {
-                detailErrorList.Add(new DetailError
-                {
-                    FieldName = nameof(request.MotherName),
-                    Value = request.MotherName,
-                    MessageId = Messages.E00002,
-                    Message = Messages.GetMessageById(Messages.E00002)
-                });
-            }
 
             if (string.IsNullOrEmpty(request.BloodType))
             {
@@ -144,8 +120,6 @@ namespace PregnaCare.Services.Implementations
                 return response;
             }
 
-            motherInfo.MotherName = request.MotherName;
-            motherInfo.DateOfBirth = request.MotherDateOfBirth;
             motherInfo.BloodType = request.BloodType;
             motherInfo.HealthStatus = request.HealhStatus;
             motherInfo.Notes = request.Notes;

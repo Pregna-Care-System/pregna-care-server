@@ -43,7 +43,7 @@ namespace PregnaCare.Api.Controllers.Account
 
         [HttpGet("CurrentUser/{userId}")]
         public async Task<IActionResult> GetUserById([FromRoute] Guid userId)
-        { 
+        {
             var result = await _accountService.GetUserById(userId);
             if (!result.Success)
             {

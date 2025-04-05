@@ -33,5 +33,12 @@ namespace PregnaCare.Api.Controllers.UserMembershipPlan
             var result = await _service.GetUserMembershipPlanList();
             return Ok(result);
         }
+
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetAllUserTransaction(Guid userId)
+        {
+            var result = await _service.GetUserTransaction(userId);
+            return Ok(result);
+        }
     }
 }

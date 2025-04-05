@@ -39,8 +39,8 @@ namespace PregnaCare.Services.Implementations
                 ReminderDate = reminderDateTime,
                 StartTime = request.StartTime,
                 EndTime = request.EndTime,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
                 IsDeleted = false,
 
             };
@@ -52,8 +52,8 @@ namespace PregnaCare.Services.Implementations
                 Id = Guid.NewGuid(),
                 UserId = id,
                 ReminderId = type.Id,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
                 IsDeleted = false,
             };
             await _userReminderRepo.AddAsync(userReminder);
@@ -94,6 +94,41 @@ namespace PregnaCare.Services.Implementations
             };
         }
 
+        public async Task<ReminderListResponse> GetAllRemindersByUserId(Guid userId)
+        {
+            var reminders = await _reminderRepo.FindWithIncludesAsync(x => x.IsDeleted == false && x.UserReminders.Any(y => y.IsDeleted == false && y.UserId == userId), x => x.UserReminders);
+
+            if(reminders.Count() == 0)
+            {
+                return new ReminderListResponse
+                {
+                    Success = false,
+                    Response = []
+                };
+            }
+
+            var responseList = reminders.Select(x => new Reminder
+            {
+                Id = x.Id,
+                ReminderTypeId = x.ReminderTypeId,
+                Title = x.Title,
+                ReminderDate = x.ReminderDate,
+                Description = x.Description,
+                StartTime = x.StartTime,
+                EndTime = x.EndTime,
+                IsDeleted = x.IsDeleted,
+                Status = x.Status,
+                CreatedAt = x.CreatedAt,
+                UpdatedAt = x.UpdatedAt,
+            }).OrderBy(x => x.ReminderDate).ToList();
+
+            return new ReminderListResponse
+            {
+                Success = true,
+                Response = responseList
+            };
+        }
+
         public async Task<ReminderResponse> GetReminderById(Guid id)
         {
             var reminder = await _repository.GetByIdAsync(id);
@@ -115,7 +150,7 @@ namespace PregnaCare.Services.Implementations
             type.ReminderDate = request.ReminderDate;
             type.StartTime = request.StartTime;
             type.EndTime = request.EndTime;
-            type.UpdatedAt = DateTime.UtcNow;
+            type.UpdatedAt = DateTime.Now;
 
             _repository.Update(type);
             await _unitOfWork.SaveChangesAsync();

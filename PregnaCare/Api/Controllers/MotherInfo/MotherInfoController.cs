@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PregnaCare.Api.Models.Requests.MotherInfoModel;
 using PregnaCare.Api.Models.Requests.MotherInfoRequestModel;
 using PregnaCare.Common.Constants;
 using PregnaCare.Services.Interfaces;
@@ -23,8 +22,6 @@ namespace PregnaCare.Api.Controllers.MotherInfo
             var responseList = _motherInfoService.GetAllMotherInfosByUserId(userId).Select(x => new
             {
                 Id = x.Id,
-                MotherName = x.MotherName,
-                DateOfBirth = x.DateOfBirth,
                 BloodType = x.BloodType,
                 HealthStatus = x.HealthStatus,
                 Notes = x.Notes,

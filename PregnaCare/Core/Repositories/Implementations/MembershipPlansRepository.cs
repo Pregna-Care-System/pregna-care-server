@@ -115,6 +115,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                                         .Where(mp => mp.IsDeleted == false)
                                         .Include(mp => mp.MembershipPlanFeatures)
                                             .ThenInclude(mpf => mpf.Feature)
+                                        .OrderBy(mp => mp.Price)
                                         .ToListAsync();
 
             var plansWithFeatures = plans.Select(mp => new MembershipPlanFeatureDTO
@@ -244,7 +245,7 @@ namespace PregnaCare.Core.Repositories.Implementations
                 {
                     UserId = userId,
                     MembershipPlanId = freePlan.Id,
-                    ExpiryDate = DateTime.UtcNow.AddDays(3),
+                    ExpiryDate = DateTime.Now.AddDays(3),
                     IsActive = true,
                     Status = StatusEnum.Completed.ToString()
                 };
@@ -257,7 +258,7 @@ namespace PregnaCare.Core.Repositories.Implementations
         public async Task<bool> HasFreePlanAsync(Guid userId)
         {
             var freePlan = await _context.MembershipPlans.FirstOrDefaultAsync(mp => mp.PlanName == PlanEnum.FreePlan.ToString());
-            if(freePlan == null)
+            if (freePlan == null)
             {
                 throw new Exception("Free Plan is not found");
             }

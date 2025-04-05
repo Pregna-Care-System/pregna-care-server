@@ -22,7 +22,7 @@ namespace PregnaCare
         public static async Task Main(string[] args)
         {
             _ = Env.Load();
-            
+
             QuestPDF.Settings.License = LicenseType.Community;
 
             var builder = WebApplication.CreateBuilder(args);
@@ -79,10 +79,14 @@ namespace PregnaCare
 
             _ = builder.Services.AddScoped<IReminderNotificationService, ReminderNotificationService>();
             _ = builder.Services.AddHostedService<ReminderBackgroundService>();
+            builder.Services.AddHostedService<BlogNotificationService>();
+            builder.Services.AddHostedService<PlanNotificationService>();
             _ = builder.Services.AddScoped<INotificationService, NotificationService>();
             _ = builder.Services.AddScoped<IBlogService, BlogService>();
             _ = builder.Services.AddScoped<ITagService, TagService>();
             _ = builder.Services.AddScoped<ICommentService, CommentService>();
+            _ = builder.Services.AddHttpClient<IShoppingService, ShoppingService>();
+
             _ = builder.Services.AddSignalR();
 
             // Config identity

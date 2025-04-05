@@ -697,20 +697,10 @@ namespace PregnaCare.Migrations
                         .HasColumnType("datetime")
                         .HasDefaultValueSql("(getdate())");
 
-                    b.Property<DateOnly?>("DateOfBirth")
-                        .HasColumnType("date");
-
                     b.Property<string>("HealthStatus")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(max)")
-                        .HasDefaultValue("");
-
-                    b.Property<string>("MotherName")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
                         .HasDefaultValue("");
 
                     b.Property<string>("Notes")
@@ -1191,10 +1181,25 @@ namespace PregnaCare.Migrations
                     b.Property<Guid>("MembershipPlanId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("PaymentErrorCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentReference")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StatusChangedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StatusNotes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -1290,6 +1295,59 @@ namespace PregnaCare.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserRole", (string)null);
+                });
+
+            modelBuilder.Entity("PregnaCare.Core.Models.WeeklyRecommendation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("BabyDevelopment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ExerciseRecommendation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HealthConcerns")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NutritionalAdvice")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PregnancyRecordId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Week")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PregnancyRecordId");
+
+                    b.ToTable("WeeklyRecommendations");
                 });
 
             modelBuilder.Entity("PregnaCare.Core.Models.Blog", b =>
@@ -1527,6 +1585,17 @@ namespace PregnaCare.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("PregnaCare.Core.Models.WeeklyRecommendation", b =>
+                {
+                    b.HasOne("PregnaCare.Core.Models.PregnancyRecord", "PregnancyRecord")
+                        .WithMany()
+                        .HasForeignKey("PregnancyRecordId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PregnancyRecord");
                 });
 
             modelBuilder.Entity("PregnaCare.Core.Models.Blog", b =>

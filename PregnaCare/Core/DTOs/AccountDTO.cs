@@ -13,8 +13,10 @@
         public string PhoneNumber { get; set; } = string.Empty;
 
         public string Gender { get; set; } = string.Empty;
+        public string Role { get; set; } = string.Empty;
         public string PlanName { get; set; } = string.Empty;
-        public DateTime? PlanCreated { get; set; } 
+        public decimal? PlanPrice { get; set; }
+        public DateTime? PlanCreated { get; set; }
         public int remainingDate { get; set; }
 
         public DateOnly? DateOfBirth { get; set; }
@@ -28,6 +30,8 @@
         public DateTime? UpdatedAt { get; set; }
 
         public bool? IsDeleted { get; set; }
+        public bool? IsFeedback { get; set; }
+
         public bool? IsActive { get; set; }
 
 

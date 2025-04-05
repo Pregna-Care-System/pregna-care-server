@@ -17,7 +17,7 @@ namespace PregnaCare.Utils
 
         public static string GetTimeAgo(DateTime dateTime)
         {
-            var timeSpan = DateTime.UtcNow.Subtract(dateTime);
+            var timeSpan = DateTime.Now.Subtract(dateTime);
 
             if (timeSpan.TotalSeconds < 60)
                 return "just now";
